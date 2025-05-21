@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WebAssembly">
+    <PropertyGroup>
+        <TargetFramework>net8.0-browser</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Browser"/>
+        <PackageReference Include="IconPacks.Avalonia" />
+        <PackageReference Include="SukiUI" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Prolizy2\Prolizy2.csproj"/>
+    </ItemGroup>
+</Project>

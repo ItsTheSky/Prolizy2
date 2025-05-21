@@ -1,0 +1,145 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Prolizy2.ViewModels"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             mc:Ignorable="d"
+             d:DesignWidth="450" d:DesignHeight="800"
+             Width="450" Height="800"
+             x:Class="Prolizy2.Views.MainView"
+             x:DataType="vm:MainViewModel">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <UserControl.Styles>
+        <Style Selector="TabItem">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <Style Selector="TabControl WrapPanel">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Width" Value="NaN" />
+        </Style>
+
+        <Style Selector="StackPanel.TabItemPanel">
+
+            <Setter Property="Orientation" Value="Vertical" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+
+        </Style>
+
+        <Style Selector="StackPanel.TabItemPanel iconPacks|PackIconLucide">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="StackPanel.TabItemPanel TextBlock">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Border Name="MainBorder" Background="Transparent">
+            <Border.GestureRecognizers>
+                <ScrollGestureRecognizer CanHorizontallyScroll="True" CanVerticallyScroll="False" />
+            </Border.GestureRecognizers>
+
+            <Grid>
+
+                <TabControl TabStripPlacement="Bottom" Margin="10"
+                            Name="MainTabControl"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                    <TabItem>
+                        <TabItem.Header>
+                            <StackPanel Classes="TabItemPanel">
+                                <iconPacks:PackIconLucide Kind="File" />
+                                <TextBlock Text="Home" />
+                            </StackPanel>
+                        </TabItem.Header>
+                        <Grid Margin="15" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <suki:GlassCard Margin="0,0,0,25">
+                                <suki:BusyArea Name="BusySignIn"
+                                               BusyText="Signing In..."
+                                               IsBusy="{Binding IsLoggingIn}">
+                                    <StackPanel>
+                                        <iconPacks:PackIconLucide Width="30"
+                                                                  Height="30"
+                                                                  Margin="10"
+                                                                  HorizontalAlignment="Center"
+                                                                  Foreground="{DynamicResource SukiPrimaryColor}"
+                                                                  Kind="LogIn" />
+                                        <TextBlock Margin="0,5,0,27"
+                                                   HorizontalAlignment="Center"
+                                                   FontSize="18"
+                                                   FontWeight="DemiBold"
+                                                   Text="Sign-in to your account" />
+                                        <TextBlock Margin="6,0,0,3"
+                                                   FontWeight="DemiBold"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="Username" />
+                                        <TextBox suki:TextBoxExtensions.Prefix="" Watermark="John" />
+                                        <TextBlock Margin="6,18,0,3"
+                                                   FontWeight="DemiBold"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="Password" />
+                                        <TextBox Name="PasswordTextBox"
+                                                 Margin="0,0,0,25"
+                                                 suki:TextBoxExtensions.AddDeleteButton="False"
+                                                 PasswordChar="*"
+                                                 Watermark="*******" />
+                                    </StackPanel>
+                                </suki:BusyArea>
+                            </suki:GlassCard>
+
+                            <Button Name="ButtonSignIn"
+                                    Width="160"
+                                    Height="40"
+                                    Margin="0,0,0,7"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    suki:ButtonExtensions.ShowProgress="{Binding IsLoggingIn}"
+                                    Classes="Flat Rounded"
+                                    Command="{Binding LoginCommand}"
+                                    FontWeight="DemiBold">
+                                Sign In
+                            </Button>
+                        </Grid>
+                    </TabItem>
+                    <TabItem>
+                        <TabItem.Header>
+                            <StackPanel Classes="TabItemPanel">
+                                <iconPacks:PackIconLucide Kind="Angry" />
+                                <TextBlock Text="Angry" />
+                            </StackPanel>
+                        </TabItem.Header>
+                    </TabItem>
+                    <TabItem>
+                        <TabItem.Header>
+                            <StackPanel Classes="TabItemPanel">
+                                <iconPacks:PackIconLucide Kind="Radius" />
+                                <TextBlock Text="Idk" />
+                            </StackPanel>
+                        </TabItem.Header>
+                    </TabItem>
+                </TabControl>
+
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Text="{Binding Vector}" Foreground="Beige" />
+            </Grid>
+
+        </Border>
+        
+        <suki:SukiDialogHost Name="DialogHost" />
+    </Grid>
+
+</UserControl>

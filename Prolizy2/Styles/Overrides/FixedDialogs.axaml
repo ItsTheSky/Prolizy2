@@ -1,0 +1,26 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:suki="https://github.com/kikipoulet/SukiUI">
+    <Design.PreviewWith>
+        <Border Padding="20" Width="400">
+            <suki:SukiDialog Title="Hello there!">
+                <suki:SukiDialog.Content>
+                    <TextBlock>Hello there :)</TextBlock>
+                </suki:SukiDialog.Content>
+            </suki:SukiDialog>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="suki|SukiDialog > Panel > Border:nth-child(1)">
+        <Setter Property="MinWidth" Value="0" />
+    </Style>
+
+    <Style Selector="suki|SukiDialog TextBlock">
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    
+    <Style Selector="suki|SukiDialog">
+        <Setter Property="MaxWidth" Value="350" />
+    </Style>
+    
+</Styles>

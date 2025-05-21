@@ -1,0 +1,24 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Prolizy2.App"
+             xmlns:sukiUi="clr-namespace:SukiUI;assembly=SukiUI"
+             RequestedThemeVariant="Dark">
+  
+    <Application.Styles>
+        <sukiUi:SukiTheme ThemeColor="Orange" Locale="en-US" />
+        
+        <StyleInclude Source="avares://IconPacks.Avalonia/Icons.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Overrides/FixedDialogs.axaml" />
+    </Application.Styles>
+    
+    <Application.Resources>
+        <ConicGradientBrush x:Key="MidnightSlateGradient" Center="0.5,0.5" Angle="0">
+            <GradientStops>
+                <GradientStop Color="#091528" Offset="0"/>
+                <GradientStop Color="#152238" Offset="0.33"/>
+                <GradientStop Color="#2A3545" Offset="0.66"/>
+                <GradientStop Color="#404A57" Offset="1"/>
+            </GradientStops>
+        </ConicGradientBrush>
+    </Application.Resources>
+</Application>
