@@ -5,55 +5,39 @@
              xmlns:vm="clr-namespace:Prolizy2.ViewModels"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:views="clr-namespace:Prolizy2.Views"
+             xmlns:common="clr-namespace:Prolizy2.Views.Common"
              mc:Ignorable="d"
              d:DesignWidth="450" d:DesignHeight="800"
-             Width="450" Height="800"
              x:Class="Prolizy2.Views.MainView"
              x:DataType="vm:MainViewModel">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainViewModel />
+        <vm:MainViewModel IsWelcomeScreenVisible="False" />
     </Design.DataContext>
 
     <UserControl.Styles>
-        <Style Selector="TabItem">
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+
+        <Style Selector="StackPanel.IsTabItemSelected TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource SukiPrimaryColor}" />
+        </Style>
+        <Style Selector="StackPanel.IsTabItemSelected iconPacks|PackIconLucide">
+            <Setter Property="Foreground" Value="{DynamicResource SukiPrimaryColor}" />
         </Style>
 
-        <Style Selector="TabControl WrapPanel">
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="Width" Value="NaN" />
-        </Style>
-
-        <Style Selector="StackPanel.TabItemPanel">
-
-            <Setter Property="Orientation" Value="Vertical" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-
-        </Style>
-
-        <Style Selector="StackPanel.TabItemPanel iconPacks|PackIconLucide">
-            <Setter Property="Width" Value="28" />
-            <Setter Property="Height" Value="28" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-        </Style>
-
-        <Style Selector="StackPanel.TabItemPanel TextBlock">
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-        </Style>
     </UserControl.Styles>
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Border Name="MainBorder" Background="Transparent">
+
+        <Border Name="MainBorder" Background="Transparent" IsVisible="{Binding !IsWelcomeScreenVisible}">
             <Border.GestureRecognizers>
                 <ScrollGestureRecognizer CanHorizontallyScroll="True" CanVerticallyScroll="False" />
             </Border.GestureRecognizers>
 
+            <!--
             <Grid>
 
                 <TabControl TabStripPlacement="Bottom" Margin="10"
@@ -69,7 +53,7 @@
                         <Grid Margin="15" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <suki:GlassCard Margin="0,0,0,25">
                                 <suki:BusyArea Name="BusySignIn"
-                                               BusyText="Signing In..."
+                                               BusyText="Connexion ..."
                                                IsBusy="{Binding IsLoggingIn}">
                                     <StackPanel>
                                         <iconPacks:PackIconLucide Width="30"
@@ -98,7 +82,7 @@
                                                  PasswordChar="*"
                                                  Watermark="*******" />
                                     </StackPanel>
-                                </suki:BusyArea>
+                                </suki:BusyArea>M
                             </suki:GlassCard>
 
                             <Button Name="ButtonSignIn"
@@ -115,13 +99,44 @@
                             </Button>
                         </Grid>
                     </TabItem>
-                    <TabItem>
+                    <TabItem IsSelected="True">
                         <TabItem.Header>
                             <StackPanel Classes="TabItemPanel">
                                 <iconPacks:PackIconLucide Kind="Angry" />
                                 <TextBlock Text="Angry" />
                             </StackPanel>
                         </TabItem.Header>
+                        <StackPanel Orientation="Vertical" Spacing="5">
+                            
+                            <controls:ModuleCard Title="Prochains Cours" VerticalAlignment="Top"
+                                                 Icon="CalendarDays">
+                            </controls:ModuleCard>
+                            <controls:ModuleCard Title="Dernières Notes" VerticalAlignment="Top"
+                                                 Icon="NotebookPen">
+                                <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto" RowSpacing="5"
+                                                     ColumnDefinitions="*,Auto" ColumnSpacing="5">
+                                    
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="SAÉ statistique BD"/>
+                                    <controls:Badge HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1" Text="18/20"/>
+                                    
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="C2"/>
+                                    <controls:Badge HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1" Text="12/20"/>
+                                    
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="DS1 Compta-finance"/>
+                                    <controls:Badge HorizontalAlignment="Right" Grid.Row="2" Grid.Column="1" Text="ATT"/>
+                                </avalonia:SpacedGrid>
+                            </controls:ModuleCard>
+                        
+                            <controls:ModuleCard Title="Absences" VerticalAlignment="Top"
+                                                 Icon="CalendarOff">
+                                <TextBlock Text="I'm inside :o" />
+                            </controls:ModuleCard>
+                        
+                            <controls:ModuleCard Title="Test" VerticalAlignment="Top"
+                                                 Icon="Clock7">
+                                <TextBlock Text="I'm inside :o" />
+                            </controls:ModuleCard>
+                        </StackPanel>
                     </TabItem>
                     <TabItem>
                         <TabItem.Header>
@@ -136,9 +151,55 @@
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                            Text="{Binding Vector}" Foreground="Beige" />
             </Grid>
+             -->
+
+            <avalonia:SpacedGrid RowDefinitions="*,Auto" RowSpacing="10"
+                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+                <ContentControl Grid.Row="0" Margin="15"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                Content="{Binding DisplayedControl}" />
+
+                <suki:GlassCard Grid.Row="1" CornerRadius="0">
+
+                    <ItemsControl ItemsSource="{Binding TabEntries}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="{Binding TabEntries.Count}" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:TabItemEntry">
+                                <Button Padding="0" HorizontalAlignment="Stretch" BorderThickness="0"
+                                        Command="{Binding ClickedCommand}">
+
+                                    <StackPanel Classes.IsTabItemSelected="{Binding IsSelected}"
+                                                Spacing="5">
+
+                                        <iconPacks:PackIconLucide Kind="{Binding Icon}"
+                                                                  HorizontalAlignment="Center"
+                                                                  Width="24" Height="24" />
+                                        <TextBlock FontSize="16"
+                                                   Text="{Binding Title, Converter={StaticResource LangKeyToValueConverter}}" />
+
+                                    </StackPanel>
+
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </suki:GlassCard>
+
+            </avalonia:SpacedGrid>
 
         </Border>
-        
+
+        <views:WelcomeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                           IsVisible="{Binding IsWelcomeScreenVisible}" />
+
         <suki:SukiDialogHost Name="DialogHost" />
     </Grid>
 

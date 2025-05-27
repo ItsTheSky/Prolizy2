@@ -1,0 +1,66 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:edt="clr-namespace:Prolizy2.Styles.Controls.Edt"
+             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Tabs"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="800"
+             x:DataType="tabs:EdtViewModel"
+             x:Class="Prolizy2.Views.Tabs.EdtTab">
+    <suki:BusyArea BusyText="{DynamicResource Loading}"
+                   IsBusy="{Binding IsLoading}">
+        <avalonia:SpacedGrid RowDefinitions="Auto,*,Auto" RowSpacing="10"
+                             ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
+
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                        Spacing="10"
+                        Orientation="Vertical"
+                        VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <TextBlock Text="{Binding CurrentDayString, FallbackValue=...}" HorizontalAlignment="Center"
+                           FontSize="24" FontWeight="SemiBold" />
+
+                <Button HorizontalAlignment="Stretch" 
+                        suki:ButtonExtensions.Icon="{iconPacks:Lucide Calendar}"
+                        suki:ButtonExtensions.ShowProgress="{Binding IsLoading}"
+                        Command="{Binding OpenCalendarCommand}">
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource EdtSelectDateTitle}" />
+                </Button>
+
+            </StackPanel>
+
+            <edt:DailyScheduleControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                      Items="{Binding DisplayedItems}"
+                                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+
+            <Button Grid.Row="2" Grid.Column="0"
+                    suki:ButtonExtensions.ShowProgress="{Binding IsLoading}"
+                    suki:ButtonExtensions.Icon="{iconPacks:Lucide ChevronLeft}"
+                    HorizontalAlignment="Stretch" Command="{Binding PreviousDayCommand}">
+                <TextBlock VerticalAlignment="Center" Text="{DynamicResource EdtPrevious}" />
+            </Button>
+            
+            <Button Grid.Row="2" Grid.Column="1" 
+                    suki:ButtonExtensions.ShowProgress="{Binding IsLoading}"
+                    Command="{Binding GoToTodayCommand}"
+                    Padding="10">
+                <iconPacks:PackIconLucide Kind="House" VerticalAlignment="Center"
+                                          Width="16" Height="16"/>
+            </Button>
+            
+            <Button Grid.Row="2" Grid.Column="2"
+                    suki:ButtonExtensions.ShowProgress="{Binding IsLoading}"
+                    HorizontalAlignment="Stretch" Command="{Binding NextDayCommand}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                            Spacing="10">
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource EdtNext}" />
+                    <iconPacks:PackIconLucide Kind="ChevronRight" VerticalAlignment="Center"
+                                              Width="12" Height="12"/>
+                </StackPanel>
+            </Button>
+
+        </avalonia:SpacedGrid>
+    </suki:BusyArea>
+</UserControl>

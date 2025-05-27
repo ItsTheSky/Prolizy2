@@ -19,7 +19,9 @@
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Avalonia.Svg" />
         <PackageReference Include="IconPacks.Avalonia" />
+        <PackageReference Include="SpacedGrid-Avalonia" />
         <PackageReference Include="SukiUI" />
     </ItemGroup>
 

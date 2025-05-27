@@ -1,0 +1,54 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls.Edt"
+        xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+        xmlns:controls1="clr-namespace:Prolizy2.Styles.Controls"
+        xmlns:model="clr-namespace:Prolizy2.Model"
+        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+    <Design.PreviewWith>
+        <controls:ItemDialogOverlay />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|ItemDialogOverlay">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Spacing="20" x:DataType="model:ScheduleItem" DataContext="{TemplateBinding Item}">
+                    
+                    <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="10">
+                        <controls1:Badge HorizontalAlignment="Right"
+                                         Text="{Binding FormattedDuration}" />
+                        
+                        <controls1:Badge HorizontalAlignment="Right" BadgeType="Neutral"
+                                         Text="{Binding FormattedType}" />
+                        
+                        <TextBlock Text="{Binding FormattedDate}"
+                                   FontSize="14" />
+                    </StackPanel>
+                    
+                    <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
+                                         ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <iconPacks:PackIconLucide Grid.Row="0" Grid.Column="0" Kind="Navigation" />
+                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                   VerticalAlignment="Center"
+                                   Text="{Binding Room}" FontWeight="Medium" />
+
+                        <iconPacks:PackIconLucide Grid.Row="1" Grid.Column="0" Kind="Clock" />
+                        <TextBlock Grid.Row="1" Grid.Column="1"
+                                   VerticalAlignment="Center"
+                                   Text="{Binding FormattedTimeRange}" FontWeight="Medium" />
+
+                        <iconPacks:PackIconLucide Grid.Row="2" Grid.Column="0" Kind="User" />
+                        <TextBlock Grid.Row="2" Grid.Column="1"
+                                   VerticalAlignment="Center"
+                                   Text="{Binding Professor}" FontWeight="Medium" />
+                    </avalonia:SpacedGrid>
+                    
+                    <TextBlock Text="{Binding AdditionalText}" TextWrapping="Wrap"
+                               HorizontalAlignment="Left"/>
+                    
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:system="clr-namespace:System;assembly=netstandard"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <system:String x:Key="Yes">Yes</system:String>
+    <system:String x:Key="No">No</system:String>
+
+    <system:String x:Key="WelcomeSubtitle">No</system:String>
+    
+    <system:String x:Key="TabHome">Home</system:String>
+    <system:String x:Key="TabEdt">TimeTable</system:String>
+    <system:String x:Key="TabBulletin">Notes</system:String>
+    <system:String x:Key="TabSettings">Settings</system:String>
+    
+    <system:String x:Key="PersonalizationBaseTheme">Base Theme</system:String>
+    <system:String x:Key="PersonalizationLightMode">Light Mode</system:String>
+    <system:String x:Key="PersonalizationDarkMode">Dark Mode</system:String>
+    <system:String x:Key="PersonalizationColorTheme">Color Theme</system:String>
+    <system:String x:Key="PersonalizationBackground">Background</system:String>
+    <system:String x:Key="PersonalizationBackgroundAnimated">Animated Background</system:String>
+    <system:String x:Key="PersonalizationBackgroundDescription">Toggle the background animation. It may enhance performance on your device if turned off.</system:String>
+    
+</ResourceDictionary>

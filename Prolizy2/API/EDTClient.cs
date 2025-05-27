@@ -74,16 +74,6 @@ public static class EDTClient
             }
         }
         
-        foreach (var prop in typeof(CourseDescription).GetProperties())
-        {
-            if (prop.PropertyType == typeof(List<string>))
-            {
-                var list = (List<string>) prop.GetValue(description)!;
-                if (list.Count == 0)
-                    list.Add("Inconnu");
-            }
-        }
-        
         return description;
     }
     

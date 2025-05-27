@@ -8,7 +8,9 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia.Browser"/>
+        <PackageReference Include="Avalonia.Svg" />
         <PackageReference Include="IconPacks.Avalonia" />
+        <PackageReference Include="SpacedGrid-Avalonia" />
         <PackageReference Include="SukiUI" />
     </ItemGroup>
 

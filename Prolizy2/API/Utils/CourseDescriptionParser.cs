@@ -30,7 +30,7 @@ public static class CourseDescriptionParser
         var courseDescription = new CourseDescription();
         
         // Séparation des parties de la description par <br />
-        var parts = description.Split(new[] { "<br />", "<br/>", "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
+        var parts = description.Split(["<br />", "<br/>", "\r\n"], StringSplitOptions.RemoveEmptyEntries)
                              .Select(p => DecodeHtmlEntities(p.Trim()))
                              .Where(p => !string.IsNullOrWhiteSpace(p))
                              .ToList();
@@ -39,9 +39,9 @@ public static class CourseDescriptionParser
         foreach (var part in parts)
         {
             // Vérification pour les parties multi-informations (séparées par des virgules ou autres délimiteurs)
-            if (part.Contains(",") || part.Contains("<"))
+            if (part.Contains(',') || part.Contains('<'))
             {
-                var subParts = part.Split(new[] { ',', '<' }, StringSplitOptions.RemoveEmptyEntries)
+                var subParts = part.Split([',', '<'], StringSplitOptions.RemoveEmptyEntries)
                                   .Select(p => p.Trim())
                                   .Where(p => !string.IsNullOrWhiteSpace(p));
                 

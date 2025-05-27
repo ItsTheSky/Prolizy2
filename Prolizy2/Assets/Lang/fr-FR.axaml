@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+    <system:String x:Key="Yes">Oui</system:String>
+    <system:String x:Key="No">Non</system:String>
+    <system:String x:Key="Loading">Chargement...</system:String>
+    <system:String x:Key="Cancel">Annuler</system:String>
+    <system:String x:Key="Confirm">Confirmer</system:String>
+    <system:String x:Key="Ok">Ok</system:String>
+
+    <system:String x:Key="TabHome">Acceuil</system:String>
+    <system:String x:Key="TabEdt">EDT</system:String>
+    <system:String x:Key="TabBulletin">Bulletin</system:String>
+    <system:String x:Key="TabSettings">Options</system:String>
+    
+    <system:String x:Key="PersonalizationBaseTheme">Thème de Base</system:String>
+    <system:String x:Key="PersonalizationLightMode">Mode Clair</system:String>
+    <system:String x:Key="PersonalizationDarkMode">Mode Sombre</system:String>
+    <system:String x:Key="PersonalizationColorTheme">Thème de Couleur</system:String>
+    <system:String x:Key="PersonalizationBackground">Gestion du Fond</system:String>
+    <system:String x:Key="PersonalizationBackgroundAnimated">Fond Animé</system:String>
+    <system:String x:Key="PersonalizationBackgroundDescription">Active/désactive l'animation du fond de l'application. La désactiver peut augmenter les performances.</system:String>
+    
+    <system:String x:Key="EdtSelectDateTitle">Changer la Date</system:String>
+    <system:String x:Key="EdtNext">Jour Suivant</system:String>
+    <system:String x:Key="EdtPrevious">Jour Précédent</system:String>
+    
+</ResourceDictionary>

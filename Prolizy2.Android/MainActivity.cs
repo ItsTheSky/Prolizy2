@@ -1,5 +1,7 @@
 ﻿using Android.App;
 using Android.Content.PM;
+using Android.OS;
+using Android.Views;
 using Avalonia;
 using Avalonia.Android;
 
@@ -17,5 +19,13 @@ public class MainActivity : AvaloniaMainActivity<App>
     {
         return base.CustomizeAppBuilder(builder)
             .WithInterFont();
+    }
+
+    protected override void OnCreate(Bundle? savedInstanceState)
+    {
+        base.OnCreate(savedInstanceState);
+        
+        Window.SetFlags(WindowManagerFlags.HardwareAccelerated, 
+            WindowManagerFlags.HardwareAccelerated);
     }
 }

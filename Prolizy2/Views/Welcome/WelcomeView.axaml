@@ -1,0 +1,177 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:viewModels="clr-namespace:Prolizy2.ViewModels"
+             mc:Ignorable="d"
+             d:DesignWidth="450" d:DesignHeight="800"
+             d:Background="#000000"
+             x:DataType="viewModels:MainViewModel"
+             x:Class="Prolizy2.Views.WelcomeView">
+
+    <UserControl.Styles>
+        
+        <!-- Style pour le titre principal -->
+        <Style Selector="TextBlock.MainTitle">
+            <Setter Property="FontSize" Value="36" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource SukiText}" />
+        </Style>
+        
+        <!-- Style pour la description -->
+        <Style Selector="TextBlock.Description">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource SukiLowText}" />
+        </Style>
+        
+        <!-- Style pour les titres de fonctionnalités -->
+        <Style Selector="TextBlock.FeatureTitle">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource SukiText}" />
+            <Setter Property="Margin" Value="0,0,0,-5" />
+        </Style>
+        
+        <!-- Style pour les descriptions de fonctionnalités -->
+        <Style Selector="TextBlock.FeatureDescription">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{DynamicResource SukiLowText}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+       
+    </UserControl.Styles>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" 
+                  VerticalScrollBarVisibility="Auto">
+        <avalonia:SpacedGrid RowDefinitions="Auto,*,Auto" RowSpacing="10" Margin="30,60,30,30">
+            
+            <!-- Section Haut: Icon + Description -->
+
+            <StackPanel Grid.Row="0" Orientation="Vertical" Spacing="10">
+                <!-- Logo et badge -->
+                <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <Border Width="100" Height="100" 
+                            CornerRadius="24" 
+                            Background="{DynamicResource SukiPrimaryColor}">
+                        <iconPacks:PackIconLucide Kind="GraduationCap" 
+                                                  Width="50" Height="50"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                    </Border>
+                
+                    <!-- Badge étoile -->
+                    <Border Width="32" Height="32" 
+                            CornerRadius="16" 
+                            Background="#B968C7"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="0,-8,-8,0">
+                        <iconPacks:PackIconLucide Kind="Sparkles" 
+                                                  Width="18" Height="18"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                    </Border>
+                </Grid>
+            
+                <!-- Titre principal -->
+                <TextBlock Text="Prolizy" Classes="MainTitle" />
+            
+                <!-- Description -->
+                <StackPanel>
+                    <TextBlock Text="Votre compagnon étudiant à l'IUT de Vélizy"
+                               MaxWidth="250"
+                               TextWrapping="Wrap"
+                               Classes="Description" />
+                </StackPanel>
+            </StackPanel>
+            
+            <!-- Liste des fonctionnalités -->
+            <StackPanel Grid.Row="1" Spacing="16" Margin="0,0,0,48" VerticalAlignment="Center">
+                
+                <!-- Emploi du temps -->
+                <suki:GlassCard>
+                    <avalonia:SpacedGrid RowDefinitions="*,*" RowSpacing="0"
+                                         ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        
+                        <iconPacks:PackIconLucide Grid.Row="0" Grid.RowSpan="2"
+                                                  Grid.Column="0" 
+                                                  Kind="Calendar" 
+                                                  Width="28" Height="28"
+                                                  Foreground="#1976D2"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                        
+                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                   Text="Emploi du temps" Classes="FeatureTitle" />
+                        <TextBlock Grid.Row="1" Grid.Column="1"
+                                   Text="Consultez vos cours en temps réel" Classes="FeatureDescription" />
+                    </avalonia:SpacedGrid>
+                </suki:GlassCard>
+                
+                <suki:GlassCard>
+                    <avalonia:SpacedGrid RowDefinitions="*,*" RowSpacing="0"
+                                         ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        
+                        <iconPacks:PackIconLucide Grid.Row="0" Grid.RowSpan="2"
+                                                  Grid.Column="0" 
+                                                  Kind="BookOpen" 
+                                                  Width="28" Height="28"
+                                                  Foreground="#7B1FA2"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                        
+                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                   Text="Bulletin &amp; Notes" Classes="FeatureTitle" />
+                        <TextBlock Grid.Row="1" Grid.Column="1"
+                                   Text="Suivez votre progression" Classes="FeatureDescription" />
+                    </avalonia:SpacedGrid>
+                </suki:GlassCard>
+                
+                <suki:GlassCard>
+                    <avalonia:SpacedGrid RowDefinitions="*,*" RowSpacing="0"
+                                         ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        
+                        <iconPacks:PackIconLucide Grid.Row="0" Grid.RowSpan="2"
+                                                  Grid.Column="0"
+                                                  Kind="Clock" 
+                                                  Width="28" Height="28"
+                                                  Foreground="#388E3C"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                        
+                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                   Text="Notifications" Classes="FeatureTitle" />
+                        <TextBlock Grid.Row="1" Grid.Column="1"
+                                   Text="Ne ratez aucun cours" Classes="FeatureDescription" />
+                    </avalonia:SpacedGrid>
+                </suki:GlassCard>
+                
+            </StackPanel>
+            
+            <StackPanel Grid.Row="2" Orientation="Vertical" Spacing="10">
+                
+                <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
+                        suki:ButtonExtensions.ShowProgress="{Binding IsStartButtonBusy}"
+                        Classes="Flat Primary" Command="{Binding StartCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="Commencer"
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center" />
+                        
+                        <iconPacks:PackIconLucide Kind="ArrowRight" VerticalAlignment="Center"
+                                                  Height="14" Width="14"/>
+                    </StackPanel>
+                </Button>
+                
+            </StackPanel>
+            
+        </avalonia:SpacedGrid>
+    </ScrollViewer>
+
+</UserControl>

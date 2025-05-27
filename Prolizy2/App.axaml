@@ -2,23 +2,59 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Prolizy2.App"
              xmlns:sukiUi="clr-namespace:SukiUI;assembly=SukiUI"
+             xmlns:common="clr-namespace:Prolizy2.ViewModels.Common"
              RequestedThemeVariant="Dark">
-  
+    
     <Application.Styles>
         <sukiUi:SukiTheme ThemeColor="Orange" Locale="en-US" />
         
         <StyleInclude Source="avares://IconPacks.Avalonia/Icons.axaml" />
+        
         <StyleInclude Source="avares://Prolizy2/Styles/Overrides/FixedDialogs.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Overrides/Typography.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Overrides/ColoredCards.axaml" />
+        
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/ModuleCard.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Badge.axaml" />
+        
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Edt/ScheduleItemCard.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Edt/DailyScheduleControl.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Edt/ItemDialogOverlay.axaml" />
     </Application.Styles>
     
     <Application.Resources>
-        <ConicGradientBrush x:Key="MidnightSlateGradient" Center="0.5,0.5" Angle="0">
-            <GradientStops>
-                <GradientStop Color="#091528" Offset="0"/>
-                <GradientStop Color="#152238" Offset="0.33"/>
-                <GradientStop Color="#2A3545" Offset="0.66"/>
-                <GradientStop Color="#404A57" Offset="1"/>
-            </GradientStops>
-        </ConicGradientBrush>
+        
+        <Color x:Key="ProSuccessColor">#4CAF50</Color>
+        <Color x:Key="ProSuccessColorLight">#A5D6A7</Color>
+        <Color x:Key="ProSuccessColorDark">#388E3C</Color>
+        <Color x:Key="ProSuccessColorText">#FFFFFF</Color>
+    
+        <!-- Info Colors -->
+        <Color x:Key="ProInfoColor">#2196F3</Color>
+        <Color x:Key="ProInfoColorLight">#BBDEFB</Color>
+        <Color x:Key="ProInfoColorDark">#1976D2</Color>
+        <Color x:Key="ProInfoColorText">#FFFFFF</Color>
+    
+        <!-- Warning Colors -->
+        <Color x:Key="ProWarningColor">#FF9800</Color>
+        <Color x:Key="ProWarningColorLight">#FFB74D</Color>
+        <Color x:Key="ProWarningColorDark">#F57C00</Color>
+        <Color x:Key="ProWarningColorText">#FFFFFF</Color>
+    
+        <!-- Error Colors -->
+        <Color x:Key="ProErrorColor">#F44336</Color>
+        <Color x:Key="ProErrorColorLight">#EF9A9A</Color>
+        <Color x:Key="ProErrorColorDark">#D32F2F</Color>
+        <Color x:Key="ProErrorColorText">#FFFFFF</Color>
+    
+        <!-- Neutral Colors -->
+        <Color x:Key="ProNeutralColor">#9E9E9E</Color>
+        <Color x:Key="ProNeutralColorLight">#E0E0E0</Color>
+        <Color x:Key="ProNeutralColorDark">#616161</Color>
+        <Color x:Key="ProNeutralColorText">#000000</Color>
+        
+        <!-- Converters -->
+        <common:LangKeyToValueConverter x:Key="LangKeyToValueConverter" />
     </Application.Resources>
+    
 </Application>

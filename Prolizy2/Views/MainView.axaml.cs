@@ -1,7 +1,10 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Styling;
 using Prolizy2.ViewModels;
+using SukiUI;
+using SukiUI.Controls;
 using SukiUI.Dialogs;
 using Vector = Avalonia.Vector;
 
@@ -10,17 +13,19 @@ namespace Prolizy2.Views;
 public partial class MainView : UserControl
 {
     public static ISukiDialogManager DialogManager { get; private set; }
+    public static SukiMainHost SukiHost { get; set; }
+    
     private Vector? lastScrollVector;
 
     public MainView()
     {
         InitializeComponent();
-
-        DialogManager = new SukiDialogManager();
-        DialogHost.Manager = DialogManager;
+        DialogManager = DialogHost.Manager = new SukiDialogManager();
 
         Loaded += (sender, args) =>
         {
+            SukiTheme.GetInstance().ChangeBaseTheme(ThemeVariant.Dark);
+            
             MainBorder.AddHandler(Gestures.ScrollGestureEvent, (o, args) => lastScrollVector = args.Delta);
             MainBorder.AddHandler(Gestures.ScrollGestureEndedEvent, (o, args) =>
             {
@@ -28,7 +33,6 @@ public partial class MainView : UserControl
                     return;
 
                 var x = lastScrollVector.Value.X;
-                (DataContext as MainViewModel)!.Vector = x.ToString();
 
                 // let a threshold of 4 to avoid accidental scroll
                 if (x == 0 || Math.Abs(x) < 3)
@@ -44,13 +48,11 @@ public partial class MainView : UserControl
 
     private void NextTab()
     {
-        if (MainTabControl.SelectedIndex < MainTabControl.Items.Count - 1)
-            MainTabControl.SelectedIndex++;
+        
     }
 
     private void PrevTab()
     {
-        if (MainTabControl.SelectedIndex > 0)
-            MainTabControl.SelectedIndex--;
+        
     }
 }

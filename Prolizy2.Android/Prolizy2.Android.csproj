@@ -32,7 +32,9 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia.Android"/>
+        <PackageReference Include="Avalonia.Svg" />
         <PackageReference Include="IconPacks.Avalonia" />
+        <PackageReference Include="SpacedGrid-Avalonia" />
         <PackageReference Include="SukiUI" />
         <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen"/>
     </ItemGroup>

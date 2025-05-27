@@ -1,0 +1,77 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls.Edt"
+        xmlns:suki="https://github.com/kikipoulet/SukiUI"
+        xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+        xmlns:controls1="clr-namespace:Prolizy2.Styles.Controls"
+        xmlns:model="clr-namespace:Prolizy2.Model"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime">
+    <Design.PreviewWith>
+        <Border Width="300" Height="200" Padding="10">
+            <controls:ScheduleItemCard HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|ScheduleItemCard">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <suki:GlassCard DataContext="{TemplateBinding Item}" x:DataType="model:ScheduleItem"
+
+                                BorderThickness="2"
+                                BorderBrush="{Binding BorderColor}"
+                                Background="{Binding BackgroundColor}"
+
+                                Padding="10"
+                                CornerRadius="10">
+
+                    <suki:GlassCard.Resources>
+                        <system:Double x:Key="GlassOpacity">0.5</system:Double>
+                    </suki:GlassCard.Resources>
+                    <suki:GlassCard.Styles>
+                        <Style Selector="Border#PART_BorderCard">
+                            <Setter Property="Background" Value="{Binding BackgroundColor}" />
+                        </Style>
+                    </suki:GlassCard.Styles>
+
+                    <avalonia:SpacedGrid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto" RowSpacing="10"
+                                         ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5">
+                        
+
+                        <TextBlock Grid.Row="0" Grid.RowSpan="2"
+                                   Grid.Column="0" Grid.ColumnSpan="2"
+                                   Text="{Binding Subject}"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap" FontWeight="SemiBold" FontSize="18"
+                                   HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+                        
+                        <controls1:Badge Grid.Row="0" Grid.Column="2" BadgeType="Info"
+                                         HorizontalAlignment="Right"
+                                         Text="{Binding FormattedDuration}" />
+                        
+                        <controls1:Badge Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                         HorizontalAlignment="Right" BadgeType="Neutral"
+                                         Text="{Binding FormattedType}" />
+
+                        <!-- Elements/Rows -->
+                        <iconPacks:PackIconLucide Grid.Row="3" Grid.Column="0" Kind="Navigation" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                                   VerticalAlignment="Center"
+                                   Text="{Binding Room}" FontWeight="Medium" />
+
+                        <iconPacks:PackIconLucide Grid.Row="4" Grid.Column="0" Kind="Clock" />
+                        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                                   VerticalAlignment="Center"
+                                   Text="{Binding FormattedTimeRange}" FontWeight="Medium" />
+
+                        <iconPacks:PackIconLucide Grid.Row="5" Grid.Column="0" Kind="User" />
+                        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
+                                   VerticalAlignment="Center"
+                                   Text="{Binding Professor}" FontWeight="Medium" />
+                    </avalonia:SpacedGrid>
+                </suki:GlassCard>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

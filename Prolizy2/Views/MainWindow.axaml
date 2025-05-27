@@ -10,5 +10,5 @@
                    Width="450" Height="800"
                    Icon="/Assets/avalonia-logo.ico"
                    Title="Prolizy2">
-        <views:MainView />
+    
 </suki:SukiWindow>

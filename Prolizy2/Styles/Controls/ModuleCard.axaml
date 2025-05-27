@@ -1,0 +1,42 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls"
+        xmlns:suki="https://github.com/kikipoulet/SukiUI"
+        xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+    <Design.PreviewWith>
+        <controls:ModuleCard Width="300" Height="200" Margin="20" 
+                             Title="Test"
+                             Icon="Activity">
+            <TextBlock Text="This is a text :)" />
+        </controls:ModuleCard>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|ModuleCard">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <suki:GlassCard HorizontalAlignment="Stretch"
+                                Padding="15"
+                                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                    <avalonia:SpacedGrid RowDefinitions="Auto,*" RowSpacing="10"
+                                         ColumnDefinitions="Auto,*" ColumnSpacing="10">
+
+                        <iconPacks:PackIconLucide Grid.Row="0" Grid.Column="0"
+                                                  Kind="{TemplateBinding Icon}" 
+                                                  Foreground="{DynamicResource SukiPrimaryColor}"
+                                                  Height="24" Width="24"/>
+
+                        <TextBlock Grid.Row="0" Grid.Column="1" 
+                                   FontSize="18" FontWeight="SemiBold"
+                                   VerticalAlignment="Center" HorizontalAlignment="Left"
+                                   Text="{TemplateBinding Title}"/>
+                        
+                        <ContentPresenter Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="{TemplateBinding Content}" />
+                        
+                    </avalonia:SpacedGrid>
+                </suki:GlassCard>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

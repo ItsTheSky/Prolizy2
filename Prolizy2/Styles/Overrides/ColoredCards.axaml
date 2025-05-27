@@ -1,0 +1,54 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:suki="https://github.com/kikipoulet/SukiUI">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="suki|GlassCard.Info">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource ProInfoColorLight}" />
+    </Style>
+    <Style Selector="suki|GlassCard.Info Border#PART_BorderCard">
+        <Setter Property="Background" Value="{DynamicResource ProInfoColor}" />
+        <Setter Property="Opacity" Value="0.2" />
+    </Style>
+
+    <Style Selector="suki|GlassCard.Warning">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource ProWarningColorLight}" />
+    </Style>
+    <Style Selector="suki|GlassCard.Warning Border#PART_BorderCard">
+        <Setter Property="Background" Value="{DynamicResource ProWarningColor}" />
+        <Setter Property="Opacity" Value="0.2" />
+    </Style>
+    
+    <Style Selector="suki|GlassCard.Success">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource ProSuccessColorLight}" />
+    </Style>
+    <Style Selector="suki|GlassCard.Success Border#PART_BorderCard">
+        <Setter Property="Background" Value="{DynamicResource ProSuccessColor}" />
+        <Setter Property="Opacity" Value="0.2" />
+    </Style>
+    
+    <Style Selector="suki|GlassCard.Error">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource ProErrorColorLight}" />
+    </Style>
+    <Style Selector="suki|GlassCard.Error Border#PART_BorderCard">
+        <Setter Property="Background" Value="{DynamicResource ProErrorColor}" />
+        <Setter Property="Opacity" Value="0.2" />
+    </Style>
+    
+    <Style Selector="suki|GlassCard.Neutral">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource ProNeutralColorLight}" />
+    </Style>
+    <Style Selector="suki|GlassCard.Neutral Border#PART_BorderCard">
+        <Setter Property="Background" Value="{DynamicResource ProNeutralColor}" />
+        <Setter Property="Opacity" Value="0.2" />
+    </Style>
+</Styles>

@@ -1,0 +1,50 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls"
+        xmlns:suki="https://github.com/kikipoulet/SukiUI"
+        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+    <Design.PreviewWith>
+        <StackPanel Orientation="Vertical" Spacing="5">
+            <controls:Badge Text="Hello" />
+            
+            <controls:Badge Text="Hello2" Icon="Amphora" />
+            
+            <controls:Badge Text="Hello2" Icon="Amphora" BadgeType="Info" />
+            <controls:Badge Text="Hello2" Icon="Amphora" BadgeType="Success" />
+            <controls:Badge Text="Hello2" Icon="Amphora" BadgeType="Warning" />
+            <controls:Badge Text="Hello2" Icon="Amphora" BadgeType="Error" />
+            <controls:Badge Text="Hello3" Icon="Amphora" BadgeType="Neutral" />
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|Badge">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <suki:GlassCard IsOpaque="True" BorderThickness="0"
+                                CornerRadius="8"
+                                HorizontalAlignment="Center" VerticalAlignment="Top"
+                                
+                                Classes.Info="{TemplateBinding IsInfo}"
+                                Classes.Success="{TemplateBinding IsSuccess}"
+                                Classes.Warning="{TemplateBinding IsWarning}"
+                                Classes.Error="{TemplateBinding IsError}"
+                                Classes.Neutral="{TemplateBinding IsNeutral}"
+                                
+                                Classes="Primary"
+                                
+                                Padding="5,2">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <iconPacks:PackIconLucide IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                  Kind="{TemplateBinding Icon}"
+                                                  Width="14" Height="14" 
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{DynamicResource SukiPrimaryColor}"/>
+                        
+                        <TextBlock Text="{TemplateBinding Text}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </suki:GlassCard>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>
