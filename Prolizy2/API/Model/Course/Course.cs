@@ -10,7 +10,7 @@ public class Course
 
     [JsonPropertyName("id")] public string Id { get; set; }
     [JsonPropertyName("start")] public DateTime Start { get; set; }
-    [JsonPropertyName("end")] public DateTime End { get; set; }
+    [JsonPropertyName("end")] public DateTime? End { get; set; }
     [JsonPropertyName("allDay")] public bool AllDay { get; set; }
     
     [JsonPropertyName("description")] public string RawDescription { get; set; }

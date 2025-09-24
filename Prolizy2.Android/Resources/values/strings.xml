@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Prolizy2</string>
+    <string name="schedule_widget_description">Affiche le prochain cours de votre emploi du temps</string>
+</resources>

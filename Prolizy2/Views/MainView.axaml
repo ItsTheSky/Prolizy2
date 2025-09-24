@@ -8,6 +8,7 @@
              xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
              xmlns:views="clr-namespace:Prolizy2.Views"
              xmlns:common="clr-namespace:Prolizy2.Views.Common"
+             xmlns:welcome="clr-namespace:Prolizy2.Views.Welcome"
              mc:Ignorable="d"
              d:DesignWidth="450" d:DesignHeight="800"
              x:Class="Prolizy2.Views.MainView"
@@ -196,7 +197,7 @@
 
         </Border>
 
-        <views:WelcomeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+        <welcome:WelcomeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                            IsVisible="{Binding IsWelcomeScreenVisible}" />
 

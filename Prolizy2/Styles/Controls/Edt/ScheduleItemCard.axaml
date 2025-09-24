@@ -35,8 +35,8 @@
                         </Style>
                     </suki:GlassCard.Styles>
 
-                    <avalonia:SpacedGrid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto" RowSpacing="10"
-                                         ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5">
+                    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto" RowSpacing="10"
+                          ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5">
                         
 
                         <TextBlock Grid.Row="0" Grid.RowSpan="2"
@@ -69,7 +69,7 @@
                         <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
                                    VerticalAlignment="Center"
                                    Text="{Binding Professor}" FontWeight="Medium" />
-                    </avalonia:SpacedGrid>
+                    </Grid>
                 </suki:GlassCard>
             </ControlTemplate>
         </Setter>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -8,7 +9,9 @@ using CommunityToolkit.Mvvm.Input;
 using Prolizy2.API;
 using Prolizy2.API.Model.Request;
 using Prolizy2.Model;
+using Prolizy2.Services;
 using Prolizy2.Utilities;
+using Prolizy2.Utilities.Bridges;
 using Prolizy2.ViewModels.Common;
 using Prolizy2.Views;
 using SukiUI.Dialogs;
@@ -18,12 +21,16 @@ namespace Prolizy2.ViewModels.Tabs;
 public partial class EdtViewModel : ViewModelBase
 {
     public MainViewModel MainVm { get; init; }
-    
+    private readonly ScheduleCacheService _cacheService = new();
+    private DateOnly _lastLoadedDay = DateOnly.MinValue;
+    private int _loadingCounter = 0;
+
     [ObservableProperty] private bool _isLoading = false;
-    
+    [ObservableProperty] private bool _isPreloading = false;
+
     [ObservableProperty] private DateOnly _currentDay = DateOnly.FromDateTime(DateTime.Now);
     public string CurrentDayString => CurrentDay.ToString("dddd dd MMMM", MainVm.LangViewModel.CurrentCulture);
-    
+
     [ObservableProperty] private ObservableCollection<ScheduleItem> _displayedItems = new();
 
     public EdtViewModel(MainViewModel mainVm)
@@ -34,7 +41,7 @@ public partial class EdtViewModel : ViewModelBase
         
         AttachExternalUpdaters();
         
-        CurrentDay = DateOnly.FromDateTime(DateTime.Now.AddDays(2));
+        CurrentDay = DateOnly.FromDateTime(DateTime.Now);
         TryRefreshCurrentDay();
     }
 
@@ -48,6 +55,12 @@ public partial class EdtViewModel : ViewModelBase
     partial void OnCurrentDayChanged(DateOnly value)
     {
         OnPropertyChanged(nameof(CurrentDayString));
+
+        // Reset last loaded day to force refresh on day change
+        if (_lastLoadedDay != value)
+        {
+            _lastLoadedDay = DateOnly.MinValue;
+        }
     }
 
     #endregion
@@ -56,64 +69,69 @@ public partial class EdtViewModel : ViewModelBase
     {
         if (IsLoading)
             return; // Prevent multiple refreshes at the same time
-        
+
+        var currentLoadId = ++_loadingCounter;
         IsLoading = true;
+
         RefreshCurrentDay().ContinueWith(t =>
         {
+            // Only update UI if this is still the latest request
+            if (currentLoadId != _loadingCounter)
+                return;
+
             if (t.IsFaulted)
             {
                 // Handle error
                 Console.WriteLine(t.Exception);
             }
-            else
-            {
-                IsLoading = false;
-            }
+
+            IsLoading = false;
+            _lastLoadedDay = CurrentDay;
+
+            var items = DisplayedItems.ToList();
+            Console.WriteLine($"Refreshing EDT for {items.Count} items.");
+            AndroidBridgeProvider.Bridge?.UpdateScheduleWidget(EdtUtilities.FindNextOrCurrentItem(items));
         });
     }
 
     public async Task RefreshCurrentDay()
     {
+        var targetDay = CurrentDay; // Capture the current day
+
         DisplayedItems.Clear();
 
-        var courses = await EDTClient.GetCourses(new CalendarRequest
-        {
-            FederationId = "INF1-B",
-            StartDate = CurrentDay,
-            EndDate = CurrentDay,
-            ViewType = CalendarRequest.CalendarViewType.AgendaWeek
-        });
+        var daySchedule = await _cacheService.LoadMonthIfNeededAsync(targetDay);
 
-        foreach (var course in courses)
-        {
-            var description = await course.GetDescription(true);
+        // Verify we're still on the same day before updating UI
+        if (targetDay != CurrentDay)
+            return;
 
-            var baseColor = ColorMatcher.FindClosestColor(course.BackgroundColor);
-            var lighterColor = ColorMatcher.MakeLighter(baseColor, 0.2);
-            var backgroundBrush = new LinearGradientBrush()
-            {
-                GradientStops =
-                [
-                    new GradientStop(baseColor, 0),
-                    new GradientStop(lighterColor, 1)
-                ]
-            };
-            
-            DisplayedItems.Add(new ScheduleItem
-            {
-                StartTime = course.Start,
-                EndTime = course.End,
-                Group = string.Join(", ", description.Groups),
-                Subject = string.Join(", ", description.Subjects),
-                Room = string.Join(", ", description.Rooms),
-                Professor = string.Join(", ", description.Professors),
-                BackgroundColor = backgroundBrush,
-                
-                ForegroundColor = new SolidColorBrush(Colors.White),
-                BorderColor = new SolidColorBrush(Colors.Gray),
-                Course = course,
-                Type = course.CourseType
-            });
+        foreach (var item in daySchedule)
+        {
+            DisplayedItems.Add(item);
+        }
+
+        _lastLoadedDay = targetDay;
+        PreloadAdjacentMonthsInBackground();
+    }
+
+    private async void PreloadAdjacentMonthsInBackground()
+    {
+        if (_isPreloading) return;
+
+        _isPreloading = true;
+        try
+        {
+            await _cacheService.PreloadAdjacentMonthsAsync(CurrentDay);
+            _cacheService.ClearOldCache(CurrentDay, 3);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error preloading adjacent months: {ex}");
+        }
+        finally
+        {
+            _isPreloading = false;
         }
     }
 
@@ -144,23 +162,66 @@ public partial class EdtViewModel : ViewModelBase
     }
     
     [RelayCommand]
-    public void NextDay()
+    public async void NextDay()
     {
         CurrentDay = CurrentDay.AddDays(1);
-        TryRefreshCurrentDay();
+        await LoadCurrentDayFromCache();
     }
-    
+
     [RelayCommand]
-    public void PreviousDay()
+    public async void PreviousDay()
     {
         CurrentDay = CurrentDay.AddDays(-1);
-        TryRefreshCurrentDay();
+        await LoadCurrentDayFromCache();
+    }
+
+    private async Task LoadCurrentDayFromCache()
+    {
+        // Prevent loading if the day hasn't actually changed
+        if (_lastLoadedDay == CurrentDay && DisplayedItems.Any())
+            return;
+
+        var currentLoadId = ++_loadingCounter;
+
+        if (_cacheService.IsWeekCached(CurrentDay))
+        {
+            // Only update if this is still the latest request
+            if (currentLoadId != _loadingCounter)
+                return;
+
+            var daySchedule = _cacheService.GetDaySchedule(CurrentDay);
+            DisplayedItems.Clear();
+            foreach (var item in daySchedule)
+            {
+                DisplayedItems.Add(item);
+            }
+
+            _lastLoadedDay = CurrentDay;
+
+            var items = DisplayedItems.ToList();
+            AndroidBridgeProvider.Bridge?.UpdateScheduleWidget(EdtUtilities.FindNextOrCurrentItem(items));
+
+            PreloadAdjacentMonthsInBackground();
+        }
+        else
+        {
+            TryRefreshCurrentDay();
+        }
     }
     
     [RelayCommand]
-    public void GoToToday()
+    public async void GoToToday()
     {
         CurrentDay = DateOnly.FromDateTime(DateTime.Now);
+        await LoadCurrentDayFromCache();
+    }
+
+    [RelayCommand]
+    public void ClearCache()
+    {
+        _cacheService.ClearCache();
+        _lastLoadedDay = DateOnly.MinValue;
+        _loadingCounter = 0;
         TryRefreshCurrentDay();
     }
     

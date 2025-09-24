@@ -1,4 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <color name="splash_background">#FFFFFF</color>
+  
+  <!-- Widget Colors -->
+  <color name="widget_background">#2D1B4E</color>
+  <color name="widget_background_gradient_start">#3D2B5E</color>
+  <color name="widget_background_gradient_end">#2D1B4E</color>
+  
+  <!-- Course Type Colors -->
+  <color name="orange_course">#FF8C42</color>
+  <color name="blue_course">#4A6CF7</color>
+  <color name="green_course">#10B981</color>
+  <color name="purple_course">#8B5CF6</color>
+  <color name="red_course">#EF4444</color>
+  
+  <!-- Text Colors -->
+  <color name="white_text">#FFFFFF</color>
+  <color name="light_gray_text">#B0B0B0</color>
+  <color name="dark_gray_text">#6B7280</color>
+  
+  <!-- Accent Colors -->
+  <color name="accent_pink">#EC4899</color>
 </resources>

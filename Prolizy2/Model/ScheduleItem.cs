@@ -74,6 +74,9 @@ public class ScheduleItem
                 return;
             }
 
+            var description = t.Result;
+            AdditionalText = string.Join("\n", description.Notes);
+            
             Dispatcher.UIThread.Invoke(() =>
             {
                 MainView.DialogManager.CreateDialog()

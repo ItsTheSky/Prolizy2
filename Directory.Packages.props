@@ -6,19 +6,19 @@
   <ItemGroup>
     <!-- Avalonia packages -->
     <!-- Important: keep version in sync! -->
-    <PackageVersion Include="Avalonia" Version="11.3.0" />
-    <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.0" />
-    <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.0" />
-    <PackageVersion Include="Avalonia.Desktop" Version="11.3.0" />
-    <PackageVersion Include="Avalonia.iOS" Version="11.3.0" />
-    <PackageVersion Include="Avalonia.Browser" Version="11.3.0" />
-    <PackageVersion Include="Avalonia.Android" Version="11.3.0" />
+    <PackageVersion Include="Avalonia" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.iOS" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.Browser" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.Android" Version="11.3.6" />
     <PackageVersion Include="Avalonia.Svg" Version="11.3.0" />
-    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-    <PackageVersion Include="HtmlAgilityPack" Version="1.12.1" />
-    <PackageVersion Include="IconPacks.Avalonia" Version="1.0.0" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.12.3" />
+    <PackageVersion Include="IconPacks.Avalonia" Version="1.2.0" />
     <PackageVersion Include="SpacedGrid-Avalonia" Version="11.0.0" />
-    <PackageVersion Include="SukiUI" Version="6.0.2" />
-    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.1" />
+    <PackageVersion Include="SukiUI" Version="6.0.4-nightly20250916" />
+    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.17" />
   </ItemGroup>
 </Project>

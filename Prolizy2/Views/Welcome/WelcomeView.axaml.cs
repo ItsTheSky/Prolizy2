@@ -1,8 +1,6 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 
-namespace Prolizy2.Views;
+namespace Prolizy2.Views.Welcome;
 
 public partial class WelcomeView : UserControl
 {

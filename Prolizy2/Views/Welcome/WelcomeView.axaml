@@ -10,7 +10,7 @@
              d:DesignWidth="450" d:DesignHeight="800"
              d:Background="#000000"
              x:DataType="viewModels:MainViewModel"
-             x:Class="Prolizy2.Views.WelcomeView">
+             x:Class="Prolizy2.Views.Welcome.WelcomeView">
 
     <UserControl.Styles>
         

@@ -13,6 +13,7 @@
         <StyleInclude Source="avares://Prolizy2/Styles/Overrides/FixedDialogs.axaml" />
         <StyleInclude Source="avares://Prolizy2/Styles/Overrides/Typography.axaml" />
         <StyleInclude Source="avares://Prolizy2/Styles/Overrides/ColoredCards.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Overrides/Settings.axaml" />
         
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/ModuleCard.axaml" />
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Badge.axaml" />

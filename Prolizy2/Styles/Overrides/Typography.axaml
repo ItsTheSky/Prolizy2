@@ -9,4 +9,8 @@
     <Style Selector="TextBlock">
         <Setter Property="FontSize" Value="14" />
     </Style>
+
+    <Style Selector="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource SukiText}" />
+    </Style>
 </Styles>
