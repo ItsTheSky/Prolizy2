@@ -7,10 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Avalonia.AvaloniaEdit" />
         <PackageReference Include="Avalonia.iOS"/>
         <PackageReference Include="Avalonia.Svg" />
+        <PackageReference Include="AvaloniaUI.DiagnosticsSupport" />
         <PackageReference Include="IconPacks.Avalonia" />
-        <PackageReference Include="SpacedGrid-Avalonia" />
         <PackageReference Include="SukiUI" />
     </ItemGroup>
 

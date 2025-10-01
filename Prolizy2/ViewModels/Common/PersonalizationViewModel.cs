@@ -3,6 +3,10 @@ using System.Collections.ObjectModel;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using IconPacks.Avalonia.Lucide;
+using Prolizy2.Utilities;
+using Prolizy2.ViewModels.Tabs;
+using Prolizy2.Views.Tabs;
 using SukiUI;
 using SukiUI.Enums;
 using SukiUI.Models;
@@ -12,6 +16,7 @@ namespace Prolizy2.ViewModels.Common;
 public partial class PersonalizationViewModel : ViewModelBase
 {
     public MainViewModel MainView { get; init; }
+    public SettingsViewModel SettingsView { get; init; }
 
     public ObservableCollection<SukiColorTheme> AvailableColors { get; } = new();
     public ObservableCollection<SukiBackgroundStyle> AvailableBackgroundStyles { get; } = new();
@@ -23,9 +28,10 @@ public partial class PersonalizationViewModel : ViewModelBase
     
     private readonly SukiTheme _theme = SukiTheme.GetInstance();
 
-    public PersonalizationViewModel(MainViewModel mainVm)
+    public PersonalizationViewModel(MainViewModel mainVm, SettingsViewModel settingsViewModel)
     {
         MainView = mainVm;
+        SettingsView = settingsViewModel;
         
         AvailableBackgroundStyles = new ObservableCollection<SukiBackgroundStyle>(Enum.GetValues<SukiBackgroundStyle>());
         AvailableColors = new ObservableCollection<SukiColorTheme>(_theme.ColorThemes);
@@ -40,6 +46,23 @@ public partial class PersonalizationViewModel : ViewModelBase
     [RelayCommand]
     private void SwitchToColorTheme(SukiColorTheme colorTheme) =>
         _theme.ChangeColorTheme(colorTheme);
+
+    [RelayCommand]
+    private void SwitchToDebugPane()
+    {
+        MainView.NavigateTo(new TabItemEntry(MainView)
+        {
+            Icon = PackIconLucideKind.MonitorCog,
+            Title = "TabDebug",
+            Content = new DebugTab()
+        });
+    }
+
+    [RelayCommand]
+    public void Back()
+    {
+        SettingsView.SwitchToMain();
+    }
 
     partial void OnBackgroundStyleChanged(SukiBackgroundStyle value) =>
         Views.MainView.SukiHost.BackgroundStyle = value;

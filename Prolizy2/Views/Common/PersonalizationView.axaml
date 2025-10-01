@@ -5,134 +5,147 @@
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:common="clr-namespace:Prolizy2.ViewModels.Common"
              xmlns:common1="clr-namespace:Prolizy2.Views.Common"
-             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             xmlns:settings="clr-namespace:Prolizy2.Styles.Controls.Settings"
+
              mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="800"
              x:DataType="common:PersonalizationViewModel"
              x:Class="Prolizy2.Views.Common.PersonalizationView">
 
-    <ScrollViewer>
-        <StackPanel Classes="MainSettingSection">
-
-            <StackPanel Classes="SettingSection">
-                <TextBlock Text="{DynamicResource PersonalizationLanguage}" />
-                <Separator />
-
-                <common1:LangView DataContext="{Binding MainView.LangViewModel}" />
-            </StackPanel>
-
-            <StackPanel Classes="SettingSection">
-                <TextBlock Text="{DynamicResource PersonalizationBaseTheme}" />
-                <Separator />
-
-                <UniformGrid HorizontalAlignment="Stretch" Columns="2">
-
-                    <RadioButton Height="110"
-                                 HorizontalAlignment="Stretch"
-                                 Padding="0"
-                                 Classes="GigaChips"
-                                 GroupName="RadioBaseTheme"
-                                 IsChecked="{Binding IsLightTheme}">
-                        <Border Margin="-50"
-                                Background="#fafafa"
-                                CornerRadius="{DynamicResource MediumCornerRadius}">
-                            <TextBlock Margin="42"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Bottom"
-                                       FontWeight="DemiBold"
-                                       Foreground="#555555"
-                                       Text="{DynamicResource PersonalizationLightMode}" />
-                        </Border>
-                    </RadioButton>
-
-                    <RadioButton Height="110"
-                                 HorizontalAlignment="Stretch"
-                                 Classes="GigaChips"
-                                 GroupName="RadioBaseTheme"
-                                 IsChecked="{Binding !IsLightTheme}">
-                        <Border Margin="-50"
-                                Background="#222222"
-                                CornerRadius="{DynamicResource MediumCornerRadius}">
-                            <TextBlock Margin="42"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Bottom"
-                                       FontWeight="DemiBold"
-                                       Foreground="#fafafa"
-                                       Text="{DynamicResource PersonalizationDarkMode}" />
-                        </Border>
-                    </RadioButton>
-                </UniformGrid>
-
-            </StackPanel>
-
-            <StackPanel Classes="SettingSection">
-                <TextBlock Text="{DynamicResource PersonalizationColorTheme}" />
-                <Separator />
-
-                <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding AvailableColors}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel HorizontalAlignment="Center"
-                                        Orientation="Horizontal"
-                                        Spacing="10" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="suki:SukiColorTheme">
-                            <RadioButton Width="50"
-                                         Height="50"
-                                         Classes="GigaChips"
-                                         Command="{Binding $parent[common1:PersonalizationView].((common:PersonalizationViewModel)DataContext).SwitchToColorThemeCommand}"
-                                         CommandParameter="{Binding}"
-                                         CornerRadius="50"
-                                         GroupName="RadioColorTheme">
-                                <Border Margin="-30"
-                                        Background="{Binding PrimaryBrush}"
-                                        CornerRadius="50" />
-                            </RadioButton>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+    <settings:SettingSubPage Title="Personalization"
+                             BackCommand="{Binding BackCommand}">
+        <ScrollViewer>
+            <StackPanel Classes="MainSettingSection">
 
                 <StackPanel Classes="SettingSection">
-                    <TextBlock Text="{DynamicResource PersonalizationBackground}" />
+                    <TextBlock Text="{DynamicResource PersonalizationLanguage}" />
                     <Separator />
 
-                    <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
-                        <StackPanel Spacing="40">
-                            <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
-                                                 ColumnDefinitions="*,*" ColumnSpacing="10">
-
-                                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                                           FontSize="16"
-                                           FontWeight="DemiBold"
-                                           Text="{DynamicResource PersonalizationBackgroundAnimated}" />
-
-                                <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                           Foreground="{DynamicResource SukiLowText}"
-                                           Text="{DynamicResource PersonalizationBackgroundDescription}"
-                                           TextWrapping="Wrap" />
-
-                                <RadioButton Classes="GigaChips" HorizontalContentAlignment="Center"
-                                             GroupName="RadioBackgroundAnimation"
-                                             IsChecked="{Binding BackgroundAnimations}"
-                                             Grid.Row="2" Grid.Column="0">
-                                    <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
-                                               Text="{DynamicResource Yes}" />
-                                </RadioButton>
-                                <RadioButton Classes="GigaChips" HorizontalContentAlignment="Center"
-                                             GroupName="RadioBackgroundAnimation"
-                                             IsChecked="{Binding !BackgroundAnimations}"
-                                             Grid.Row="2" Grid.Column="1">
-                                    <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
-                                               Text="{DynamicResource No}" />
-                                </RadioButton>
-
-                            </avalonia:SpacedGrid>
-                        </StackPanel>
-                    </suki:GlassCard>
+                    <common1:LangView DataContext="{Binding MainView.LangViewModel}" />
                 </StackPanel>
 
+                <StackPanel Classes="SettingSection">
+                    <TextBlock Text="{DynamicResource PersonalizationBaseTheme}" />
+                    <Separator />
+
+                    <UniformGrid HorizontalAlignment="Stretch" Columns="2">
+
+                        <RadioButton Height="110"
+                                     HorizontalAlignment="Stretch"
+                                     Padding="0"
+                                     Classes="GigaChips"
+                                     GroupName="RadioBaseTheme"
+                                     IsChecked="{Binding IsLightTheme}">
+                            <Border Margin="-50"
+                                    Background="#fafafa"
+                                    CornerRadius="{DynamicResource MediumCornerRadius}">
+                                <TextBlock Margin="42"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Bottom"
+                                           FontWeight="DemiBold"
+                                           Foreground="#555555"
+                                           Text="{DynamicResource PersonalizationLightMode}" />
+                            </Border>
+                        </RadioButton>
+
+                        <RadioButton Height="110"
+                                     HorizontalAlignment="Stretch"
+                                     Classes="GigaChips"
+                                     GroupName="RadioBaseTheme"
+                                     IsChecked="{Binding !IsLightTheme}">
+                            <Border Margin="-50"
+                                    Background="#222222"
+                                    CornerRadius="{DynamicResource MediumCornerRadius}">
+                                <TextBlock Margin="42"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Bottom"
+                                           FontWeight="DemiBold"
+                                           Foreground="#fafafa"
+                                           Text="{DynamicResource PersonalizationDarkMode}" />
+                            </Border>
+                        </RadioButton>
+                    </UniformGrid>
+
+                </StackPanel>
+
+                <StackPanel Classes="SettingSection">
+                    <TextBlock Text="{DynamicResource PersonalizationColorTheme}" />
+                    <Separator />
+
+                    <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding AvailableColors}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel HorizontalAlignment="Center"
+                                            Orientation="Horizontal"
+                                            Spacing="10" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="suki:SukiColorTheme">
+                                <RadioButton Width="50"
+                                             Height="50"
+                                             Classes="GigaChips"
+                                             Command="{Binding $parent[common1:PersonalizationView].((common:PersonalizationViewModel)DataContext).SwitchToColorThemeCommand}"
+                                             CommandParameter="{Binding}"
+                                             CornerRadius="50"
+                                             GroupName="RadioColorTheme">
+                                    <Border Margin="-30"
+                                            Background="{Binding PrimaryBrush}"
+                                            CornerRadius="50" />
+                                </RadioButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <StackPanel Classes="SettingSection">
+                        <TextBlock Text="{DynamicResource PersonalizationBackground}" />
+                        <Separator />
+
+                        <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
+                            <StackPanel Spacing="40">
+                                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
+                                      ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                               FontSize="16"
+                                               FontWeight="DemiBold"
+                                               Text="{DynamicResource PersonalizationBackgroundAnimated}" />
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                               Foreground="{DynamicResource SukiLowText}"
+                                               Text="{DynamicResource PersonalizationBackgroundDescription}"
+                                               TextWrapping="Wrap" />
+
+                                    <RadioButton Classes="GigaChips" HorizontalContentAlignment="Center"
+                                                 GroupName="RadioBackgroundAnimation"
+                                                 IsChecked="{Binding BackgroundAnimations}"
+                                                 Grid.Row="2" Grid.Column="0">
+                                        <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                                   Text="{DynamicResource Yes}" />
+                                    </RadioButton>
+                                    <RadioButton Classes="GigaChips" HorizontalContentAlignment="Center"
+                                                 GroupName="RadioBackgroundAnimation"
+                                                 IsChecked="{Binding !BackgroundAnimations}"
+                                                 Grid.Row="2" Grid.Column="1">
+                                        <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                                   Text="{DynamicResource No}" />
+                                    </RadioButton>
+
+                                </Grid>
+                            </StackPanel>
+                        </suki:GlassCard>
+                    </StackPanel>
+
+                </StackPanel>
+
+                <StackPanel Classes="SettingSection">
+                    <TextBlock Text="{DynamicResource PersonalizationOther}" />
+                    <Separator />
+
+                    <Button Command="{Binding SwitchToDebugPaneCommand}"
+                            Content="{DynamicResource PersonalizationOtherDebug}" />
+
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </settings:SettingSubPage>
 </UserControl>

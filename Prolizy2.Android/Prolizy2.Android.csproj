@@ -4,7 +4,7 @@
         <TargetFramework>net8.0-android</TargetFramework>
         <SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
         <Nullable>enable</Nullable>
-        <ApplicationId>com.CompanyName.Prolizy2</ApplicationId>
+        <ApplicationId>net.itsthesky.Prolizy2</ApplicationId>
         <ApplicationVersion>1</ApplicationVersion>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <AndroidPackageFormat>apk</AndroidPackageFormat>
@@ -22,6 +22,7 @@
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 
         <AndroidResgenClass>Resource</AndroidResgenClass>
+        <NullabilityInfoContextSupport>true</NullabilityInfoContextSupport>
     </PropertyGroup>
 
     <ItemGroup>
@@ -32,9 +33,10 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia.Android"/>
+        <PackageReference Include="Avalonia.AvaloniaEdit" />
         <PackageReference Include="Avalonia.Svg" />
+        <PackageReference Include="AvaloniaUI.DiagnosticsSupport" />
         <PackageReference Include="IconPacks.Avalonia" />
-        <PackageReference Include="SpacedGrid-Avalonia" />
         <PackageReference Include="SukiUI" />
         <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen"/>
     </ItemGroup>

@@ -1,0 +1,16 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             xmlns:settings="clr-namespace:Prolizy2.Styles.Controls.Settings"
+             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Tabs"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="tabs:SettingsViewModel"
+             x:Class="Prolizy2.Views.Tabs.SettingsTab">
+    
+    <TransitioningContentControl Content="{Binding CurrentPage}"
+                                 PageTransition="{Binding CurrentTransitions}" />
+    
+</UserControl>

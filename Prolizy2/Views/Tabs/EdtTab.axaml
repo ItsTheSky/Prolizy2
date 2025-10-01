@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:edt="clr-namespace:Prolizy2.Styles.Controls.Edt"
              xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Tabs"
-             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
              mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="800"
@@ -12,7 +12,7 @@
              x:Class="Prolizy2.Views.Tabs.EdtTab">
     <suki:BusyArea BusyText="{DynamicResource Loading}"
                    IsBusy="{Binding IsLoading}">
-        <avalonia:SpacedGrid RowDefinitions="Auto,*,Auto" RowSpacing="10"
+        <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10"
                              ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
 
             <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
@@ -61,6 +61,6 @@
                 </StackPanel>
             </Button>
 
-        </avalonia:SpacedGrid>
+        </Grid>
     </suki:BusyArea>
 </UserControl>

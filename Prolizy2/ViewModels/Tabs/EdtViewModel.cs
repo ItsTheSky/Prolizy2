@@ -123,7 +123,7 @@ public partial class EdtViewModel : ViewModelBase
         try
         {
             await _cacheService.PreloadAdjacentMonthsAsync(CurrentDay);
-            _cacheService.ClearOldCache(CurrentDay, 3);
+            _cacheService.ClearOldCache(CurrentDay);
         }
         catch (Exception ex)
         {
@@ -177,7 +177,7 @@ public partial class EdtViewModel : ViewModelBase
 
     private async Task LoadCurrentDayFromCache()
     {
-        // Prevent loading if the day hasn't actually changed
+        // Prevent loading if the day hasn't changed
         if (_lastLoadedDay == CurrentDay && DisplayedItems.Any())
             return;
 

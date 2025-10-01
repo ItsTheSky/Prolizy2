@@ -1,0 +1,38 @@
+﻿using System.Windows.Input;
+using Avalonia;
+using Avalonia.Controls.Primitives;
+using CommunityToolkit.Mvvm.Input;
+using IconPacks.Avalonia.Lucide;
+
+namespace Prolizy2.Styles.Controls.Settings;
+
+public class SettingsMenuItem : TemplatedControl
+{
+    public static readonly StyledProperty<string> HeaderProperty =
+        AvaloniaProperty.Register<SettingsMenuItem, string>(nameof(Header));
+
+    public static readonly StyledProperty<PackIconLucideKind?> IconProperty =
+        AvaloniaProperty.Register<SettingsMenuItem, PackIconLucideKind?>(nameof(Icon));
+
+    public static readonly StyledProperty<IRelayCommand?> CommandProperty =
+        AvaloniaProperty.Register<SettingsMenuItem, IRelayCommand?>(nameof(Command));
+
+
+    public string Header
+    {
+        get => GetValue(HeaderProperty);
+        set => SetValue(HeaderProperty, value);
+    }
+    
+    public PackIconLucideKind? Icon
+    {
+        get => GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+    
+    public IRelayCommand? Command
+    {
+        get => GetValue(CommandProperty);
+        set => SetValue(CommandProperty, value);
+    }
+}

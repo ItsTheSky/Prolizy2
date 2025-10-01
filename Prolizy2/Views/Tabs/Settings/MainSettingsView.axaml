@@ -1,0 +1,41 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:Prolizy2.ViewModels.Tabs.Settings"
+             xmlns:settings1="clr-namespace:Prolizy2.Styles.Controls.Settings"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="settings:MainSettingsViewModel"
+             x:Class="Prolizy2.Views.Tabs.Settings.MainSettingsView">
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+        
+        <TextBlock Grid.Row="0" Text="Options"
+                   Margin="0,20"
+                   Classes="Header"/>
+        
+        <StackPanel Grid.Row="1" Spacing="10" VerticalAlignment="Center">
+            
+            <settings1:SettingsMenuItem Icon="House"
+                                       Header="Accueil"
+                                       Command="{Binding GoToHomeCommand}"/>
+            
+            <settings1:SettingsMenuItem Icon="Calendar"
+                                        Header="Emploi du Temps"
+                                        Command="{Binding GoToEdtCommand}"/>
+            
+            <settings1:SettingsMenuItem Icon="Dock"
+                                        Header="Bulletin"
+                                        Command="{Binding GoToBulletinCommand}"/>
+            
+            <settings1:SettingsMenuItem Icon="Pen"
+                                        Header="Personalisation"
+                                        Command="{Binding GoToPersonalisationCommand}"/>
+            
+        </StackPanel>
+        
+        <TextBlock Grid.Row="2" TextAlignment="Center"
+                   Margin="0,20"
+                   Classes="Quote" Text="v1.0.0"/>
+        
+    </Grid>
+</UserControl>

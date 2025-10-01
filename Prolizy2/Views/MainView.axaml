@@ -5,7 +5,7 @@
              xmlns:vm="clr-namespace:Prolizy2.ViewModels"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
-             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             
              xmlns:views="clr-namespace:Prolizy2.Views"
              xmlns:common="clr-namespace:Prolizy2.Views.Common"
              xmlns:welcome="clr-namespace:Prolizy2.Views.Welcome"
@@ -31,7 +31,7 @@
 
     </UserControl.Styles>
 
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
         <Border Name="MainBorder" Background="Transparent" IsVisible="{Binding !IsWelcomeScreenVisible}">
             <Border.GestureRecognizers>
@@ -114,7 +114,7 @@
                             </controls:ModuleCard>
                             <controls:ModuleCard Title="Dernières Notes" VerticalAlignment="Top"
                                                  Icon="NotebookPen">
-                                <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto" RowSpacing="5"
+                                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="5"
                                                      ColumnDefinitions="*,Auto" ColumnSpacing="5">
                                     
                                     <TextBlock Grid.Row="0" Grid.Column="0" Text="SAÉ statistique BD"/>
@@ -125,7 +125,7 @@
                                     
                                     <TextBlock Grid.Row="2" Grid.Column="0" Text="DS1 Compta-finance"/>
                                     <controls:Badge HorizontalAlignment="Right" Grid.Row="2" Grid.Column="1" Text="ATT"/>
-                                </avalonia:SpacedGrid>
+                                </Grid>
                             </controls:ModuleCard>
                         
                             <controls:ModuleCard Title="Absences" VerticalAlignment="Top"
@@ -154,7 +154,7 @@
             </Grid>
              -->
 
-            <avalonia:SpacedGrid RowDefinitions="*,Auto" RowSpacing="10"
+            <Grid RowDefinitions="*,Auto" RowSpacing="10"
                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
                 <ContentControl Grid.Row="0" Margin="15"
@@ -193,7 +193,7 @@
 
                 </suki:GlassCard>
 
-            </avalonia:SpacedGrid>
+            </Grid>
 
         </Border>
 
@@ -202,6 +202,7 @@
                            IsVisible="{Binding IsWelcomeScreenVisible}" />
 
         <suki:SukiDialogHost Name="DialogHost" />
-    </Grid>
+        <suki:SukiToastHost Position="TopLeft" Name="ToastHost"/>
+    </Panel>
 
 </UserControl>

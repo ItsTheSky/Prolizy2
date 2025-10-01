@@ -34,14 +34,12 @@ public partial class MainViewModel : ViewModelBase
                 Content = new HomeTab { DataContext = HomeViewModel }
             },
 
-
             new TabItemEntry(this)
             {
                 Icon = PackIconLucideKind.Calendar,
                 Title = "TabEdt",
-                Content = new EdtTab { DataContext = EdtViewMode }
+                Content = new EdtTab { DataContext = EdtViewModel }
             },
-
 
             new TabItemEntry(this)
             {
@@ -49,12 +47,11 @@ public partial class MainViewModel : ViewModelBase
                 Title = "TabBulletin",
             },
 
-
             new TabItemEntry(this)
             {
                 Icon = PackIconLucideKind.Settings,
                 Title = "TabSettings",
-                Content = new PersonalizationView { DataContext = PersonalizationViewModel }
+                Content = new SettingsTab { DataContext = SettingsViewModel }
             }
 
         ];
@@ -77,9 +74,9 @@ public partial class MainViewModel : ViewModelBase
     #region View Models
     
     [ObservableProperty] private HomeViewModel _homeViewModel;
-    [ObservableProperty] private EdtViewModel _edtViewMode;
+    [ObservableProperty] private EdtViewModel _edtViewModel;
+    [ObservableProperty] private SettingsViewModel _settingsViewModel;
 
-    [ObservableProperty] private PersonalizationViewModel _personalizationViewModel;
     [ObservableProperty] private LangViewModel _langViewModel;
 
     #endregion
@@ -89,12 +86,12 @@ public partial class MainViewModel : ViewModelBase
 
     public MainViewModel()
     {
-        PersonalizationViewModel = new(this);
         LangViewModel = new(this);
         
         // Initialize the ViewModels
         HomeViewModel = new(this);
-        EdtViewMode = new(this);
+        EdtViewModel = new(this);
+        SettingsViewModel = new(this);
         
         InitTabEntries();
         

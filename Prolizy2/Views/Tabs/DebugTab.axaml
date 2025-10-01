@@ -1,0 +1,51 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Prolizy2.Views.Tabs.DebugTab">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" RowSpacing="10"
+                         ColumnDefinitions="*,*,*,*" ColumnSpacing="4"
+                         Margin="10">
+        
+        <TextBlock Text="Débug" Grid.Column="0" Grid.ColumnSpan="4"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Center"
+                   TextAlignment="Center"
+                   Grid.Row="0"/>
+        
+        <suki:InfoBar Grid.Column="0" Grid.ColumnSpan="4" 
+                          Grid.Row="1" Severity="Error" IsOpen="True" IsClosable="False"
+                          Message="Si vous ne savez pas ce que vous faites, ne touchez à rien !" />
+        
+        <Button Grid.Row="2"
+                Grid.Column="0" Grid.ColumnSpan="2"
+                Content="Load Err. Rep." HorizontalAlignment="Stretch"
+                Click="LoadErrorFile_OnClick"/>
+        
+        <Button Grid.Row="2" Grid.Column="2"
+                Content="Clear" HorizontalAlignment="Stretch"
+                Click="Clear_OnClick"/>
+        
+        <Button Grid.Row="2" Grid.Column="3"
+                Content="Crash" HorizontalAlignment="Stretch"
+                Click="Crash_OnClick"/>
+        
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4"
+                Classes="accent"
+                Content="Copy logs/error report" HorizontalAlignment="Stretch"
+                Click="Copy_OnClick"/>
+        
+        <suki:GlassCard Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="4">
+            <avaloniaEdit:TextEditor x:Name="TextBlock" IsReadOnly="True"
+                                     FontFamily="Consolas" FontSize="12"
+                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                     WordWrap="False" ShowLineNumbers="True" />
+        </suki:GlassCard>
+        
+    </Grid>
+</UserControl>

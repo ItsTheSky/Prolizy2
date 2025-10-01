@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
-             xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             
              xmlns:viewModels="clr-namespace:Prolizy2.ViewModels"
              mc:Ignorable="d"
              d:DesignWidth="450" d:DesignHeight="800"
@@ -49,7 +49,7 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" 
                   VerticalScrollBarVisibility="Auto">
-        <avalonia:SpacedGrid RowDefinitions="Auto,*,Auto" RowSpacing="10" Margin="30,60,30,30">
+        <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10" Margin="30,60,30,30">
             
             <!-- Section Haut: Icon + Description -->
 
@@ -96,7 +96,7 @@
                 
                 <!-- Emploi du temps -->
                 <suki:GlassCard>
-                    <avalonia:SpacedGrid RowDefinitions="*,*" RowSpacing="0"
+                    <Grid RowDefinitions="*,*" RowSpacing="0"
                                          ColumnDefinitions="Auto,*" ColumnSpacing="10">
                         
                         <iconPacks:PackIconLucide Grid.Row="0" Grid.RowSpan="2"
@@ -111,11 +111,11 @@
                                    Text="Emploi du temps" Classes="FeatureTitle" />
                         <TextBlock Grid.Row="1" Grid.Column="1"
                                    Text="Consultez vos cours en temps réel" Classes="FeatureDescription" />
-                    </avalonia:SpacedGrid>
+                    </Grid>
                 </suki:GlassCard>
                 
                 <suki:GlassCard>
-                    <avalonia:SpacedGrid RowDefinitions="*,*" RowSpacing="0"
+                    <Grid RowDefinitions="*,*" RowSpacing="0"
                                          ColumnDefinitions="Auto,*" ColumnSpacing="10">
                         
                         <iconPacks:PackIconLucide Grid.Row="0" Grid.RowSpan="2"
@@ -130,11 +130,11 @@
                                    Text="Bulletin &amp; Notes" Classes="FeatureTitle" />
                         <TextBlock Grid.Row="1" Grid.Column="1"
                                    Text="Suivez votre progression" Classes="FeatureDescription" />
-                    </avalonia:SpacedGrid>
+                    </Grid>
                 </suki:GlassCard>
                 
                 <suki:GlassCard>
-                    <avalonia:SpacedGrid RowDefinitions="*,*" RowSpacing="0"
+                    <Grid RowDefinitions="*,*" RowSpacing="0"
                                          ColumnDefinitions="Auto,*" ColumnSpacing="10">
                         
                         <iconPacks:PackIconLucide Grid.Row="0" Grid.RowSpan="2"
@@ -149,7 +149,7 @@
                                    Text="Notifications" Classes="FeatureTitle" />
                         <TextBlock Grid.Row="1" Grid.Column="1"
                                    Text="Ne ratez aucun cours" Classes="FeatureDescription" />
-                    </avalonia:SpacedGrid>
+                    </Grid>
                 </suki:GlassCard>
                 
             </StackPanel>
@@ -171,7 +171,7 @@
                 
             </StackPanel>
             
-        </avalonia:SpacedGrid>
+        </Grid>
     </ScrollViewer>
 
 </UserControl>

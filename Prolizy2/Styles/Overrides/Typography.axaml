@@ -13,4 +13,25 @@
     <Style Selector="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource SukiText}" />
     </Style>
+    
+    <Style Selector="TextBlock.Header">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+        <Setter Property="Foreground" Value="{DynamicResource SukiText}" />
+        <Setter Property="TextAlignment" Value="Center" />
+    </Style>
+    
+    <Style Selector="TextBlock.Quote">
+        <Setter Property="FontStyle" Value="Italic" />
+        <Setter Property="Foreground" Value="{DynamicResource SukiLowText}" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+    
+    <Style Selector="TextBlock.SubHeader">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Margin" Value="0,5,0,5" />
+        <Setter Property="Foreground" Value="{DynamicResource SukiText}" />
+    </Style>
 </Styles>

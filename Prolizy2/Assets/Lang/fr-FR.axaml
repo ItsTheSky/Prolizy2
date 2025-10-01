@@ -8,7 +8,7 @@
     <system:String x:Key="Confirm">Confirmer</system:String>
     <system:String x:Key="Ok">Ok</system:String>
 
-    <system:String x:Key="TabHome">Acceuil</system:String>
+    <system:String x:Key="TabHome">Accueil</system:String>
     <system:String x:Key="TabEdt">EDT</system:String>
     <system:String x:Key="TabBulletin">Bulletin</system:String>
     <system:String x:Key="TabSettings">Options</system:String>
@@ -21,6 +21,8 @@
     <system:String x:Key="PersonalizationBackground">Gestion du Fond</system:String>
     <system:String x:Key="PersonalizationBackgroundAnimated">Fond Animé</system:String>
     <system:String x:Key="PersonalizationBackgroundDescription">Active/désactive l'animation du fond de l'application. La désactiver peut augmenter les performances.</system:String>
+    <system:String x:Key="PersonalizationOther">Autres Options</system:String>
+    <system:String x:Key="PersonalizationOtherDebug">Page de Débug</system:String>
     
     <system:String x:Key="EdtSelectDateTitle">Changer la Date</system:String>
     <system:String x:Key="EdtNext">Suivant</system:String>

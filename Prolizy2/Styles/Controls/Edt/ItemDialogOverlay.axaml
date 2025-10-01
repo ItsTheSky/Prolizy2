@@ -1,7 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Prolizy2.Styles.Controls.Edt"
-        xmlns:avalonia="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+        
         xmlns:controls1="clr-namespace:Prolizy2.Styles.Controls"
         xmlns:model="clr-namespace:Prolizy2.Model"
         xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
@@ -26,7 +26,7 @@
                                    FontSize="14" />
                     </StackPanel>
                     
-                    <avalonia:SpacedGrid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
+                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
                                          ColumnDefinitions="Auto,*" ColumnSpacing="10">
                         <iconPacks:PackIconLucide Grid.Row="0" Grid.Column="0" Kind="Navigation" />
                         <TextBlock Grid.Row="0" Grid.Column="1"
@@ -42,7 +42,7 @@
                         <TextBlock Grid.Row="2" Grid.Column="1"
                                    VerticalAlignment="Center"
                                    Text="{Binding Professor}" FontWeight="Medium" />
-                    </avalonia:SpacedGrid>
+                    </Grid>
                     
                     <TextBlock Text="{Binding AdditionalText}" TextWrapping="Wrap"
                                HorizontalAlignment="Left"/>

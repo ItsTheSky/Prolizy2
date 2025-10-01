@@ -1,0 +1,32 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls.Settings">
+    <Design.PreviewWith>
+        <controls:SettingSubPage />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|SettingSubPage">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid RowDefinitions="Auto,*,Auto">
+                    
+                    <TextBlock Grid.Row="0" Text="{TemplateBinding Title}"
+                               Margin="0,20"
+                               Classes="Header"/>
+                    
+                    <ContentPresenter Grid.Row="1"
+                                      Margin="0,10"
+                                      Content="{TemplateBinding Content}"/>
+                    
+                    <Button Grid.Row="2" Classes="Flat"
+                            Margin="10,20"
+                            HorizontalAlignment="Stretch"
+                            Content="Retour"
+                            Command="{TemplateBinding BackCommand}"/>
+                    
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

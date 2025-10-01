@@ -9,6 +9,7 @@
         <sukiUi:SukiTheme ThemeColor="Orange" Locale="en-US" />
         
         <StyleInclude Source="avares://IconPacks.Avalonia/Icons.axaml" />
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Simple/AvaloniaEdit.xaml" />
         
         <StyleInclude Source="avares://Prolizy2/Styles/Overrides/FixedDialogs.axaml" />
         <StyleInclude Source="avares://Prolizy2/Styles/Overrides/Typography.axaml" />
@@ -21,6 +22,9 @@
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Edt/ScheduleItemCard.axaml" />
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Edt/DailyScheduleControl.axaml" />
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Edt/ItemDialogOverlay.axaml" />
+        
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Settings/SettingsMenuItem.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Settings/SettingSubPage.axaml" />
     </Application.Styles>
     
     <Application.Resources>

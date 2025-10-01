@@ -1,5 +1,6 @@
 using System;
 using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
 using Avalonia.Input;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,6 +10,7 @@ using Prolizy2.ViewModels;
 using SukiUI;
 using SukiUI.Controls;
 using SukiUI.Dialogs;
+using SukiUI.Toasts;
 using Vector = Avalonia.Vector;
 
 namespace Prolizy2.Views;
@@ -16,7 +18,9 @@ namespace Prolizy2.Views;
 public partial class MainView : UserControl
 {
     public static ISukiDialogManager DialogManager { get; private set; }
+    public static ISukiToastManager ToastManager { get; private set; }
     public static SukiMainHost SukiHost { get; set; }
+    public static TopLevel TopLevel { get; set; }
     
     private Vector? lastScrollVector;
 
@@ -24,6 +28,7 @@ public partial class MainView : UserControl
     {
         InitializeComponent();
         DialogManager = DialogHost.Manager = new SukiDialogManager();
+        ToastManager = ToastHost.Manager = new SukiToastManager();
 
         Loaded += (sender, args) =>
         {

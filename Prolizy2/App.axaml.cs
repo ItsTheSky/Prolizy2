@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Prolizy2.Utilities;
 using Prolizy2.ViewModels;
 using Prolizy2.Views;
 using SukiUI.Controls;
@@ -15,6 +16,8 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        this.AttachDeveloperTools();
+        Logs.Init();
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -32,6 +35,7 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow { Content = sukiMiddleman };
+            MainView.TopLevel = desktop.MainWindow;
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -40,6 +44,7 @@ public partial class App : Application
             {
                 (singleViewPlatform.MainView as SukiMainHost)!.BackgroundAnimationEnabled = true;
             };
+            MainView.TopLevel = TopLevel.GetTopLevel(singleViewPlatform.MainView)!;
         }
 
         base.OnFrameworkInitializationCompleted();

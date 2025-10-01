@@ -1,0 +1,39 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls.Settings"
+        xmlns:suki="https://github.com/kikipoulet/SukiUI"
+        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+    <Design.PreviewWith>
+        <controls:SettingsMenuItem />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|SettingsMenuItem">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                
+                <suki:GlassCard IsInteractive="True"
+                                Command="{TemplateBinding Command}">
+                    <Grid ColumnDefinitions="Auto,*,Auto"
+                          ColumnSpacing="10">
+                    
+                        <iconPacks:PackIconLucide Grid.Column="0"
+                                                  HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                  Width="24" Height="24" FontSize="24"
+                                                  Kind="{TemplateBinding Icon}"/>
+                    
+                        <TextBlock Grid.Column="1" Classes="SubHeader" 
+                                   TextAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                   Text="{TemplateBinding Header}" />
+                    
+                        <iconPacks:PackIconLucide Grid.Column="2"
+                                                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                  Width="24" Height="24" FontSize="24"
+                                                  Kind="ArrowRight"/>
+                    
+                    </Grid>
+                </suki:GlassCard>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>
