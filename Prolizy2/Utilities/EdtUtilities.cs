@@ -6,7 +6,6 @@ namespace Prolizy2.Utilities;
 
 public static class EdtUtilities
 {
-
     /// <summary>
     /// Finds the next or current schedule item (= course) for the given list of items.
     /// This method will check each item by their date to match,
@@ -19,34 +18,40 @@ public static class EdtUtilities
     {
         if (items == null || items.Count == 0)
             return null;
+        
+        // first we sort them
+        items.Sort((a, b) =>
+        {
+            var dateComparison = a.Date.CompareTo(b.Date);
+            return dateComparison != 0 ? dateComparison : a.StartTimeOnly.CompareTo(b.StartTimeOnly);
+        });
 
         var now = DateTime.Now;
         var currentDate = DateOnly.FromDateTime(now);
+        var currentTime = TimeOnly.FromDateTime(now);
+        
+        // Filter items for the current date
+        var todayItems = items.FindAll(item => item.Date == currentDate);
 
-        // First, try to find an item that is currently ongoing
-        foreach (var item in items)
+        // Check for an ongoing item
+        foreach (var item in todayItems)
         {
-            if (item.StartTime <= now && item.EndTime >= now &&
-                DateOnly.FromDateTime(item.StartTime.Date) == currentDate)
-            {
+            if (item.StartTimeOnly <= currentTime && item.EndTimeOnly >= currentTime)
                 return item;
-            }
         }
 
-        // If no ongoing item found, find the next item after the current time
-        ScheduleItem? nextItem = null;
+        foreach (var item in todayItems)
+        {
+            if (item.StartTimeOnly > currentTime)
+                return item;
+        }
+
         foreach (var item in items)
         {
-            if (DateOnly.FromDateTime(item.StartTime.Date) == currentDate && item.StartTime > now)
-            {
-                if (nextItem == null || item.StartTime < nextItem.StartTime)
-                {
-                    nextItem = item;
-                }
-            }
+            if (item.Date > currentDate)
+                return item;
         }
 
-        return nextItem;
+        return null;
     }
-    
 }

@@ -100,9 +100,9 @@ public partial class MainViewModel : ViewModelBase
         LangViewModel = new(this);
 
         // Initialize the ViewModels
-        HomeViewModel = new(this);
-        EdtViewModel = new(this);
-        SettingsViewModel = new(this);
+        HomeViewModel = new HomeViewModel(this);
+        EdtViewModel = new EdtViewModel(this);
+        SettingsViewModel = new SettingsViewModel(this);
 
         InitTabEntries();
 

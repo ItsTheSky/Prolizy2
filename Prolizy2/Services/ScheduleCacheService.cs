@@ -155,6 +155,11 @@ public class ScheduleCacheService
         }
     }
 
+    public List<ScheduleItem> GetCachedItems()
+    {
+        return _weeklyCache.Values.SelectMany(list => list).ToList();
+    }
+
     public void ClearCache()
     {
         _weeklyCache.Clear();

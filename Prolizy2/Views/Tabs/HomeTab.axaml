@@ -2,13 +2,55 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             xmlns:model="clr-namespace:Prolizy2.Model"
+             xmlns:viewModels="clr-namespace:Prolizy2"
+             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Tabs"
+             xmlns:controls="clr-namespace:Prolizy2.Styles.Controls"
+
              mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="800"
+             x:DataType="tabs:HomeViewModel"
              x:Class="Prolizy2.Views.Tabs.HomeTab">
-    <Grid RowDefinitions="Auto,Auto">
-        
-        <TextBlock Grid.Row="0" Text="Bonjour Rafael 👋"
-                   FontSize="26" FontWeight="SemiBold"/>
-        
+    <Grid RowDefinitions="Auto,Auto" RowSpacing="10">
+
+        <TextBlock Grid.Row="0" Text="Bonjour 👋"
+                   Classes="Header" />
+
+        <suki:GlassCard Grid.Row="1" IsInteractive="True" Command="{Binding NavigateToAndOpenNextItemCommand}"
+                        Background="{Binding NextScheduleItem.BackgroundColor, FallbackValue={DynamicResource SukiGlassCardBackground}}">
+            
+            <Panel>
+                <Grid RowDefinitions="Auto,20,Auto" RowSpacing="5"
+                      ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5"
+                      IsVisible="{Binding NextScheduleItem, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    
+                    <iconPacks:PackIconLucide Grid.Row="0" Grid.Column="0" 
+                                              Kind="CalendarClock"
+                                              Width="20" Height="20" FontSize="20"/>
+                    
+                    <TextBlock Grid.Row="0" Grid.Column="1" 
+                               VerticalAlignment="Center"
+                               Classes="TextBig" Text="Prochain Cours"/>
+                    
+                    <controls:Badge Grid.Row="0" Grid.Column="2" Text="{Binding NextScheduleItem.Room}"/>
+                    
+                    <iconPacks:PackIconLucide Grid.Row="1" Grid.Column="2" Grid.RowSpan="2"
+                                              HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              Width="24" Height="24" FontSize="24"
+                                              Kind="ArrowRight"/>
+                    
+                    <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                               TextWrapping="Wrap"
+                               Classes="TextNormal" Text="{Binding NextScheduleItem.Subject}" />
+                </Grid>
+            
+                <TextBlock Classes="SubHeader" Text="Chargement ..."
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsVisible="{Binding NextScheduleItem, Converter={x:Static ObjectConverters.IsNull}}"/>
+            </Panel>
+
+        </suki:GlassCard>
+
     </Grid>
 </UserControl>

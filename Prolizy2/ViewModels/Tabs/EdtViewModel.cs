@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -161,6 +162,7 @@ public partial class EdtViewModel : ViewModelBase
         {
             await _cacheService.PreloadAdjacentMonthsAsync(CurrentDay, MainView.Preferences.Get<string>("edt_group"));
             _cacheService.ClearOldCache(CurrentDay);
+            UpdateHomeNextCourse();
         }
         catch (Exception ex)
         {
@@ -204,7 +206,7 @@ public partial class EdtViewModel : ViewModelBase
     {
         CurrentDay = CurrentDay.AddDays(1);
         IsGoingRight = true;
-        await LoadCurrentDayFromCache();
+        LoadCurrentDayFromCache();
     }
 
     [RelayCommand]
@@ -212,10 +214,10 @@ public partial class EdtViewModel : ViewModelBase
     {
         CurrentDay = CurrentDay.AddDays(-1);
         IsGoingRight = false;
-        await LoadCurrentDayFromCache();
+        LoadCurrentDayFromCache();
     }
 
-    private async Task LoadCurrentDayFromCache()
+    public void LoadCurrentDayFromCache()
     {
         // Prevent loading if the day hasn't changed
         if (_lastLoadedDay == CurrentDay && CurrentDailyControl.Items.Any())
@@ -249,6 +251,8 @@ public partial class EdtViewModel : ViewModelBase
             Logs.Debug("EDT: Week is NOT cached, fetching from network. (Is latest request? " + (currentLoadId == _loadingCounter) + ")");
             TryRefreshCurrentDay();
         }
+        
+        UpdateHomeNextCourse();
     }
     
     [RelayCommand]
@@ -256,7 +260,7 @@ public partial class EdtViewModel : ViewModelBase
     {
         IsGoingRight = CurrentDay <= DateOnly.FromDateTime(DateTime.Now);
         CurrentDay = DateOnly.FromDateTime(DateTime.Now);
-        await LoadCurrentDayFromCache();
+        LoadCurrentDayFromCache();
     }
 
     [RelayCommand]
@@ -276,6 +280,13 @@ public partial class EdtViewModel : ViewModelBase
         {
             DataContext = new EdtSettingsViewModel(MainVm, MainVm.SettingsViewModel)
         });
+    }
+
+    public void UpdateHomeNextCourse()
+    {
+        var cache = _cacheService.GetCachedItems();
+        MainVm.HomeViewModel.NextScheduleItem = EdtUtilities.FindNextOrCurrentItem(cache);
+        Logs.Debug("EDT: Updated home next course: " + (MainVm.HomeViewModel.NextScheduleItem?.Subject ?? "null") + $"Got {cache.Count} items in cache.");
     }
     
     #endregion

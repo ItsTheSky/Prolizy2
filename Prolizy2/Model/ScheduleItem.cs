@@ -18,6 +18,10 @@ public class ScheduleItem
 {
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
+    
+    public DateOnly Date => DateOnly.FromDateTime(StartTime);
+    public TimeOnly StartTimeOnly => TimeOnly.FromDateTime(StartTime);
+    public TimeOnly EndTimeOnly => TimeOnly.FromDateTime(EndTime);
 
     public string Professor { get; set; }
     public string Subject { get; set; }
