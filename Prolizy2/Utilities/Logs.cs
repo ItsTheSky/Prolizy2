@@ -39,6 +39,12 @@ public static class Logs
     {
         LogWriter.WriteLine(message, LogType.Debug);
     }
+
+    public static void Error(Exception ex)
+    {
+        var message = ex.ToString();
+        LogWriter.WriteLine(message, LogType.Error);
+    }
 }
 
 public class LogWriter : TextWriter

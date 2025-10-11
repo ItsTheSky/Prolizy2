@@ -1,0 +1,35 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:Prolizy2.Styles.Controls.Settings"
+             xmlns:vm="clr-namespace:Prolizy2.ViewModels.Tabs.Settings"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:EdtSettingsViewModel"
+             x:Class="Prolizy2.Views.Tabs.Settings.EdtSettingsView">
+    <settings:SettingSubPage Title="Emploi du Temps"
+                             BackCommand="{Binding BackCommand}">
+
+        <ScrollViewer>
+            <StackPanel Classes="MainSettingSection">
+
+                <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
+                    <StackPanel Spacing="10">
+                        <TextBlock FontSize="16"
+                                   FontWeight="DemiBold"
+                                   Text="Groupe" />
+
+                        <TextBlock Foreground="{DynamicResource SukiLowText}"
+                                   Text="Changer le groupe utilisé pour la récupération des cours. Le groupe vous est fournis sous forme de code à rentrer."
+                                   TextWrapping="Wrap" />
+
+                        <Button Command="{Binding EditGroupCommand}">Changer le Groupe</Button>
+                    </StackPanel>
+                </suki:GlassCard>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </settings:SettingSubPage>
+</UserControl>

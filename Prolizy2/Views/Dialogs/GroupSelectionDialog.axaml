@@ -1,0 +1,43 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:dialogs="clr-namespace:Prolizy2.ViewModels.Dialogs"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="dialogs:GroupSelectionDialogViewModel"
+             x:Class="Prolizy2.Views.Dialogs.GroupSelectionDialog">
+    
+    <suki:GroupBox Header="Changement de groupe">
+        <StackPanel Spacing="10">
+            <TextBox Text="{Binding Query}" />
+            
+            <Panel Height="200" Width="300">
+                <TextBlock IsVisible="{Binding !IsQueryValid}">
+                    Veuillez entrer un code de groupe valide (au moins 2 caractères).
+                </TextBlock>
+            
+                <TextBlock IsVisible="{Binding AreResultsEmpty}">
+                    Aucun groupe trouvé correspondant à votre recherche.
+                </TextBlock>
+            
+                <ScrollViewer IsVisible="{Binding IsQueryValid}">
+                    <ListBox ItemsSource="{Binding LoadedGroups}"
+                             SelectedItem="{Binding SelectedGroup}" />
+                </ScrollViewer>
+            </Panel>
+            
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Grid.Column="0" HorizontalContentAlignment="Center"
+                        Command="{Binding CloseDialogCommand}"
+                        Content="Annuler" />
+                
+                <Button Grid.Column="1" HorizontalContentAlignment="Center"
+                        Classes="Flat"
+                        IsEnabled="{Binding IsSelectedGroupValid}"
+                        Command="{Binding ValidateSelectionCommand}"
+                        Content="Valider" />
+            </Grid>
+        </StackPanel>
+    </suki:GroupBox>
+</UserControl>

@@ -3,7 +3,11 @@
              x:Class="Prolizy2.App"
              xmlns:sukiUi="clr-namespace:SukiUI;assembly=SukiUI"
              xmlns:common="clr-namespace:Prolizy2.ViewModels.Common"
+             xmlns:utilities="clr-namespace:Prolizy2.Utilities"
              RequestedThemeVariant="Dark">
+    <Application.DataTemplates>
+        <utilities:ViewLocator />
+    </Application.DataTemplates>
     
     <Application.Styles>
         <sukiUi:SukiTheme ThemeColor="Orange" Locale="en-US" />
@@ -18,6 +22,7 @@
         
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/ModuleCard.axaml" />
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Badge.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/PresentationBlock.axaml" />
         
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Edt/ScheduleItemCard.axaml" />
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Edt/DailyScheduleControl.axaml" />

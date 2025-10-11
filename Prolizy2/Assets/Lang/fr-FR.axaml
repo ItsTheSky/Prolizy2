@@ -13,6 +13,10 @@
     <system:String x:Key="TabBulletin">Bulletin</system:String>
     <system:String x:Key="TabSettings">Options</system:String>
     
+    <system:String x:Key="EdtNotConfiguredTitle">Groupe non configuré</system:String>
+    <system:String x:Key="EdtNotConfiguredDescription">Veuillez configurer votre groupe dans les options. Le groupe déterminera les cours à afficher!</system:String>
+    <system:String x:Key="EdtGoToSettings">Configurer le Groupe</system:String>
+    
     <system:String x:Key="PersonalizationLanguage">Langage</system:String>
     <system:String x:Key="PersonalizationBaseTheme">Thème de Base</system:String>
     <system:String x:Key="PersonalizationLightMode">Clair</system:String>

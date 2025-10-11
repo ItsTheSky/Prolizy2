@@ -50,7 +50,7 @@ public class ScheduleCacheService
             .ToList();
     }
 
-    public async Task<List<ScheduleItem>> LoadMonthIfNeededAsync(DateOnly date, string federationId = "INF2-FI-B")
+    public async Task<List<ScheduleItem>> LoadMonthIfNeededAsync(DateOnly date, string federationId)
     {
         if (IsWeekCached(date))
             return GetDaySchedule(date);
@@ -74,7 +74,7 @@ public class ScheduleCacheService
         return GetDaySchedule(date);
     }
 
-    public async Task LoadMonthAsync(DateOnly date, string federationId = "INF2-FI-B")
+    public async Task LoadMonthAsync(DateOnly date, string federationId)
     {
         var monthWeeks = GetMonthWeeks(date);
         var loadTasks = new List<Task>();
@@ -94,7 +94,7 @@ public class ScheduleCacheService
         }
     }
 
-    public async Task LoadWeekAsync(DateOnly date, string federationId = "INF2-FA")
+    public async Task LoadWeekAsync(DateOnly date, string federationId)
     {
         var weekKey = GetWeekKey(date);
 
@@ -132,7 +132,7 @@ public class ScheduleCacheService
         }
     }
 
-    public async Task PreloadAdjacentMonthsAsync(DateOnly currentDate, string federationId = "INF2-FI-B")
+    public async Task PreloadAdjacentMonthsAsync(DateOnly currentDate, string federationId)
     {
         var previousMonth = currentDate.AddMonths(-1);
         var nextMonth = currentDate.AddMonths(1);

@@ -1,10 +1,14 @@
 using System.Globalization;
+using System.Threading.Tasks;
+using AsyncAwaitBestPractices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Prolizy2.Utilities;
 using Prolizy2.ViewModels;
+using Prolizy2.ViewModels.Common;
 using Prolizy2.Views;
 using SukiUI.Controls;
 using SukiUI.Enums;
@@ -31,6 +35,11 @@ public partial class App : Application
             Content = view
         };
         MainView.SukiHost = sukiMiddleman;
+        Dispatcher.UIThread.InvokeAsync(async () =>
+        {
+            await Task.Delay(50);
+            PersonalizationViewModel.LoadFromPreferencesToApp();
+        }).SafeFireAndForget();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

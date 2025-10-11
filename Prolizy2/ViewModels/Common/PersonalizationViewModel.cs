@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -38,14 +39,22 @@ public partial class PersonalizationViewModel : ViewModelBase
         IsLightTheme = _theme.ActiveBaseTheme == ThemeVariant.Light;
         _theme.OnBaseThemeChanged += variant =>
             IsLightTheme = variant == ThemeVariant.Light;
+        
+        LoadFromPreferences();
     }
     
-    partial void OnIsLightThemeChanged(bool value) =>
+    partial void OnIsLightThemeChanged(bool value)
+    {
         _theme.ChangeBaseTheme(value ? ThemeVariant.Light : ThemeVariant.Dark);
-    
+        Views.MainView.Preferences.Set("per_base_theme", value ? "Light" : "Dark");
+    }
+
     [RelayCommand]
-    private void SwitchToColorTheme(SukiColorTheme colorTheme) =>
+    private void SwitchToColorTheme(SukiColorTheme colorTheme)
+    {
         _theme.ChangeColorTheme(colorTheme);
+        Views.MainView.Preferences.Set("per_color_theme", colorTheme.DisplayName);
+    }
 
     [RelayCommand]
     private void SwitchToDebugPane()
@@ -64,11 +73,46 @@ public partial class PersonalizationViewModel : ViewModelBase
         SettingsView.SwitchToMain();
     }
 
-    partial void OnBackgroundStyleChanged(SukiBackgroundStyle value) =>
+    partial void OnBackgroundStyleChanged(SukiBackgroundStyle value)
+    {
         Views.MainView.SukiHost.BackgroundStyle = value;
-    
-    partial void OnBackgroundAnimationsChanged(bool value) => 
+        Views.MainView.Preferences.Set("per_background_style", value.ToString());
+    }
+
+    partial void OnBackgroundAnimationsChanged(bool value)
+    {
         Views.MainView.SukiHost.BackgroundAnimationEnabled = value;
+        Views.MainView.Preferences.Set("per_background_animations", value);
+    }
+
+
+    public void LoadFromPreferences()
+    {
+        var backgroundStyleStr = Views.MainView.Preferences.Get("per_background_style", "Mica");
+        BackgroundStyle = Enum.TryParse<SukiBackgroundStyle>(backgroundStyleStr, out var bgStyle) ? bgStyle : SukiBackgroundStyle.Gradient;
+        BackgroundAnimations = Views.MainView.Preferences.Get("per_background_animations", true);
+    }
+
+    public static void LoadFromPreferencesToApp()
+    {
+        var theme = SukiTheme.GetInstance();
+        Logs.Debug("Given theme is " + theme);
+        var baseTheme = Views.MainView.Preferences.Get("per_base_theme", "Light");
+        theme.ChangeBaseTheme(baseTheme == "Light" ? ThemeVariant.Light : ThemeVariant.Dark);
+        var colorThemeName = Views.MainView.Preferences.Get("per_color_theme", "Blue");
+        Logs.Debug($"PER: colorThemeName: {colorThemeName}");
+        var colorTheme = theme.ColorThemes.ToList().Find(t => t.DisplayName == colorThemeName);
+        Logs.Debug($"PER: colorTheme: {colorTheme}");
+        if (colorTheme != null)
+            theme.ChangeColorTheme(colorTheme);
+        var backgroundStyleStr = Views.MainView.Preferences.Get("per_background_style", "Gradient");
+        Logs.Debug($"PER: backgroundStyleStr: {backgroundStyleStr}");
+        var backgroundStyle = Enum.TryParse<SukiBackgroundStyle>(backgroundStyleStr, out var bgStyle) ? bgStyle : SukiBackgroundStyle.Gradient;
+        Logs.Debug($"PER: backgroundStyle: {backgroundStyle}");
+        Views.MainView.SukiHost.BackgroundStyle = backgroundStyle;
+        var backgroundAnimations = Views.MainView.Preferences.Get("per_background_animations", true);
+        Views.MainView.SukiHost.BackgroundAnimationEnabled = backgroundAnimations;
+    }
 }
 
 public partial class PersonalizationLangViewModel : ObservableObject

@@ -5,9 +5,7 @@
              xmlns:vm="clr-namespace:Prolizy2.ViewModels"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
-             
-             xmlns:views="clr-namespace:Prolizy2.Views"
-             xmlns:common="clr-namespace:Prolizy2.Views.Common"
+
              xmlns:welcome="clr-namespace:Prolizy2.Views.Welcome"
              mc:Ignorable="d"
              d:DesignWidth="450" d:DesignHeight="800"
@@ -155,11 +153,15 @@
              -->
 
             <Grid RowDefinitions="*,Auto" RowSpacing="10"
-                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
-                <ContentControl Grid.Row="0" Margin="15"
-                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                Content="{Binding DisplayedControl}" />
+                <TransitioningContentControl Grid.Row="0" Margin="15"
+                                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                             Content="{Binding DisplayedControl}">
+                    <TransitioningContentControl.PageTransition>
+                        <CrossFade Duration="0:00:00.2" />
+                    </TransitioningContentControl.PageTransition>
+                </TransitioningContentControl>
 
                 <suki:GlassCard Grid.Row="1" CornerRadius="0">
 
@@ -198,11 +200,11 @@
         </Border>
 
         <welcome:WelcomeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                           IsVisible="{Binding IsWelcomeScreenVisible}" />
+                             HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                             IsVisible="{Binding IsWelcomeScreenVisible}" />
 
         <suki:SukiDialogHost Name="DialogHost" />
-        <suki:SukiToastHost Position="TopLeft" Name="ToastHost"/>
+        <suki:SukiToastHost Position="TopLeft" Name="ToastHost" />
     </Panel>
 
 </UserControl>

@@ -23,11 +23,11 @@
                                         Header="Emploi du Temps"
                                         Command="{Binding GoToEdtCommand}"/>
             
-            <settings1:SettingsMenuItem Icon="Dock"
+            <settings1:SettingsMenuItem Icon="NotebookPen"
                                         Header="Bulletin"
                                         Command="{Binding GoToBulletinCommand}"/>
             
-            <settings1:SettingsMenuItem Icon="Pen"
+            <settings1:SettingsMenuItem Icon="WandSparkles"
                                         Header="Personalisation"
                                         Command="{Binding GoToPersonalisationCommand}"/>
             
@@ -35,7 +35,7 @@
         
         <TextBlock Grid.Row="2" TextAlignment="Center"
                    Margin="0,20"
-                   Classes="Quote" Text="v1.0.0"/>
+                   Classes="Quote" Text="{Binding  Version}"/>
         
     </Grid>
 </UserControl>
