@@ -43,6 +43,7 @@ public partial class MainViewModel : ViewModelBase
             {
                 Icon = PackIconLucideKind.NotebookPen,
                 Title = "TabBulletin",
+                Content = new BulletinTab { DataContext = BulletinViewModel }
             },
 
             new TabItemEntry(this)
@@ -84,6 +85,7 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty] private HomeViewModel _homeViewModel;
     [ObservableProperty] private EdtViewModel _edtViewModel;
+    [ObservableProperty] private BulletinCoreViewModel _bulletinViewModel;
     [ObservableProperty] private SettingsViewModel _settingsViewModel;
 
     [ObservableProperty] private LangViewModel _langViewModel;
@@ -103,6 +105,7 @@ public partial class MainViewModel : ViewModelBase
         HomeViewModel = new HomeViewModel(this);
         EdtViewModel = new EdtViewModel(this);
         SettingsViewModel = new SettingsViewModel(this);
+        BulletinViewModel = new BulletinCoreViewModel(this);
 
         InitTabEntries();
 
