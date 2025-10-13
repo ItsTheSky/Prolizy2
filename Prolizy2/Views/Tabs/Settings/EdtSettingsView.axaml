@@ -25,6 +25,8 @@
                                    TextWrapping="Wrap" />
 
                         <Button Command="{Binding EditGroupCommand}">Changer le Groupe</Button>
+                        <Button Classes="Danger" IsEnabled="{Binding CurrentGroup, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" 
+                                Command="{Binding DeleteGroupCommand}">Supprimer le Groupe</Button>
                     </StackPanel>
                 </suki:GlassCard>
 

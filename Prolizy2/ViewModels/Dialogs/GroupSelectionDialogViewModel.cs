@@ -37,6 +37,7 @@ public partial class GroupSelectionDialogViewModel(ISukiDialog dialog, EdtSettin
     public async Task ValidateSelection()
     {
         MainView.Preferences.Set("edt_group", SelectedGroup);
+        edtSettingsViewModel.CurrentGroup = SelectedGroup;
 
         edtSettingsViewModel.MainView.EdtViewModel.IsConfigured = true;
         edtSettingsViewModel.MainView.EdtViewModel.IsLoading = false;
