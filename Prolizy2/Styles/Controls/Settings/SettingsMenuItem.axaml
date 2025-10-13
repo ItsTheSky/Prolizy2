@@ -2,9 +2,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Prolizy2.Styles.Controls.Settings"
         xmlns:suki="https://github.com/kikipoulet/SukiUI"
-        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+        xmlns:controls1="clr-namespace:Prolizy2.Styles.Controls">
     <Design.PreviewWith>
-        <controls:SettingsMenuItem />
+        <StackPanel Margin="10" Orientation="Vertical"
+                    Spacing="5" Width="500">
+            <controls:SettingsMenuItem Icon="TicketsPlane" Header="Hello there" />
+            <controls:SettingsMenuItem Icon="Accessibility" Header="Bulletin" HasSoonBadge="True"/>
+        </StackPanel>
     </Design.PreviewWith>
 
     <Style Selector="controls|SettingsMenuItem">
@@ -14,7 +19,7 @@
                 
                 <suki:GlassCard IsInteractive="True"
                                 Command="{TemplateBinding Command}">
-                    <Grid ColumnDefinitions="Auto,*,Auto"
+                    <Grid ColumnDefinitions="Auto,Auto,*,Auto"
                           ColumnSpacing="10">
                     
                         <iconPacks:PackIconLucide Grid.Column="0"
@@ -23,10 +28,15 @@
                                                   Kind="{TemplateBinding Icon}"/>
                     
                         <TextBlock Grid.Column="1" Classes="SubHeader" 
-                                   TextAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                   TextAlignment="Left" 
+                                   HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                    Text="{TemplateBinding Header}" />
+                        
+                        <controls1:Badge Grid.Column="2" IsVisible="{TemplateBinding HasSoonBadge}"
+                                         VerticalAlignment="Center" HorizontalAlignment="Left"
+                                         Text="Bientôt!"/>
                     
-                        <iconPacks:PackIconLucide Grid.Column="2"
+                        <iconPacks:PackIconLucide Grid.Column="3"
                                                   HorizontalAlignment="Right" VerticalAlignment="Center"
                                                   Width="24" Height="24" FontSize="24"
                                                   Kind="ArrowRight"/>

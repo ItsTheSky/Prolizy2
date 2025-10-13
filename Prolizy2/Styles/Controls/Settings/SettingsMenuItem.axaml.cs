@@ -16,6 +16,9 @@ public class SettingsMenuItem : TemplatedControl
 
     public static readonly StyledProperty<IRelayCommand?> CommandProperty =
         AvaloniaProperty.Register<SettingsMenuItem, IRelayCommand?>(nameof(Command));
+    
+    public static readonly StyledProperty<bool> HasSoonBadgeProperty =
+        AvaloniaProperty.Register<SettingsMenuItem, bool>(nameof(HasSoonBadge), false);
 
 
     public string Header
@@ -34,5 +37,11 @@ public class SettingsMenuItem : TemplatedControl
     {
         get => GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
+    }
+    
+    public bool HasSoonBadge
+    {
+        get => GetValue(HasSoonBadgeProperty);
+        set => SetValue(HasSoonBadgeProperty, value);
     }
 }

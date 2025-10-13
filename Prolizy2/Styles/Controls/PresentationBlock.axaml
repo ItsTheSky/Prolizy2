@@ -44,12 +44,12 @@
                     <Button IsVisible="{TemplateBinding ButtonText, Converter={x:Static ObjectConverters.IsNotNull}}"
                             Command="{TemplateBinding ButtonCommand}"
                             HorizontalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" Spacing="5">
-                            <iconPacks:PackIconLucide Kind="{TemplateBinding ButtonIcon}"
-                                                      IsVisible="{TemplateBinding ButtonIcon, Converter={x:Static ObjectConverters.IsNotNull}}" />
-
+                        <StackPanel Orientation="Horizontal" Spacing="10">
                             <TextBlock Text="{TemplateBinding ButtonText}"
                                        IsVisible="{TemplateBinding ButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            
+                            <iconPacks:PackIconLucide Kind="{TemplateBinding ButtonIcon}"
+                                                      IsVisible="{TemplateBinding ButtonIcon, Converter={x:Static ObjectConverters.IsNotNull}}" />
                         </StackPanel>
                     </Button>
 

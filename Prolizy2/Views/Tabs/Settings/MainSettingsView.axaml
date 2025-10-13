@@ -17,6 +17,7 @@
             
             <settings1:SettingsMenuItem Icon="House"
                                        Header="Accueil"
+                                       HasSoonBadge="True"
                                        Command="{Binding GoToHomeCommand}"/>
             
             <settings1:SettingsMenuItem Icon="Calendar"
