@@ -4,6 +4,7 @@
              xmlns:sukiUi="clr-namespace:SukiUI;assembly=SukiUI"
              xmlns:common="clr-namespace:Prolizy2.ViewModels.Common"
              xmlns:utilities="clr-namespace:Prolizy2.Utilities"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              RequestedThemeVariant="Dark">
     <Application.DataTemplates>
         <utilities:ViewLocator />
@@ -33,6 +34,8 @@
     </Application.Styles>
     
     <Application.Resources>
+        
+        <system:Boolean x:Key="ProlizyHasItemCardData">True</system:Boolean>
         
         <Color x:Key="ProSuccessColor">#4CAF50</Color>
         <Color x:Key="ProSuccessColorLight">#A5D6A7</Color>

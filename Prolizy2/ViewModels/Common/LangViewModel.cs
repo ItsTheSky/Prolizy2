@@ -12,6 +12,7 @@ using Avalonia.Styling;
 using Avalonia.Svg;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Prolizy2.Utilities;
 
 namespace Prolizy2.ViewModels.Common;
 
@@ -82,7 +83,7 @@ public partial class LangViewModel : ObservableObject
             }
             
             CurrentCultureChanged?.Invoke(value);
-            Console.WriteLine($"CurrentCulture: {value}");
+            Logs.Debug($"LANG: CurrentCulture: {value}");
         }
     }
 
@@ -143,11 +144,7 @@ public partial class LangEntry : ObservableObject
         Culture = cultureInfo;
         
         DisplayName = cultureInfo.DisplayName;
-        Console.WriteLine($"avares://Prolizy2/Assets/Lang/Icons/{cultureInfo}.svg");
-        Icon = new SvgImage
-        {
-            Source = SvgSource.Load($"avares://Prolizy2/Assets/Lang/Icons/{cultureInfo}.svg", null)
-        };
+        Icon = new SvgImage { Source = SvgSource.Load($"avares://Prolizy2/Assets/Lang/Icons/{cultureInfo}.svg", null) };
     }
     
 }

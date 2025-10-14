@@ -15,7 +15,7 @@ using SukiUI.Dialogs;
 
 namespace Prolizy2.ViewModels.Dialogs;
 
-public partial class GroupSelectionDialogViewModel(ISukiDialog dialog, EdtSettingsViewModel edtSettingsViewModel)
+public partial class GroupSelectionDialogViewModel(ISukiDialog dialog, EdtSettingsViewModel edtSettingsViewModel, bool isSecondaryGroup)
     : ObservableObject
 {
     [ObservableProperty] private bool _isSelectedGroupValid;
@@ -36,17 +36,29 @@ public partial class GroupSelectionDialogViewModel(ISukiDialog dialog, EdtSettin
     [RelayCommand]
     public async Task ValidateSelection()
     {
-        MainView.Preferences.Set("edt_group", SelectedGroup);
-        edtSettingsViewModel.CurrentGroup = SelectedGroup;
+        if (isSecondaryGroup)
+        {
+            MainView.Preferences.Set("edt_secondary_group", SelectedGroup);
+            edtSettingsViewModel.SecondaryGroup = SelectedGroup;
+        }
+        else
+        {
+            MainView.Preferences.Set("edt_group", SelectedGroup);
+            edtSettingsViewModel.CurrentGroup = SelectedGroup;
 
-        edtSettingsViewModel.MainView.EdtViewModel.IsConfigured = true;
-        edtSettingsViewModel.MainView.EdtViewModel.IsLoading = false;
-        
+            edtSettingsViewModel.MainView.EdtViewModel.IsConfigured = true;
+            edtSettingsViewModel.MainView.EdtViewModel.IsLoading = false;
+        }
+
         edtSettingsViewModel.MainView.EdtViewModel.ClearCache();
         edtSettingsViewModel.MainView.EdtViewModel.TryRefreshCurrentDay();
-        
-        edtSettingsViewModel.SettingsView.SwitchToMain();
-        edtSettingsViewModel.MainView.NavigateTo(typeof(EdtViewModel));
+
+        if (!isSecondaryGroup)
+        {
+            edtSettingsViewModel.SettingsView.SwitchToMain();
+            edtSettingsViewModel.MainView.NavigateTo(typeof(EdtViewModel));
+        }
+
         dialog.Dismiss();
     }
 

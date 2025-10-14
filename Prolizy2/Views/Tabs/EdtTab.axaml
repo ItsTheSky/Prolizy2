@@ -33,11 +33,48 @@
                     </Button>
 
                 </StackPanel>
-                
+
+                <!-- Single column view (no secondary group) -->
                 <TransitioningContentControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
-                                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
+                                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                              Content="{Binding CurrentDailyControl}"
-                                             PageTransition="{Binding DailyItemsTransition}" />
+                                             PageTransition="{Binding DailyItemsTransition}"
+                                             IsVisible="{Binding !HasSecondaryGroup}" />
+
+                <!-- Two column view (with secondary group) -->
+                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                      ColumnDefinitions="*,10,*"
+                      RowDefinitions="Auto,*"
+                      IsVisible="{Binding HasSecondaryGroup}">
+
+                    <!-- Labels -->
+                    <suki:GlassCard Grid.Row="0" Grid.Column="0" Padding="10"
+                                    Classes="Accent"
+                                    CornerRadius="8" Margin="0,0,0,10">
+                        <TextBlock Text="{Binding PrimaryGroupName, FallbackValue='Groupe 1'}"
+                                   FontSize="14" FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" />
+                    </suki:GlassCard>
+
+                    <suki:GlassCard Grid.Row="0" Grid.Column="2" Padding="10"
+                                    Classes="Accent"
+                                    CornerRadius="8" Margin="0,0,0,10">
+                        <TextBlock Text="{Binding SecondaryGroupName, FallbackValue='Groupe 2'}"
+                                   FontSize="14" FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" />
+                    </suki:GlassCard>
+
+                    <!-- Schedule controls -->
+                    <TransitioningContentControl Grid.Row="1" Grid.Column="0"
+                                                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                                 Content="{Binding CurrentDailyControl}"
+                                                 PageTransition="{Binding DailyItemsTransition}" />
+
+                    <TransitioningContentControl Grid.Row="1" Grid.Column="2"
+                                                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                                 Content="{Binding SecondaryDailyControl}"
+                                                 PageTransition="{Binding DailyItemsTransition}" />
+                </Grid>
 
                 <Button Grid.Row="2" Grid.Column="0"
                         suki:ButtonExtensions.ShowProgress="{Binding IsLoading}"

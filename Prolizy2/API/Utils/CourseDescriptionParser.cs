@@ -56,6 +56,9 @@ public static class CourseDescriptionParser
             }
         }
         
+        if (courseDescription.EventType.IsProject() && courseDescription.Subjects.Count == 0)
+            courseDescription.Subjects.Add("SAÉ");
+        
         return courseDescription;
     }
 

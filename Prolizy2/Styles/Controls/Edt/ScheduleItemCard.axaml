@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Prolizy2.Styles.Controls.Edt"
         xmlns:suki="https://github.com/kikipoulet/SukiUI"
-        
+
         xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
         xmlns:controls1="clr-namespace:Prolizy2.Styles.Controls"
         xmlns:model="clr-namespace:Prolizy2.Model"
@@ -35,41 +35,65 @@
                         </Style>
                     </suki:GlassCard.Styles>
 
-                    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto" RowSpacing="10"
-                          ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5">
-                        
+                    <Panel>
 
-                        <TextBlock Grid.Row="0" Grid.RowSpan="2"
-                                   Grid.Column="0" Grid.ColumnSpan="2"
-                                   Text="{Binding Subject}"
-                                   TextAlignment="Center"
-                                   TextWrapping="Wrap" FontWeight="SemiBold" FontSize="18"
-                                   HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-                        
-                        <controls1:Badge Grid.Row="0" Grid.Column="2" BadgeType="Info"
-                                         HorizontalAlignment="Right"
-                                         Text="{Binding FormattedDuration}" />
-                        
-                        <controls1:Badge Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
-                                         HorizontalAlignment="Right" BadgeType="Neutral"
-                                         Text="{Binding FormattedType}" />
+                        <Grid RowDefinitions="Auto,Auto" RowSpacing="10"
+                              ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5"
+                              IsVisible="{DynamicResource !ProlizyHasItemCardData}">
+                            
+                            <TextBlock Grid.Row="0" Grid.RowSpan="2"
+                                       Grid.Column="0" Grid.ColumnSpan="2"
+                                       Text="{Binding Subject}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" FontWeight="SemiBold" FontSize="18"
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Top" />
 
-                        <!-- Elements/Rows -->
-                        <iconPacks:PackIconLucide Grid.Row="3" Grid.Column="0" Kind="Navigation" />
-                        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
-                                   VerticalAlignment="Center"
-                                   Text="{Binding Room}" FontWeight="Medium" />
+                            <controls1:Badge Grid.Row="0" Grid.Column="2" BadgeType="Info"
+                                             HorizontalAlignment="Right"
+                                             Text="{Binding FormattedDuration}" />
 
-                        <iconPacks:PackIconLucide Grid.Row="4" Grid.Column="0" Kind="Clock" />
-                        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
-                                   VerticalAlignment="Center"
-                                   Text="{Binding FormattedTimeRange}" FontWeight="Medium" />
+                            <controls1:Badge Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                             HorizontalAlignment="Right" BadgeType="Neutral"
+                                             Text="{Binding FormattedType}" />
+                        </Grid>
 
-                        <iconPacks:PackIconLucide Grid.Row="5" Grid.Column="0" Kind="User" />
-                        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
-                                   VerticalAlignment="Center"
-                                   Text="{Binding Professor}" FontWeight="Medium" />
-                    </Grid>
+                        <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto" RowSpacing="10"
+                              ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5"
+                              IsVisible="{DynamicResource ProlizyHasItemCardData}">
+
+                            <TextBlock Grid.Row="0" Grid.RowSpan="2"
+                                       Grid.Column="0" Grid.ColumnSpan="2"
+                                       Text="{Binding Subject}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" FontWeight="SemiBold" FontSize="18"
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+
+                            <controls1:Badge Grid.Row="0" Grid.Column="2" BadgeType="Info"
+                                             HorizontalAlignment="Right"
+                                             Text="{Binding FormattedDuration}" />
+
+                            <controls1:Badge Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                             HorizontalAlignment="Right" BadgeType="Neutral"
+                                             Text="{Binding FormattedType}" />
+
+                            <!-- Elements/Rows -->
+                            <iconPacks:PackIconLucide Grid.Row="3" Grid.Column="0" Kind="Navigation" />
+                            <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding Room}" FontWeight="Medium" />
+
+                            <iconPacks:PackIconLucide Grid.Row="4" Grid.Column="0" Kind="Clock" />
+                            <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding FormattedTimeRange}" FontWeight="Medium" />
+
+                            <iconPacks:PackIconLucide Grid.Row="5" Grid.Column="0" Kind="User" />
+                            <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding Professor}" FontWeight="Medium" />
+                        </Grid>
+
+                    </Panel>
                 </suki:GlassCard>
             </ControlTemplate>
         </Setter>

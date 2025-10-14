@@ -34,6 +34,12 @@ public class DailyScheduleControl : TemplatedControl
             defaultValue: true,
             defaultBindingMode: Avalonia.Data.BindingMode.OneWay);
 
+    public static readonly StyledProperty<bool> ShowHoursProperty =
+        AvaloniaProperty.Register<DailyScheduleControl, bool>(
+            nameof(ShowHours), 
+            defaultValue: true,
+            defaultBindingMode: Avalonia.Data.BindingMode.OneWay);
+
     public static readonly StyledProperty<int> DisplayedHoursProperty =
         AvaloniaProperty.Register<DailyScheduleControl, int>(
             nameof(DisplayedHours), 
@@ -70,6 +76,12 @@ public class DailyScheduleControl : TemplatedControl
     {
         get => GetValue(ShowHourLinesProperty);
         set => SetValue(ShowHourLinesProperty, value);
+    }
+    
+    public bool ShowHours
+    {
+        get => GetValue(ShowHoursProperty);
+        set => SetValue(ShowHoursProperty, value);
     }
 
     public int DisplayedHours
@@ -175,7 +187,6 @@ public class DailyScheduleControl : TemplatedControl
 
         var hourHeight = canvasHeight / DisplayedHours;
 
-        // Update time labels positioning
         GenerateTimeLabels();
 
         // Draw hour lines if enabled
@@ -359,6 +370,8 @@ public class DailyScheduleControl : TemplatedControl
         if (_timeLabelsContainer == null || _scheduleCanvas == null) return;
 
         _timeLabelsContainer.Children.Clear();
+        
+        if (!ShowHours) return;
 
         var canvasHeight = _scheduleCanvas.Bounds.Height;
         if (canvasHeight <= 0) return;
@@ -388,22 +401,10 @@ public class DailyScheduleControl : TemplatedControl
         }
     }
 
-    // Add a method to force visual refresh
-    public void ForceVisualRefresh()
-    {
-        Dispatcher.UIThread.Post(() =>
-        {
-            UpdateVisual();
-            this.InvalidateVisual();
-            this.InvalidateMeasure();
-            this.InvalidateArrange();
-        });
-    }
-
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         // Clean up collection change subscriptions
-        if (Items is ObservableCollection<ScheduleItem> collection)
+        if (Items is { } collection)
         {
             collection.CollectionChanged -= OnItemsCollectionChanged;
         }

@@ -28,6 +28,7 @@ public partial class EdtViewModel : ViewModelBase
 {
     public MainViewModel MainVm { get; init; }
     private ScheduleCacheService _cacheService = new();
+    private ScheduleCacheService _secondaryCacheService = new();
     private DateOnly _lastLoadedDay = DateOnly.MinValue;
     private int _loadingCounter = 0;
 
@@ -44,8 +45,13 @@ public partial class EdtViewModel : ViewModelBase
             return char.ToUpper(dayString[0]) + dayString[1..];
         }
     }
-    
+
     [ObservableProperty] private DailyScheduleControl _currentDailyControl = new() { Items = [] };
+    [ObservableProperty] private DailyScheduleControl _secondaryDailyControl = new() { Items = [] };
+
+    public bool HasSecondaryGroup => MainView.Preferences.ContainsKey("edt_secondary_group");
+    public string? PrimaryGroupName => MainView.Preferences.Get<string?>("edt_group");
+    public string? SecondaryGroupName => MainView.Preferences.Get<string?>("edt_secondary_group");
     
     #region Transitions
 
@@ -77,6 +83,7 @@ public partial class EdtViewModel : ViewModelBase
             return;
 
         IsConfigured = MainView.Preferences.ContainsKey("edt_group");
+        Paths.SetResourceKey("ProlizyHasItemCardData", MainView.Preferences.Get("edt_course_data_in_card", true));
         
         AttachExternalUpdaters();
         
@@ -137,6 +144,7 @@ public partial class EdtViewModel : ViewModelBase
         var targetDay = CurrentDay; // Capture the current day
 
         CurrentDailyControl.Items.Clear();
+        SecondaryDailyControl.Items.Clear();
 
         var daySchedule = await _cacheService.LoadMonthIfNeededAsync(targetDay, MainView.Preferences.Get<string>("edt_group"));
 
@@ -148,6 +156,34 @@ public partial class EdtViewModel : ViewModelBase
         {
             Items = new ObservableCollection<ScheduleItem>(daySchedule)
         };
+
+        // Always create a new secondary control to avoid visual parent conflicts
+        if (HasSecondaryGroup)
+        {
+            var secondaryGroup = MainView.Preferences.Get<string?>("edt_secondary_group");
+            if (!string.IsNullOrEmpty(secondaryGroup))
+            {
+                var secondarySchedule = await _secondaryCacheService.LoadMonthIfNeededAsync(targetDay, secondaryGroup);
+                SecondaryDailyControl = new DailyScheduleControl
+                {
+                    Items = new ObservableCollection<ScheduleItem>(secondarySchedule),
+                    ShowHours = false
+                };
+            }
+            else
+            {
+                SecondaryDailyControl = new DailyScheduleControl { Items = [] };
+            }
+        }
+        else
+        {
+            // Create new empty control to detach previous one
+            SecondaryDailyControl = new DailyScheduleControl { Items = [] };
+        }
+
+        OnPropertyChanged(nameof(HasSecondaryGroup));
+        OnPropertyChanged(nameof(PrimaryGroupName));
+        OnPropertyChanged(nameof(SecondaryGroupName));
 
         _lastLoadedDay = targetDay;
         PreloadAdjacentMonthsInBackground();
@@ -162,6 +198,18 @@ public partial class EdtViewModel : ViewModelBase
         {
             await _cacheService.PreloadAdjacentMonthsAsync(CurrentDay, MainView.Preferences.Get<string>("edt_group"));
             _cacheService.ClearOldCache(CurrentDay);
+
+            // Preload secondary group if configured
+            if (HasSecondaryGroup)
+            {
+                var secondaryGroup = MainView.Preferences.Get<string?>("edt_secondary_group");
+                if (!string.IsNullOrEmpty(secondaryGroup))
+                {
+                    await _secondaryCacheService.PreloadAdjacentMonthsAsync(CurrentDay, secondaryGroup);
+                    _secondaryCacheService.ClearOldCache(CurrentDay);
+                }
+            }
+
             UpdateHomeNextCourse();
         }
         catch (Exception ex)
@@ -238,6 +286,33 @@ public partial class EdtViewModel : ViewModelBase
                 Items = new ObservableCollection<ScheduleItem>(daySchedule)
             };
 
+            // Always create a new secondary control to avoid visual parent conflicts
+            if (HasSecondaryGroup)
+            {
+                var secondaryGroup = MainView.Preferences.Get<string?>("edt_secondary_group");
+                if (!string.IsNullOrEmpty(secondaryGroup) && _secondaryCacheService.IsWeekCached(CurrentDay))
+                {
+                    var secondarySchedule = _secondaryCacheService.GetDaySchedule(CurrentDay);
+                    SecondaryDailyControl = new DailyScheduleControl()
+                    {
+                        Items = new ObservableCollection<ScheduleItem>(secondarySchedule),
+                        ShowHours = false
+                    };
+                }
+                else
+                {
+                    SecondaryDailyControl = new DailyScheduleControl() { Items = [] };
+                }
+            }
+            else
+            {
+                SecondaryDailyControl = new DailyScheduleControl() { Items = [] };
+            }
+
+            OnPropertyChanged(nameof(HasSecondaryGroup));
+            OnPropertyChanged(nameof(PrimaryGroupName));
+            OnPropertyChanged(nameof(SecondaryGroupName));
+
             _lastLoadedDay = CurrentDay;
 
             var items = CurrentDailyControl.Items.ToList();
@@ -251,7 +326,7 @@ public partial class EdtViewModel : ViewModelBase
             Logs.Debug("EDT: Week is NOT cached, fetching from network. (Is latest request? " + (currentLoadId == _loadingCounter) + ")");
             TryRefreshCurrentDay();
         }
-        
+
         UpdateHomeNextCourse();
     }
     
@@ -267,6 +342,7 @@ public partial class EdtViewModel : ViewModelBase
     public void ClearCache()
     {
         _cacheService = new ScheduleCacheService();
+        _secondaryCacheService = new ScheduleCacheService();
         _lastLoadedDay = DateOnly.MinValue;
         _loadingCounter = 0;
     }

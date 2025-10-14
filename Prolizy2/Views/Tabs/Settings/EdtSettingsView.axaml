@@ -5,6 +5,7 @@
              xmlns:settings="clr-namespace:Prolizy2.Styles.Controls.Settings"
              xmlns:vm="clr-namespace:Prolizy2.ViewModels.Tabs.Settings"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:controls="clr-namespace:Prolizy2.Styles.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:EdtSettingsViewModel"
              x:Class="Prolizy2.Views.Tabs.Settings.EdtSettingsView">
@@ -15,19 +16,93 @@
             <StackPanel Classes="MainSettingSection">
 
                 <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
-                    <StackPanel Spacing="10">
-                        <TextBlock FontSize="16"
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10"
+                          ColumnDefinitions="*,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" FontSize="16"
                                    FontWeight="DemiBold"
-                                   Text="Groupe" />
+                                   Text="Groupe principal" />
 
-                        <TextBlock Foreground="{DynamicResource SukiLowText}"
+                        <controls:Badge Grid.Row="0" Grid.Column="1"
+                                        Text="{Binding CurrentGroup}"
+                                        IsVisible="{Binding CurrentGroup, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                   Foreground="{DynamicResource SukiLowText}"
                                    Text="Changer le groupe utilisé pour la récupération des cours. Le groupe vous est fournis sous forme de code à rentrer."
                                    TextWrapping="Wrap" />
 
-                        <Button Command="{Binding EditGroupCommand}">Changer le Groupe</Button>
-                        <Button Classes="Danger" IsEnabled="{Binding CurrentGroup, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" 
-                                Command="{Binding DeleteGroupCommand}">Supprimer le Groupe</Button>
-                    </StackPanel>
+                        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                Command="{Binding EditGroupCommand}">
+                            Changer le Groupe
+                        </Button>
+                        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                Classes="Danger"
+                                IsEnabled="{Binding CurrentGroup, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                Command="{Binding DeleteGroupCommand}">
+                            Supprimer le Groupe
+                        </Button>
+                    </Grid>
+                </suki:GlassCard>
+
+                <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10"
+                          ColumnDefinitions="*,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" FontSize="16"
+                                   FontWeight="DemiBold"
+                                   Text="Groupe secondaire" />
+
+                        <controls:Badge Grid.Row="0" Grid.Column="1"
+                                        Text="{Binding SecondaryGroup}"
+                                        IsVisible="{Binding SecondaryGroup, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                   Foreground="{DynamicResource SukiLowText}"
+                                   Text="Ajouter un groupe secondaire pour afficher deux emplois du temps côte à côte. Cela permet de comparer les cours de deux groupes différents."
+                                   TextWrapping="Wrap" />
+
+                        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                Command="{Binding EditSecondaryGroupCommand}">
+                            Changer le Groupe Secondaire
+                        </Button>
+                        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                Classes="Danger"
+                                IsEnabled="{Binding SecondaryGroup, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                Command="{Binding DeleteSecondaryGroupCommand}">
+                            Supprimer le Groupe Secondaire
+                        </Button>
+                    </Grid>
+                </suki:GlassCard>
+
+                <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
+                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
+                          ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                   FontSize="16"
+                                   FontWeight="DemiBold"
+                                   Text="{DynamicResource PersonalizationBackgroundAnimated}" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                   Foreground="{DynamicResource SukiLowText}"
+                                   Text="{DynamicResource PersonalizationBackgroundDescription}"
+                                   TextWrapping="Wrap" />
+
+                        <RadioButton Classes="GigaChips" HorizontalContentAlignment="Center"
+                                     GroupName="RadioBackgroundAnimation"
+                                     IsChecked="{Binding HasCourseDataInCard}"
+                                     Grid.Row="2" Grid.Column="0">
+                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                       Text="{DynamicResource Yes}" />
+                        </RadioButton>
+                        <RadioButton Classes="GigaChips" HorizontalContentAlignment="Center"
+                                     GroupName="RadioBackgroundAnimation"
+                                     IsChecked="{Binding !HasCourseDataInCard}"
+                                     Grid.Row="2" Grid.Column="1">
+                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                       Text="{DynamicResource No}" />
+                        </RadioButton>
+
+                    </Grid>
                 </suki:GlassCard>
 
             </StackPanel>

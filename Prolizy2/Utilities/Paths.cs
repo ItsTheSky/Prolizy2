@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Avalonia;
+using Avalonia.Controls;
 
 namespace Prolizy2.Utilities;
 
@@ -23,6 +26,11 @@ public static class Paths
             System.IO.Directory.CreateDirectory(path);
 
         return paths.Aggregate(path, System.IO.Path.Combine);
+    }
+
+    public static void SetResourceKey(string key, object? value)
+    {
+        Application.Current!.Resources[key] = value;
     }
     
 }

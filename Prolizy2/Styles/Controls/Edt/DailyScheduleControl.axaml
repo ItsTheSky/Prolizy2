@@ -16,6 +16,7 @@
                             Grid.Row="0"
                             Name="PART_TimeLabelsContainer"
                             Width="30"
+                            IsVisible="{TemplateBinding ShowHours}"
                             Background="Transparent">
                         <!-- Time labels will be generated dynamically and positioned with Canvas.Top -->
                     </Canvas>
