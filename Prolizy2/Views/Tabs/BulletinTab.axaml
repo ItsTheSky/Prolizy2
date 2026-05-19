@@ -8,7 +8,6 @@
              x:DataType="bvm:BulletinCoreViewModel"
              x:Class="Prolizy2.Views.Tabs.BulletinTab">
     <Panel>
-        <bv:BulletinAccordionView IsVisible="{Binding Options.IsAccordionVariant}" />
         <bv:BulletinTabsView IsVisible="{Binding Options.IsTabsVariant}" />
         <bv:BulletinDrillDownView IsVisible="{Binding Options.IsDrillDownVariant}" />
     </Panel>

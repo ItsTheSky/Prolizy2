@@ -30,28 +30,32 @@ public partial class MainViewModel : ViewModelBase
             {
                 Icon = LucideIconKind.House,
                 Title = "TabHome",
-                Content = new HomeTab { DataContext = HomeViewModel }
+                ViewModelType = typeof(HomeViewModel),
+                ContentFactory = () => new HomeTab { DataContext = HomeViewModel }
             },
 
             new TabItemEntry(this)
             {
                 Icon = LucideIconKind.Calendar,
                 Title = "TabEdt",
-                Content = new EdtTab { DataContext = EdtViewModel }
+                ViewModelType = typeof(EdtViewModel),
+                ContentFactory = () => new EdtTab { DataContext = EdtViewModel }
             },
 
             new TabItemEntry(this)
             {
                 Icon = LucideIconKind.NotebookPen,
                 Title = "TabBulletin",
-                Content = new BulletinTab { DataContext = BulletinViewModel }
+                ViewModelType = typeof(BulletinCoreViewModel),
+                ContentFactory = () => new BulletinTab { DataContext = BulletinViewModel }
             },
 
             new TabItemEntry(this)
             {
                 Icon = LucideIconKind.Settings,
                 Title = "TabSettings",
-                Content = new SettingsTab { DataContext = SettingsViewModel }
+                ViewModelType = typeof(SettingsViewModel),
+                ContentFactory = () => new SettingsTab { DataContext = SettingsViewModel }
             }
         ];
 
@@ -72,7 +76,7 @@ public partial class MainViewModel : ViewModelBase
     {
         foreach (var entry in TabEntries)
         {
-            if (entry.Content?.DataContext?.GetType() == vmType)
+            if (entry.ViewModelType == vmType)
             {
                 NavigateTo(entry);
                 return;
@@ -141,7 +145,23 @@ public partial class TabItemEntry(MainViewModel mainVm) : ObservableObject
     [ObservableProperty] private string _title;
     [ObservableProperty] private bool _isSelected;
 
-    [ObservableProperty] private Control? _content;
+    /// <summary>View-model type hosted by this tab; used by <see cref="MainViewModel.NavigateTo(Type)"/>.</summary>
+    public Type? ViewModelType { get; init; }
+
+    /// <summary>Factory building the tab view on first display. Mutually exclusive with a direct <see cref="Content"/>.</summary>
+    public Func<Control>? ContentFactory { get; init; }
+
+    private Control? _content;
+
+    /// <summary>
+    /// The control shown for this tab. When <see cref="ContentFactory"/> is set the
+    /// view is wrapped in a <see cref="LazyLoader"/> and built only on first display.
+    /// </summary>
+    public Control? Content
+    {
+        get => _content ??= ContentFactory is { } factory ? new LazyLoader(factory) : null;
+        set => _content = value;
+    }
 
     [RelayCommand]
     public void Clicked()

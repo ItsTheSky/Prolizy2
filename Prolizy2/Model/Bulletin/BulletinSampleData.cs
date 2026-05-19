@@ -25,12 +25,7 @@ public static class BulletinSampleData
             Rank = 11,
             Total = 71,
             Decision = "ADM",
-            DecisionLabel = "Admis",
-            FinePrint =
-                "Décision année : ADM — Admis. Inscrit le 30/01/2025. " +
-                "UE acquises : UE2.1 → UE2.6. Autorisé à s'inscrire en S3.\n" +
-                "Les moyennes servent à situer l'étudiant dans la promotion et ne " +
-                "correspondent pas à des validations de compétences ou d'UE."
+            DecisionLabel = "Admis"
         };
 
         data.Semesters = new ObservableCollection<SemesterInfo>

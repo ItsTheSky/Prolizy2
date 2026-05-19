@@ -17,11 +17,11 @@
                 <!-- Variante d'affichage -->
                 <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
                     <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
-                          ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                        <TextBlock Grid.Row="0" Grid.ColumnSpan="3"
+                          ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
                                    FontSize="16" FontWeight="DemiBold"
                                    Text="Variante d'affichage" />
-                        <TextBlock Grid.Row="1" Grid.ColumnSpan="3"
+                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2"
                                    Foreground="{DynamicResource SukiLowText}"
                                    TextWrapping="Wrap"
                                    Text="Choisit la manière dont le bulletin organise les unités d'enseignement, les ressources et les SAÉ." />
@@ -29,18 +29,11 @@
                         <RadioButton Grid.Row="2" Grid.Column="0"
                                      Classes="GigaChips" HorizontalContentAlignment="Center"
                                      GroupName="BulletinVariant"
-                                     IsChecked="{Binding Options.IsAccordionVariant}">
-                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
-                                       Text="Accordéon" />
-                        </RadioButton>
-                        <RadioButton Grid.Row="2" Grid.Column="1"
-                                     Classes="GigaChips" HorizontalContentAlignment="Center"
-                                     GroupName="BulletinVariant"
                                      IsChecked="{Binding Options.IsTabsVariant}">
                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
                                        Text="Onglets" />
                         </RadioButton>
-                        <RadioButton Grid.Row="2" Grid.Column="2"
+                        <RadioButton Grid.Row="2" Grid.Column="1"
                                      Classes="GigaChips" HorizontalContentAlignment="Center"
                                      GroupName="BulletinVariant"
                                      IsChecked="{Binding Options.IsDrillDownVariant}">

@@ -1,15 +1,12 @@
 namespace Prolizy2.ViewModels.Bulletin;
 
-/// <summary>The three layout directions explored in the design hand-off.</summary>
+/// <summary>The layout directions offered for the bulletin.</summary>
 public enum BulletinVariant
 {
-    /// <summary>V1 — everything on a single scroll with inline accordions.</summary>
-    Accordion,
-
-    /// <summary>V2 — segmented tabs (Synthèse / Ressources / SAÉ).</summary>
+    /// <summary>Segmented tabs (Synthèse / Ressources / SAÉ).</summary>
     Tabs,
 
-    /// <summary>V3 — master / detail drill-down navigation.</summary>
+    /// <summary>Master / detail drill-down navigation.</summary>
     DrillDown
 }
 
