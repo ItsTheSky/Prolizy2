@@ -95,7 +95,7 @@ public class SacocheClient
         if (input == null)
             throw new Exception("Failed to retrieve API key: input not found");
         
-        _apiKey = input.GetAttributeValue("value", null!);
+        _apiKey = input.GetAttributeValue("value", null);
         if (_apiKey == null)
             throw new Exception("Failed to retrieve API key: empty value");
         
@@ -196,7 +196,7 @@ public class SacocheClient
         {
             await Logout();
         }
-        catch (Exception)
+        catch (Exception e)
         {
             // ignored
         }

@@ -277,7 +277,7 @@ public class SecureStorage
     /// <summary>
     /// Récupère une valeur sécurisée
     /// </summary>
-    public async Task<string> GetAsync(string key, string defaultValue = null!)
+    public async Task<string> GetAsync(string key, string defaultValue = null)
     {
         await _lock.WaitAsync();
         try

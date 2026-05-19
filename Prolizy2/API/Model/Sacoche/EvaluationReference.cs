@@ -21,7 +21,7 @@ public class EvaluationReference
         public override DateOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             // fomat is 'JJ/MM/AAAA'
-            var date = reader.GetString()!;
+            var date = reader.GetString();
             var split = date.Split('/');
             return new DateOnly(int.Parse(split[2]), int.Parse(split[1]), int.Parse(split[0]));
         }
