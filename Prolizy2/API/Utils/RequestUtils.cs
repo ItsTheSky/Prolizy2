@@ -43,7 +43,7 @@ public static class RequestUtils
         string endpoint,
         object? data,
         PostFormat postFormat = PostFormat.FormUrlEncoded,
-        RequestCustomizer? customizer = null,
+        RequestCustomizer customizer = null,
         CancellationToken token = default
     )
     {
@@ -62,7 +62,7 @@ public static class RequestUtils
         TargetServer targetServer,
         object? data,
         PostFormat postFormat = PostFormat.FormUrlEncoded,
-        RequestCustomizer? customizer = null,
+        RequestCustomizer customizer = null,
         CancellationToken token = default
     )
     {
@@ -135,7 +135,7 @@ public static class RequestUtils
         TargetServer targetServer,
         string endpoint,
         object? parameters,
-        RequestCustomizer? customizer = null,
+        RequestCustomizer customizer = null,
         CancellationToken token = default)
     {
         return await SendAsync(Method.Get, targetServer, endpoint, parameters, PostFormat.FormUrlEncoded, customizer, token);
@@ -146,7 +146,7 @@ public static class RequestUtils
         string endpoint,
         object? content,
         PostFormat postFormat = PostFormat.FormUrlEncoded,
-        RequestCustomizer? customizer = null,
+        RequestCustomizer customizer = null,
         CancellationToken token = default)
     {
         return await SendAsync(Method.Post, targetServer, endpoint, content, postFormat, customizer, token);

@@ -105,7 +105,7 @@ public class BulletinClient
         {
             return JsonSerializer.Deserialize<List<double>>(json)!;
         }
-        catch (Exception)
+        catch (Exception e)
         {
             return null;
         }
