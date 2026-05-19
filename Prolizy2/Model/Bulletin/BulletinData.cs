@@ -45,9 +45,6 @@ public partial class BulletinData : ObservableObject
     [NotifyPropertyChangedFor(nameof(DecisionBadgeText))]
     private string _decisionLabel = "Admis";
 
-    /// <summary>Free-text fine print shown at the bottom of the accordion variant.</summary>
-    [ObservableProperty] private string _finePrint = string.Empty;
-
     /// <summary>Simple mean of the numeric unit averages — the "Moyenne semestre".</summary>
     public GradeValue SemesterAverage
     {

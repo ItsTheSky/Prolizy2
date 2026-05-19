@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Prolizy2.Views;
@@ -21,10 +22,9 @@ public partial class BulletinDisplayOptions : ObservableObject
     private bool _suppressPersist;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsAccordionVariant))]
     [NotifyPropertyChangedFor(nameof(IsTabsVariant))]
     [NotifyPropertyChangedFor(nameof(IsDrillDownVariant))]
-    private BulletinVariant _variant = BulletinVariant.Accordion;
+    private BulletinVariant _variant = BulletinVariant.Tabs;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsComfortable))]
@@ -48,12 +48,6 @@ public partial class BulletinDisplayOptions : ObservableObject
     private BulletinDisplayOptions() => Load();
 
     #region Two-way bool helpers (radio / toggle binding)
-
-    public bool IsAccordionVariant
-    {
-        get => Variant == BulletinVariant.Accordion;
-        set { if (value) Variant = BulletinVariant.Accordion; }
-    }
 
     public bool IsTabsVariant
     {
@@ -125,7 +119,8 @@ public partial class BulletinDisplayOptions : ObservableObject
             return;
 
         _suppressPersist = true;
-        Variant = (BulletinVariant)dto.Variant;
+        var variant = (BulletinVariant)dto.Variant;
+        Variant = Enum.IsDefined(variant) ? variant : BulletinVariant.Tabs;
         Density = (BulletinDensity)dto.Density;
         SortMode = (UnitSortMode)dto.SortMode;
         ColorMode = (UnitColorMode)dto.ColorMode;
