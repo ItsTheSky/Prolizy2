@@ -116,7 +116,7 @@ public class LangKeyToValueConverter : IValueConverter
     {
         if (value is string key)
         {
-            object val = null!;
+            object? val = null;
             var resource = Application.Current?.Resources
                 .TryGetResource(key, ThemeVariant.Default, out val) ?? false;
 

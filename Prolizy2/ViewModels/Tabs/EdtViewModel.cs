@@ -72,7 +72,7 @@ public partial class EdtViewModel : ViewModelBase
     [ObservableProperty] private bool _isGoingRight;
     public IPageTransition DailyItemsTransition => IsGoingRight ? SlideLeftTransition : SlideRightTransition;
 
-    partial void OnIsGoingRightChanged(bool _) => OnPropertyChanged(nameof(DailyItemsTransition));
+    partial void OnIsGoingRightChanged(bool value) => OnPropertyChanged(nameof(DailyItemsTransition));
 
     #endregion
     
@@ -250,19 +250,21 @@ public partial class EdtViewModel : ViewModelBase
     }
     
     [RelayCommand]
-    public async Task NextDay()
+    public Task NextDay()
     {
         CurrentDay = CurrentDay.AddDays(1);
         IsGoingRight = true;
         LoadCurrentDayFromCache();
+        return Task.CompletedTask;
     }
 
     [RelayCommand]
-    public async Task PreviousDay()
+    public Task PreviousDay()
     {
         CurrentDay = CurrentDay.AddDays(-1);
         IsGoingRight = false;
         LoadCurrentDayFromCache();
+        return Task.CompletedTask;
     }
 
     public void LoadCurrentDayFromCache()
@@ -331,11 +333,12 @@ public partial class EdtViewModel : ViewModelBase
     }
     
     [RelayCommand]
-    public async Task GoToToday()
+    public Task GoToToday()
     {
         IsGoingRight = CurrentDay <= DateOnly.FromDateTime(DateTime.Now);
         CurrentDay = DateOnly.FromDateTime(DateTime.Now);
         LoadCurrentDayFromCache();
+        return Task.CompletedTask;
     }
 
     [RelayCommand]

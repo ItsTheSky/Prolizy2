@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
+             xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
+             xmlns:bvm="clr-namespace:Prolizy2.ViewModels.Bulletin"
+             mc:Ignorable="d" d:DesignWidth="400"
+             x:DataType="bvm:BulletinCoreViewModel"
+             x:Class="Prolizy2.Views.Bulletin.BulletinHeaderSection">
+
+    <UserControl.Styles>
+        <Style Selector="ListBox.SemesterChips">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="ItemsPanel">
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="8" />
+                </ItemsPanelTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="ListBox.SemesterChips ListBoxItem">
+            <Setter Property="IsEnabled" Value="{ReflectionBinding !IsFuture}" />
+            <Setter Property="CornerRadius" Value="999" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel Spacing="10">
+
+        <bc:BulletinHeaderBar Title="Bulletin"
+                              StudentCommand="{Binding OpenStudentInfoCommand}"
+                              DownloadCommand="{Binding OpenStudentInfoCommand}" />
+
+        <ListBox Classes="SemesterChips"
+                 ItemsSource="{Binding Data.Semesters}"
+                 SelectedItem="{Binding SelectedSemester}">
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="bm:SemesterInfo">
+                    <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Code}" FontSize="12" FontWeight="Bold"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Year, StringFormat='· {0}'}"
+                                   FontSize="12"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource SukiLowText}" />
+                        <Border IsVisible="{Binding HasTrack}"
+                                Background="#1AFFFFFF"
+                                CornerRadius="4"
+                                Padding="4,1"
+                                VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Track}"
+                                       FontSize="10" FontWeight="Bold"
+                                       Foreground="{DynamicResource SukiLowText}" />
+                        </Border>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <bc:SemesterHeroCard Bulletin="{Binding Data}" />
+
+    </StackPanel>
+</UserControl>

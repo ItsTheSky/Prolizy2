@@ -1,0 +1,128 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
+             xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
+             xmlns:badge="clr-namespace:Prolizy2.Styles.Controls"
+             xmlns:bv="clr-namespace:Prolizy2.Views.Bulletin"
+             xmlns:bvm="clr-namespace:Prolizy2.ViewModels.Bulletin"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="850"
+             x:DataType="bvm:BulletinCoreViewModel"
+             x:Class="Prolizy2.Views.Bulletin.BulletinTabsView">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="0,0,0,40" Spacing="10">
+
+            <bv:BulletinHeaderSection />
+
+            <TabControl>
+
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <iconPacks:PackIconLucide Kind="ListChecks" Width="14" Height="14"
+                                                      VerticalAlignment="Center" />
+                            <TextBlock Text="Synthèse" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <StackPanel Margin="0,8,0,0">
+                        <ItemsControl ItemsSource="{Binding SortedUnits}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="8" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="bm:TeachingUnitInfo">
+                                    <bc:UnitCard Unit="{Binding}" DisplayMode="Accordion" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <bc:SectionHeader Icon="GraduationCap" Title="Compétences (RCUE)" />
+
+                        <ItemsControl ItemsSource="{Binding Data.Competences}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="3" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="bm:CompetenceInfo">
+                                    <suki:GlassCard Margin="3" Padding="8" CornerRadius="8">
+                                        <StackPanel Spacing="4" HorizontalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontSize="11" FontWeight="SemiBold"
+                                                       HorizontalAlignment="Center" />
+                                            <badge:Badge Text="{Binding Status}"
+                                                         BadgeType="{Binding StatusBadgeType}" />
+                                        </StackPanel>
+                                    </suki:GlassCard>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </TabItem>
+
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <iconPacks:PackIconLucide Kind="BookOpen" Width="14" Height="14"
+                                                      VerticalAlignment="Center" />
+                            <TextBlock Text="Ressources" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <StackPanel Margin="0,8,0,0">
+                        <bc:SectionHeader Icon="BookOpen"
+                                          Title="Ressources"
+                                          Hint="{Binding Data.Resources.Count, StringFormat='{}{0} éléments'}" />
+                        <ItemsControl ItemsSource="{Binding Data.Resources}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="6" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="bm:EvaluationGroupInfo">
+                                    <bc:EvaluationGroupCard Group="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </TabItem>
+
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <iconPacks:PackIconLucide Kind="WandSparkles" Width="14" Height="14"
+                                                      VerticalAlignment="Center" />
+                            <TextBlock Text="SAÉ" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <StackPanel Margin="0,8,0,0">
+                        <bc:SectionHeader Icon="WandSparkles"
+                                          Title="SAÉ"
+                                          Hint="{Binding Data.Saes.Count, StringFormat='{}{0} éléments'}" />
+                        <ItemsControl ItemsSource="{Binding Data.Saes}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="6" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="bm:EvaluationGroupInfo">
+                                    <bc:EvaluationGroupCard Group="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </TabItem>
+
+            </TabControl>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

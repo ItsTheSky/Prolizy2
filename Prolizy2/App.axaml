@@ -31,6 +31,14 @@
         
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Settings/SettingsMenuItem.axaml" />
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Settings/SettingSubPage.axaml" />
+
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Bulletin/GradeText.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Bulletin/SectionHeader.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Bulletin/BulletinHeaderBar.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Bulletin/DetailHeaderBar.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Bulletin/SemesterHeroCard.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Bulletin/UnitCard.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Bulletin/EvaluationGroupCard.axaml" />
     </Application.Styles>
     
     <Application.Resources>

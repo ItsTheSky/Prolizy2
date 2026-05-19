@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
+             xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
+             xmlns:bvm="clr-namespace:Prolizy2.ViewModels.Bulletin"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="850"
+             x:DataType="bvm:EvaluationListViewModel"
+             x:Class="Prolizy2.Views.Bulletin.EvaluationListView">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="0,0,0,40">
+
+            <bc:DetailHeaderBar Title="{Binding Title}"
+                                Subtitle="{Binding Subtitle}"
+                                Accent="{Binding AccentBrush}"
+                                BackCommand="{Binding BackCommand}" />
+
+            <ItemsControl ItemsSource="{Binding Items}" Margin="0,8,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="6" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="bm:EvaluationGroupInfo">
+                        <suki:GlassCard Padding="0" CornerRadius="8">
+                            <Button x:CompileBindings="False"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    CornerRadius="0"
+                                    Padding="10,8"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    Command="{Binding $parent[UserControl].DataContext.OpenItemCommand}"
+                                    CommandParameter="{Binding}">
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                                    <Border Grid.Column="0"
+                                            Background="{Binding AccentSoftBrush}"
+                                            CornerRadius="6"
+                                            MinWidth="54"
+                                            Padding="6,3"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Code}"
+                                                   FontSize="10" FontWeight="Bold"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   Foreground="{Binding AccentBrush}" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="8,0" Spacing="2"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Label}"
+                                                   FontSize="12" FontWeight="SemiBold"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{Binding EvaluationCountLabel}"
+                                                   FontSize="10"
+                                                   Foreground="{DynamicResource SukiLowText}" />
+                                    </StackPanel>
+                                    <bc:GradeText Grid.Column="2"
+                                                  Grade="{Binding Average}"
+                                                  GradeSize="18"
+                                                  ShowMaximum="False"
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,8,0" />
+                                    <iconPacks:PackIconLucide Grid.Column="3"
+                                                              Kind="ChevronRight"
+                                                              Width="14" Height="14"
+                                                              VerticalAlignment="Center"
+                                                              Foreground="{DynamicResource SukiLowText}" />
+                                </Grid>
+                            </Button>
+                        </suki:GlassCard>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

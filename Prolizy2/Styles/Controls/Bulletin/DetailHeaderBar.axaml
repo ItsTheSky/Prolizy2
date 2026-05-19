@@ -1,0 +1,45 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls.Bulletin"
+        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+    <Design.PreviewWith>
+        <Border Width="380" Padding="10" Background="#0E0E10">
+            <controls:DetailHeaderBar Title="UE2.4" Subtitle="Gérer" />
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|DetailHeaderBar">
+        <Setter Property="Accent" Value="{DynamicResource SukiPrimaryColor}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="Auto,*" Margin="0,4,0,6">
+
+                    <Button Grid.Column="0"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Width="36" Height="36"
+                            Padding="0"
+                            CornerRadius="18"
+                            VerticalAlignment="Center"
+                            Command="{TemplateBinding BackCommand}">
+                        <iconPacks:PackIconLucide Kind="ChevronLeft"
+                                                  Width="22" Height="22"
+                                                  Foreground="{TemplateBinding Accent}" />
+                    </Button>
+
+                    <StackPanel Grid.Column="1" Margin="6,0,0,0"
+                                VerticalAlignment="Center" Spacing="1">
+                        <TextBlock Text="{TemplateBinding Title}"
+                                   FontSize="18" FontWeight="Bold"
+                                   Foreground="{DynamicResource SukiText}" />
+                        <TextBlock Text="{TemplateBinding Subtitle}"
+                                   FontSize="11"
+                                   IsVisible="{TemplateBinding Subtitle, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   Foreground="{DynamicResource SukiLowText}" />
+                    </StackPanel>
+
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

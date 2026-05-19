@@ -109,8 +109,7 @@ public class ColorizeAvalonEdit : DocumentColorizingTransformer
     protected override void ColorizeLine(DocumentLine line)
     {
         var lineStartOffset = line.Offset;
-        var start = 0;
-        
+
         var clr = LogType.MatchPrefix(DebugTab.Instance.TextBlock.Document.GetText(line));
         if (clr != null)
         {

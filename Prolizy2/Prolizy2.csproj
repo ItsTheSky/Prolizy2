@@ -4,6 +4,9 @@
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <!-- CS8618: data/transfer model classes are intentionally populated after construction
+             (JSON deserialisation, object initialisers) — matches the existing convention in Bulletins.cs. -->
+        <NoWarn>$(NoWarn);CS8618</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

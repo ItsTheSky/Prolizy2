@@ -1,0 +1,192 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
+             xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
+             xmlns:badge="clr-namespace:Prolizy2.Styles.Controls"
+             xmlns:bvm="clr-namespace:Prolizy2.ViewModels.Bulletin"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="850"
+             x:DataType="bvm:UnitDetailViewModel"
+             x:Class="Prolizy2.Views.Bulletin.UnitDetailView">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="ContributionRow" x:DataType="bm:ContributionInfo">
+            <suki:GlassCard Padding="0" CornerRadius="8">
+                <Button x:CompileBindings="False"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        CornerRadius="0"
+                        Padding="10,8"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        Command="{Binding $parent[UserControl].DataContext.OpenContributionCommand}"
+                        CommandParameter="{Binding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+                        <Border Grid.Column="0"
+                                Background="{Binding AccentSoftBrush}"
+                                CornerRadius="6"
+                                MinWidth="54"
+                                Padding="6,3"
+                                VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Code}"
+                                       FontSize="10" FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Foreground="{Binding AccentBrush}" />
+                        </Border>
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding Label}"
+                                   FontSize="12"
+                                   Margin="8,0"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" />
+                        <bc:GradeText Grid.Column="2"
+                                      Grade="{Binding Grade}"
+                                      GradeSize="13"
+                                      ShowMaximum="False"
+                                      VerticalAlignment="Center"
+                                      Foreground="{Binding Grade.ToneBrush}"
+                                      DimBrush="{Binding Grade.ToneBrush}" />
+                        <TextBlock Grid.Column="3"
+                                   Text="{Binding CoefficientLabel}"
+                                   FontSize="10"
+                                   MinWidth="30"
+                                   Margin="10,0,8,0"
+                                   TextAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource SukiLowText}"
+                                   IsVisible="{Binding ShowCoefficients, Source={x:Static bvm:BulletinDisplayOptions.Instance}}" />
+                        <iconPacks:PackIconLucide Grid.Column="4"
+                                                  Kind="ChevronRight"
+                                                  Width="14" Height="14"
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{DynamicResource SukiLowText}" />
+                    </Grid>
+                </Button>
+            </suki:GlassCard>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="0,0,0,40">
+
+            <bc:DetailHeaderBar Title="{Binding Unit.Code}"
+                                Subtitle="{Binding Unit.ShortName}"
+                                Accent="{Binding Unit.UnitBrush}"
+                                BackCommand="{Binding BackCommand}" />
+
+            <!-- UE hero -->
+            <Border Background="{Binding Unit.HeroBackgroundBrush}"
+                    BorderBrush="{Binding Unit.HeroBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="14">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="{Binding Unit.Name}"
+                               FontSize="13" FontWeight="SemiBold"
+                               TextWrapping="Wrap" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" Spacing="8">
+                            <TextBlock Text="MOYENNE UE"
+                                       FontSize="10" FontWeight="Bold"
+                                       Foreground="{DynamicResource SukiLowText}" />
+                            <bc:GradeText Grade="{Binding Unit.Average}"
+                                          GradeSize="32"
+                                          HorizontalAlignment="Left" />
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <badge:Badge Text="{Binding Unit.Status}"
+                                             BadgeType="{Binding Unit.StatusBadgeType}" />
+                                <badge:Badge Text="{Binding Unit.RankLabel}"
+                                             BadgeType="Neutral" />
+                                <badge:Badge Text="{Binding Unit.BonusLabel}"
+                                             BadgeType="Success"
+                                             IsVisible="{Binding Unit.HasBonus}" />
+                                <badge:Badge Text="{Binding Unit.MalusLabel}"
+                                             BadgeType="Error"
+                                             IsVisible="{Binding Unit.HasMalus}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Spacing="4"
+                                    IsVisible="{Binding Options.ShowWeightBars}">
+                            <TextBlock Text="POIDS"
+                                       FontSize="9" FontWeight="Bold"
+                                       HorizontalAlignment="Right"
+                                       Foreground="{DynamicResource SukiLowText}" />
+                            <ItemsControl ItemsSource="{Binding Unit.Contributions}" Height="44">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="3"
+                                                    VerticalAlignment="Bottom" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="bm:ContributionInfo">
+                                        <Border Width="8"
+                                                Height="{Binding WeightBarHeight}"
+                                                CornerRadius="2"
+                                                VerticalAlignment="Bottom"
+                                                Background="{Binding AccentBrush}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="{Binding Unit.TotalWeightLabel}"
+                                       FontSize="9"
+                                       HorizontalAlignment="Right"
+                                       Foreground="{DynamicResource SukiLowText}" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Resources -->
+            <bc:SectionHeader Icon="BookOpen"
+                              Title="Ressources contributives"
+                              IsVisible="{Binding Unit.HasResourceContributions}" />
+            <ItemsControl ItemsSource="{Binding Unit.ResourceContributions}"
+                          ItemTemplate="{StaticResource ContributionRow}"
+                          IsVisible="{Binding Unit.HasResourceContributions}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="6" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- SAÉ -->
+            <bc:SectionHeader Icon="WandSparkles"
+                              Title="SAÉ contributives"
+                              IsVisible="{Binding Unit.HasSaeContributions}" />
+            <ItemsControl ItemsSource="{Binding Unit.SaeContributions}"
+                          ItemTemplate="{StaticResource ContributionRow}"
+                          IsVisible="{Binding Unit.HasSaeContributions}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="6" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- Portfolio -->
+            <bc:SectionHeader Icon="Folder"
+                              Title="Portfolio"
+                              IsVisible="{Binding Unit.HasPortfolioContributions}" />
+            <ItemsControl ItemsSource="{Binding Unit.PortfolioContributions}"
+                          ItemTemplate="{StaticResource ContributionRow}"
+                          IsVisible="{Binding Unit.HasPortfolioContributions}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="6" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

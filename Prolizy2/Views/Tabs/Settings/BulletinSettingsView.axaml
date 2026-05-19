@@ -1,0 +1,191 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:Prolizy2.Styles.Controls.Settings"
+             xmlns:vm="clr-namespace:Prolizy2.ViewModels.Tabs.Settings"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="850"
+             x:DataType="vm:BulletinSettingsViewModel"
+             x:Class="Prolizy2.Views.Tabs.Settings.BulletinSettingsView">
+    <settings:SettingSubPage Title="Bulletin"
+                             BackCommand="{Binding BackCommand}">
+
+        <ScrollViewer>
+            <StackPanel Classes="MainSettingSection">
+
+                <!-- Variante d'affichage -->
+                <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
+                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
+                          ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="3"
+                                   FontSize="16" FontWeight="DemiBold"
+                                   Text="Variante d'affichage" />
+                        <TextBlock Grid.Row="1" Grid.ColumnSpan="3"
+                                   Foreground="{DynamicResource SukiLowText}"
+                                   TextWrapping="Wrap"
+                                   Text="Choisit la manière dont le bulletin organise les unités d'enseignement, les ressources et les SAÉ." />
+
+                        <RadioButton Grid.Row="2" Grid.Column="0"
+                                     Classes="GigaChips" HorizontalContentAlignment="Center"
+                                     GroupName="BulletinVariant"
+                                     IsChecked="{Binding Options.IsAccordionVariant}">
+                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                       Text="Accordéon" />
+                        </RadioButton>
+                        <RadioButton Grid.Row="2" Grid.Column="1"
+                                     Classes="GigaChips" HorizontalContentAlignment="Center"
+                                     GroupName="BulletinVariant"
+                                     IsChecked="{Binding Options.IsTabsVariant}">
+                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                       Text="Onglets" />
+                        </RadioButton>
+                        <RadioButton Grid.Row="2" Grid.Column="2"
+                                     Classes="GigaChips" HorizontalContentAlignment="Center"
+                                     GroupName="BulletinVariant"
+                                     IsChecked="{Binding Options.IsDrillDownVariant}">
+                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                       Text="Drill-down" />
+                        </RadioButton>
+                    </Grid>
+                </suki:GlassCard>
+
+                <!-- Densité -->
+                <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
+                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
+                          ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                                   FontSize="16" FontWeight="DemiBold"
+                                   Text="Densité" />
+                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2"
+                                   Foreground="{DynamicResource SukiLowText}"
+                                   TextWrapping="Wrap"
+                                   Text="Le mode compact resserre les lignes pour afficher davantage d'information à l'écran." />
+
+                        <RadioButton Grid.Row="2" Grid.Column="0"
+                                     Classes="GigaChips" HorizontalContentAlignment="Center"
+                                     GroupName="BulletinDensity"
+                                     IsChecked="{Binding Options.IsComfortable}">
+                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                       Text="Confort" />
+                        </RadioButton>
+                        <RadioButton Grid.Row="2" Grid.Column="1"
+                                     Classes="GigaChips" HorizontalContentAlignment="Center"
+                                     GroupName="BulletinDensity"
+                                     IsChecked="{Binding Options.IsCompact}">
+                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                       Text="Compact" />
+                        </RadioButton>
+                    </Grid>
+                </suki:GlassCard>
+
+                <!-- Tri des UE -->
+                <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
+                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
+                          ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                                   FontSize="16" FontWeight="DemiBold"
+                                   Text="Tri des unités d'enseignement" />
+                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2"
+                                   Foreground="{DynamicResource SukiLowText}"
+                                   TextWrapping="Wrap"
+                                   Text="Ordonne les UE par leur code ou par leur moyenne décroissante." />
+
+                        <RadioButton Grid.Row="2" Grid.Column="0"
+                                     Classes="GigaChips" HorizontalContentAlignment="Center"
+                                     GroupName="BulletinSort"
+                                     IsChecked="{Binding Options.IsSortByCode}">
+                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                       Text="Par code" />
+                        </RadioButton>
+                        <RadioButton Grid.Row="2" Grid.Column="1"
+                                     Classes="GigaChips" HorizontalContentAlignment="Center"
+                                     GroupName="BulletinSort"
+                                     IsChecked="{Binding Options.IsSortByAverage}">
+                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                       Text="Par moyenne" />
+                        </RadioButton>
+                    </Grid>
+                </suki:GlassCard>
+
+                <!-- Couleur des UE -->
+                <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
+                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
+                          ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                                   FontSize="16" FontWeight="DemiBold"
+                                   Text="Couleur des UE" />
+                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2"
+                                   Foreground="{DynamicResource SukiLowText}"
+                                   TextWrapping="Wrap"
+                                   Text="La bande colorée d'une UE suit sa couleur propre, ou une teinte calculée depuis la moyenne." />
+
+                        <RadioButton Grid.Row="2" Grid.Column="0"
+                                     Classes="GigaChips" HorizontalContentAlignment="Center"
+                                     GroupName="BulletinColor"
+                                     IsChecked="{Binding Options.IsColorByUnit}">
+                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                       Text="Par UE" />
+                        </RadioButton>
+                        <RadioButton Grid.Row="2" Grid.Column="1"
+                                     Classes="GigaChips" HorizontalContentAlignment="Center"
+                                     GroupName="BulletinColor"
+                                     IsChecked="{Binding Options.IsColorByGrade}">
+                            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
+                                       Text="Par note" />
+                        </RadioButton>
+                    </Grid>
+                </suki:GlassCard>
+
+                <!-- Détails affichés -->
+                <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
+                    <StackPanel Spacing="14">
+                        <TextBlock FontSize="16" FontWeight="DemiBold"
+                                   Text="Détails affichés" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" Spacing="2">
+                                <TextBlock Text="Afficher le rang" FontWeight="Medium" />
+                                <TextBlock Text="Position dans la promotion sur chaque UE."
+                                           FontSize="12"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource SukiLowText}" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" VerticalAlignment="Center"
+                                          OnContent="" OffContent=""
+                                          IsChecked="{Binding Options.ShowRank}" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" Spacing="2">
+                                <TextBlock Text="Afficher les coefficients" FontWeight="Medium" />
+                                <TextBlock Text="Poids de chaque ressource et évaluation."
+                                           FontSize="12"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource SukiLowText}" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" VerticalAlignment="Center"
+                                          OnContent="" OffContent=""
+                                          IsChecked="{Binding Options.ShowCoefficients}" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" Spacing="2">
+                                <TextBlock Text="Mini-graphe des poids" FontWeight="Medium" />
+                                <TextBlock Text="Histogramme des coefficients sur le détail d'une UE."
+                                           FontSize="12"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource SukiLowText}" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" VerticalAlignment="Center"
+                                          OnContent="" OffContent=""
+                                          IsChecked="{Binding Options.ShowWeightBars}" />
+                        </Grid>
+                    </StackPanel>
+                </suki:GlassCard>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </settings:SettingSubPage>
+</UserControl>
