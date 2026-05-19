@@ -3,8 +3,7 @@
         xmlns:controls="using:Prolizy2.Styles.Controls.Edt"
         
         xmlns:controls1="clr-namespace:Prolizy2.Styles.Controls"
-        xmlns:model="clr-namespace:Prolizy2.Model"
-        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+        xmlns:model="clr-namespace:Prolizy2.Model">
     <Design.PreviewWith>
         <controls:ItemDialogOverlay />
     </Design.PreviewWith>
@@ -28,17 +27,17 @@
                     
                     <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
                                          ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                        <iconPacks:PackIconLucide Grid.Row="0" Grid.Column="0" Kind="Navigation" />
+                        <LucideIcon Grid.Row="0" Grid.Column="0" Kind="Navigation" />
                         <TextBlock Grid.Row="0" Grid.Column="1"
                                    VerticalAlignment="Center"
                                    Text="{Binding Room}" FontWeight="Medium" />
 
-                        <iconPacks:PackIconLucide Grid.Row="1" Grid.Column="0" Kind="Clock" />
+                        <LucideIcon Grid.Row="1" Grid.Column="0" Kind="Clock" />
                         <TextBlock Grid.Row="1" Grid.Column="1"
                                    VerticalAlignment="Center"
                                    Text="{Binding FormattedTimeRange}" FontWeight="Medium" />
 
-                        <iconPacks:PackIconLucide Grid.Row="2" Grid.Column="0" Kind="User" />
+                        <LucideIcon Grid.Row="2" Grid.Column="0" Kind="User" />
                         <TextBlock Grid.Row="2" Grid.Column="1"
                                    VerticalAlignment="Center"
                                    Text="{Binding Professor}" FontWeight="Medium" />

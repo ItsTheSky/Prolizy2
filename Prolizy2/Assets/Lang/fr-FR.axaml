@@ -32,4 +32,14 @@
     <system:String x:Key="EdtNext">Suivant</system:String>
     <system:String x:Key="EdtPrevious">Précédent</system:String>
     
+    <system:String x:Key="EdtSettingsDeleteGroup">Supprimer le Groupe</system:String>
+    <system:String x:Key="EdtSettingsPrimaryGroup">Groupe principal</system:String>
+    <system:String x:Key="EdtSettingsPrimaryGroupDesc">Changer le groupe utilisé pour la récupération des cours. Le groupe vous est fournis sous forme de code à rentrer.</system:String>
+    <system:String x:Key="EdtSettingsChangePrimaryGroup">Changer le Groupe</system:String>
+    <system:String x:Key="EdtSettingsSecondaryGroup">Groupe secondaire</system:String>
+    <system:String x:Key="EdtSettingsSecondaryGroupDesc">Ajouter un groupe secondaire pour afficher deux emplois du temps côte à côte. Cela permet de comparer les cours de deux groupes différents.</system:String>
+    <system:String x:Key="EdtSettingsChangeSecondaryGroup">Changer le Groupe Secondaire</system:String>
+    <system:String x:Key="EdtSettingsComplexItemCard">Détails des cours</system:String> 
+    <system:String x:Key="EdtSettingsComplexItemCardDesc">Active/désactive la grille de détails sur les cartes de l'emploi du temps. Les détails seront toujours accessible, une fois une carte cliquée. Une baisse de performance (surtout avec deux groupes de configurés) peut être sentie si cette option est activée.</system:String>
+    
 </ResourceDictionary>

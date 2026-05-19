@@ -2,7 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Prolizy2.Styles.Controls.Settings"
         xmlns:suki="https://github.com/kikipoulet/SukiUI"
-        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
         xmlns:controls1="clr-namespace:Prolizy2.Styles.Controls">
     <Design.PreviewWith>
         <StackPanel Margin="10" Orientation="Vertical"
@@ -22,10 +21,10 @@
                     <Grid ColumnDefinitions="Auto,Auto,*,Auto"
                           ColumnSpacing="10">
                     
-                        <iconPacks:PackIconLucide Grid.Column="0"
-                                                  HorizontalAlignment="Left" VerticalAlignment="Center"
-                                                  Width="24" Height="24" FontSize="24"
-                                                  Kind="{TemplateBinding Icon}"/>
+                        <LucideIcon Grid.Column="0"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                                    Size="24"
+                                    Kind="{TemplateBinding Icon}"/>
                     
                         <TextBlock Grid.Column="1" Classes="SubHeader" 
                                    TextAlignment="Left" 
@@ -36,10 +35,10 @@
                                          VerticalAlignment="Center" HorizontalAlignment="Left"
                                          Text="Bientôt!"/>
                     
-                        <iconPacks:PackIconLucide Grid.Column="3"
-                                                  HorizontalAlignment="Right" VerticalAlignment="Center"
-                                                  Width="24" Height="24" FontSize="24"
-                                                  Kind="ArrowRight"/>
+                        <LucideIcon Grid.Column="3"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Size="24"
+                                    Kind="ArrowRight"/>
                     
                     </Grid>
                 </suki:GlassCard>

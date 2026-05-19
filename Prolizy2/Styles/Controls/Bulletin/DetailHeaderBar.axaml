@@ -1,7 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="using:Prolizy2.Styles.Controls.Bulletin"
-        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+        xmlns:controls="using:Prolizy2.Styles.Controls.Bulletin">
     <Design.PreviewWith>
         <Border Width="380" Padding="10" Background="#0E0E10">
             <controls:DetailHeaderBar Title="UE2.4" Subtitle="Gérer" />
@@ -22,9 +21,9 @@
                             CornerRadius="18"
                             VerticalAlignment="Center"
                             Command="{TemplateBinding BackCommand}">
-                        <iconPacks:PackIconLucide Kind="ChevronLeft"
-                                                  Width="22" Height="22"
-                                                  Foreground="{TemplateBinding Accent}" />
+                        <LucideIcon Kind="ChevronLeft"
+                                    Size="22"
+                                    Foreground="{TemplateBinding Accent}" />
                     </Button>
 
                     <StackPanel Grid.Column="1" Margin="6,0,0,0"

@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Prolizy2.ViewModels"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
-             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
 
              xmlns:welcome="clr-namespace:Prolizy2.Views.Welcome"
              mc:Ignorable="d"
@@ -23,7 +22,7 @@
         <Style Selector="StackPanel.IsTabItemSelected TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource SukiPrimaryColor}" />
         </Style>
-        <Style Selector="StackPanel.IsTabItemSelected iconPacks|PackIconLucide">
+        <Style Selector="StackPanel.IsTabItemSelected LucideIcon">
             <Setter Property="Foreground" Value="{DynamicResource SukiPrimaryColor}" />
         </Style>
 
@@ -45,7 +44,7 @@
                     <TabItem>
                         <TabItem.Header>
                             <StackPanel Classes="TabItemPanel">
-                                <iconPacks:PackIconLucide Kind="File" />
+                                <LucideIcon Kind="File" />
                                 <TextBlock Text="Home" />
                             </StackPanel>
                         </TabItem.Header>
@@ -55,12 +54,11 @@
                                                BusyText="Connexion ..."
                                                IsBusy="{Binding IsLoggingIn}">
                                     <StackPanel>
-                                        <iconPacks:PackIconLucide Width="30"
-                                                                  Height="30"
-                                                                  Margin="10"
-                                                                  HorizontalAlignment="Center"
-                                                                  Foreground="{DynamicResource SukiPrimaryColor}"
-                                                                  Kind="LogIn" />
+                                        <LucideIcon Size="30"
+                                                    Margin="10"
+                                                    HorizontalAlignment="Center"
+                                                    Foreground="{DynamicResource SukiPrimaryColor}"
+                                                    Kind="LogIn" />
                                         <TextBlock Margin="0,5,0,27"
                                                    HorizontalAlignment="Center"
                                                    FontSize="18"
@@ -101,7 +99,7 @@
                     <TabItem IsSelected="True">
                         <TabItem.Header>
                             <StackPanel Classes="TabItemPanel">
-                                <iconPacks:PackIconLucide Kind="Angry" />
+                                <LucideIcon Kind="Angry" />
                                 <TextBlock Text="Angry" />
                             </StackPanel>
                         </TabItem.Header>
@@ -140,7 +138,7 @@
                     <TabItem>
                         <TabItem.Header>
                             <StackPanel Classes="TabItemPanel">
-                                <iconPacks:PackIconLucide Kind="Radius" />
+                                <LucideIcon Kind="Radius" />
                                 <TextBlock Text="Idk" />
                             </StackPanel>
                         </TabItem.Header>
@@ -180,9 +178,9 @@
                                     <StackPanel Classes.IsTabItemSelected="{Binding IsSelected}"
                                                 Spacing="5">
 
-                                        <iconPacks:PackIconLucide Kind="{Binding Icon}"
-                                                                  HorizontalAlignment="Center"
-                                                                  Width="24" Height="24" />
+                                        <LucideIcon Kind="{Binding Icon}"
+                                                    HorizontalAlignment="Center"
+                                                    Size="24" />
                                         <TextBlock FontSize="16"
                                                    Text="{Binding Title, Converter={StaticResource LangKeyToValueConverter}}" />
 

@@ -48,6 +48,7 @@ public partial class EdtViewModel : ViewModelBase
 
     [ObservableProperty] private DailyScheduleControl _currentDailyControl = new() { Items = [] };
     [ObservableProperty] private DailyScheduleControl _secondaryDailyControl = new() { Items = [] };
+    [ObservableProperty] private DailyScheduleControl _singleViewDailyControl = new() { Items = [] };
 
     public bool HasSecondaryGroup => MainView.Preferences.ContainsKey("edt_secondary_group");
     public string? PrimaryGroupName => MainView.Preferences.Get<string?>("edt_group");
@@ -134,7 +135,7 @@ public partial class EdtViewModel : ViewModelBase
             IsLoading = false;
             _lastLoadedDay = CurrentDay;
 
-            var items = CurrentDailyControl.Items.ToList();
+            var items = HasSecondaryGroup ? CurrentDailyControl.Items.ToList() : SingleViewDailyControl.Items.ToList();
             AndroidBridgeProvider.Bridge?.UpdateScheduleWidget(EdtUtilities.FindNextOrCurrentItem(items));
         });
     }
@@ -143,42 +144,38 @@ public partial class EdtViewModel : ViewModelBase
     {
         var targetDay = CurrentDay; // Capture the current day
 
-        CurrentDailyControl.Items.Clear();
-        SecondaryDailyControl.Items.Clear();
-
         var daySchedule = await _cacheService.LoadMonthIfNeededAsync(targetDay, MainView.Preferences.Get<string>("edt_group"));
 
         // Verify we're still on the same day before updating UI
         if (targetDay != CurrentDay)
             return;
 
-        CurrentDailyControl = new DailyScheduleControl
-        {
-            Items = new ObservableCollection<ScheduleItem>(daySchedule)
-        };
-
-        // Always create a new secondary control to avoid visual parent conflicts
+        // Load secondary group if configured
         if (HasSecondaryGroup)
         {
             var secondaryGroup = MainView.Preferences.Get<string?>("edt_secondary_group");
             if (!string.IsNullOrEmpty(secondaryGroup))
             {
                 var secondarySchedule = await _secondaryCacheService.LoadMonthIfNeededAsync(targetDay, secondaryGroup);
+
+                // Use separate controls for dual-column view
+                CurrentDailyControl = new DailyScheduleControl
+                {
+                    Items = new ObservableCollection<ScheduleItem>(daySchedule)
+                };
                 SecondaryDailyControl = new DailyScheduleControl
                 {
-                    Items = new ObservableCollection<ScheduleItem>(secondarySchedule),
-                    ShowHours = false
+                    Items = new ObservableCollection<ScheduleItem>(secondarySchedule)
                 };
-            }
-            else
-            {
-                SecondaryDailyControl = new DailyScheduleControl { Items = [] };
             }
         }
         else
         {
-            // Create new empty control to detach previous one
-            SecondaryDailyControl = new DailyScheduleControl { Items = [] };
+            // Use separate control for single-column view
+            SingleViewDailyControl = new DailyScheduleControl
+            {
+                Items = new ObservableCollection<ScheduleItem>(daySchedule)
+            };
         }
 
         OnPropertyChanged(nameof(HasSecondaryGroup));
@@ -268,7 +265,7 @@ public partial class EdtViewModel : ViewModelBase
     public void LoadCurrentDayFromCache()
     {
         // Prevent loading if the day hasn't changed
-        if (_lastLoadedDay == CurrentDay && CurrentDailyControl.Items.Any())
+        if (_lastLoadedDay == CurrentDay && (HasSecondaryGroup ? CurrentDailyControl.Items.Any() : SingleViewDailyControl.Items.Any()))
             return;
 
         var currentLoadId = ++_loadingCounter;
@@ -281,32 +278,33 @@ public partial class EdtViewModel : ViewModelBase
                 return;
 
             var daySchedule = _cacheService.GetDaySchedule(CurrentDay);
-            CurrentDailyControl = new DailyScheduleControl()
-            {
-                Items = new ObservableCollection<ScheduleItem>(daySchedule)
-            };
 
-            // Always create a new secondary control to avoid visual parent conflicts
+            // Load secondary group from cache if configured
             if (HasSecondaryGroup)
             {
                 var secondaryGroup = MainView.Preferences.Get<string?>("edt_secondary_group");
                 if (!string.IsNullOrEmpty(secondaryGroup) && _secondaryCacheService.IsWeekCached(CurrentDay))
                 {
                     var secondarySchedule = _secondaryCacheService.GetDaySchedule(CurrentDay);
+
+                    // Use separate controls for dual-column view
+                    CurrentDailyControl = new DailyScheduleControl()
+                    {
+                        Items = new ObservableCollection<ScheduleItem>(daySchedule)
+                    };
                     SecondaryDailyControl = new DailyScheduleControl()
                     {
-                        Items = new ObservableCollection<ScheduleItem>(secondarySchedule),
-                        ShowHours = false
+                        Items = new ObservableCollection<ScheduleItem>(secondarySchedule)
                     };
-                }
-                else
-                {
-                    SecondaryDailyControl = new DailyScheduleControl() { Items = [] };
                 }
             }
             else
             {
-                SecondaryDailyControl = new DailyScheduleControl() { Items = [] };
+                // Use separate control for single-column view
+                SingleViewDailyControl = new DailyScheduleControl()
+                {
+                    Items = new ObservableCollection<ScheduleItem>(daySchedule)
+                };
             }
 
             OnPropertyChanged(nameof(HasSecondaryGroup));
@@ -315,7 +313,7 @@ public partial class EdtViewModel : ViewModelBase
 
             _lastLoadedDay = CurrentDay;
 
-            var items = CurrentDailyControl.Items.ToList();
+            var items = daySchedule.ToList();
             AndroidBridgeProvider.Bridge?.UpdateScheduleWidget(EdtUtilities.FindNextOrCurrentItem(items));
             Logs.Debug("EDT: from week cache, loaded " + items.Count + " items.");
 

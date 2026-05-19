@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
-using IconPacks.Avalonia.Lucide;
+using Lucide.Avalonia;
 
 namespace Prolizy2.Styles.Controls;
 
@@ -13,8 +13,8 @@ public class PresentationBlock : ContentControl
     public static readonly StyledProperty<string?> DescriptionProperty =
         AvaloniaProperty.Register<PresentationBlock, string?>(nameof(Description));
 
-    public static readonly StyledProperty<PackIconLucideKind> IconProperty =
-        AvaloniaProperty.Register<PresentationBlock, PackIconLucideKind>(nameof(Icon), PackIconLucideKind.OctagonAlert);
+    public static readonly StyledProperty<LucideIconKind> IconProperty =
+        AvaloniaProperty.Register<PresentationBlock, LucideIconKind>(nameof(Icon), LucideIconKind.OctagonAlert);
 
     public static readonly StyledProperty<ICommand?> ButtonCommandProperty =
         AvaloniaProperty.Register<PresentationBlock, ICommand?>(nameof(ButtonCommand));
@@ -22,8 +22,8 @@ public class PresentationBlock : ContentControl
     public static readonly StyledProperty<string?> ButtonTextProperty =
         AvaloniaProperty.Register<PresentationBlock, string?>(nameof(ButtonText));
 
-    public static readonly StyledProperty<PackIconLucideKind?> ButtonIconProperty =
-        AvaloniaProperty.Register<PresentationBlock, PackIconLucideKind?>(nameof(ButtonIcon));
+    public static readonly StyledProperty<LucideIconKind?> ButtonIconProperty =
+        AvaloniaProperty.Register<PresentationBlock, LucideIconKind?>(nameof(ButtonIcon));
 
     public string Title
     {
@@ -37,7 +37,7 @@ public class PresentationBlock : ContentControl
         set => SetValue(DescriptionProperty, value);
     }
 
-    public PackIconLucideKind Icon
+    public LucideIconKind Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
@@ -55,7 +55,7 @@ public class PresentationBlock : ContentControl
         set => SetValue(ButtonTextProperty, value);
     }
 
-    public PackIconLucideKind? ButtonIcon
+    public LucideIconKind? ButtonIcon
     {
         get => GetValue(ButtonIconProperty);
         set => SetValue(ButtonIconProperty, value);

@@ -2,8 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Prolizy2.Styles.Controls.Bulletin"
         xmlns:bvm="using:Prolizy2.ViewModels.Bulletin"
-        xmlns:suki="https://github.com/kikipoulet/SukiUI"
-        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+        xmlns:suki="https://github.com/kikipoulet/SukiUI">
     <Design.PreviewWith>
         <Border Width="380" Padding="15" Background="#0E0E10">
             <controls:EvaluationGroupCard />
@@ -58,14 +57,14 @@
                                     <Panel Grid.Column="3" Width="20"
                                            Margin="8,0,0,0"
                                            VerticalAlignment="Center">
-                                        <iconPacks:PackIconLucide Kind="ChevronDown"
-                                                                  Width="16" Height="16"
-                                                                  Foreground="{DynamicResource SukiLowText}"
-                                                                  IsVisible="{Binding !IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
-                                        <iconPacks:PackIconLucide Kind="ChevronUp"
-                                                                  Width="16" Height="16"
-                                                                  Foreground="{DynamicResource SukiLowText}"
-                                                                  IsVisible="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        <LucideIcon Kind="ChevronDown"
+                                                    Size="16"
+                                                    Foreground="{DynamicResource SukiLowText}"
+                                                    IsVisible="{Binding !IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        <LucideIcon Kind="ChevronUp"
+                                                    Size="16"
+                                                    Foreground="{DynamicResource SukiLowText}"
+                                                    IsVisible="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
                                     </Panel>
 
                                 </Grid>

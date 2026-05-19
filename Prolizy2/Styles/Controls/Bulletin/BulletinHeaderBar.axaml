@@ -1,7 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="using:Prolizy2.Styles.Controls.Bulletin"
-        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+        xmlns:controls="using:Prolizy2.Styles.Controls.Bulletin">
     <Design.PreviewWith>
         <Border Width="380" Padding="15" Background="#0E0E10">
             <controls:BulletinHeaderBar />
@@ -28,7 +27,7 @@
                             CornerRadius="18"
                             VerticalAlignment="Center"
                             Command="{TemplateBinding DownloadCommand}">
-                        <iconPacks:PackIconLucide Kind="Download" Width="20" Height="20" />
+                        <LucideIcon Kind="Download" Size="20" />
                     </Button>
 
                     <Button Grid.Column="2"
@@ -39,7 +38,7 @@
                             CornerRadius="18"
                             VerticalAlignment="Center"
                             Command="{TemplateBinding StudentCommand}">
-                        <iconPacks:PackIconLucide Kind="CircleUser" Width="22" Height="22" />
+                        <LucideIcon Kind="CircleUser" Size="22" />
                     </Button>
 
                 </Grid>

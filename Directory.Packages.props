@@ -2,26 +2,28 @@
     <!-- https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management -->
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <AvaloniaVersion>12.0.999-cibuild0059304-alpha</AvaloniaVersion>
+        <AvaloniaVersion>12.0.3</AvaloniaVersion>
     </PropertyGroup>
-    <ItemGroup>
+    <ItemGroup> 
         <!-- Avalonia packages -->
         <!-- Important: keep version in sync! -->
         <PackageVersion Include="AsyncAwaitBestPractices" Version="9.0.0"/>
         <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)"/>
-        <PackageVersion Include="Avalonia.AvaloniaEdit" Version="11.3.0"/>
+        <PackageVersion Include="Avalonia.AvaloniaEdit" Version="12.0.0"/>
         <PackageVersion Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)"/>
-        <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)"/>
         <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)"/>
         <PackageVersion Include="Avalonia.iOS" Version="$(AvaloniaVersion)"/>
         <PackageVersion Include="Avalonia.Browser" Version="$(AvaloniaVersion)"/>
         <PackageVersion Include="Avalonia.Android" Version="$(AvaloniaVersion)"/>
-        <PackageVersion Include="Avalonia.Svg" Version="11.3.0"/>
-        <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.0.4"/>
+        <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1"/>
+        <!-- Successor of the deprecated Avalonia.Svg package; first ID with an Avalonia 12 build -->
+        <PackageVersion Include="Svg.Controls.Avalonia" Version="12.0.0.9"/>
         <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
         <PackageVersion Include="HtmlAgilityPack" Version="1.12.4"/>
-        <PackageVersion Include="IconPacks.Avalonia" Version="1.0.0"/>
-        <PackageVersion Include="SukiUI" Version="6.1.0"/>
+        <!-- Lucide icons, rebuilt for net8.0 from dme-compunet/Lucide.Avalonia, see B:\Sky\LocalNuGet -->
+        <PackageVersion Include="Lucide.Avalonia" Version="0.2.7-net8"/>
+        <!-- Avalonia 12 build from SukiUI PR #598, packed locally into B:\Sky\LocalNuGet -->
+        <PackageVersion Include="SukiUI" Version="6.1.0-pr598"/>
         <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.17"/>
     </ItemGroup>
 </Project>

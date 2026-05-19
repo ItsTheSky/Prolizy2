@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using IconPacks.Avalonia.Lucide;
+using Lucide.Avalonia;
 using Prolizy2.Utilities;
 using Prolizy2.ViewModels.Bulletin;
 using Prolizy2.ViewModels.Common;
@@ -28,28 +28,28 @@ public partial class MainViewModel : ViewModelBase
         [
             new TabItemEntry(this)
             {
-                Icon = PackIconLucideKind.House,
+                Icon = LucideIconKind.House,
                 Title = "TabHome",
                 Content = new HomeTab { DataContext = HomeViewModel }
             },
 
             new TabItemEntry(this)
             {
-                Icon = PackIconLucideKind.Calendar,
+                Icon = LucideIconKind.Calendar,
                 Title = "TabEdt",
                 Content = new EdtTab { DataContext = EdtViewModel }
             },
 
             new TabItemEntry(this)
             {
-                Icon = PackIconLucideKind.NotebookPen,
+                Icon = LucideIconKind.NotebookPen,
                 Title = "TabBulletin",
                 Content = new BulletinTab { DataContext = BulletinViewModel }
             },
 
             new TabItemEntry(this)
             {
-                Icon = PackIconLucideKind.Settings,
+                Icon = LucideIconKind.Settings,
                 Title = "TabSettings",
                 Content = new SettingsTab { DataContext = SettingsViewModel }
             }
@@ -137,7 +137,7 @@ public partial class MainViewModel : ViewModelBase
 
 public partial class TabItemEntry(MainViewModel mainVm) : ObservableObject
 {
-    [ObservableProperty] private PackIconLucideKind _icon;
+    [ObservableProperty] private LucideIconKind _icon;
     [ObservableProperty] private string _title;
     [ObservableProperty] private bool _isSelected;
 

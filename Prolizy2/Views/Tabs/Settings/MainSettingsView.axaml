@@ -8,35 +8,36 @@
              x:DataType="settings:MainSettingsViewModel"
              x:Class="Prolizy2.Views.Tabs.Settings.MainSettingsView">
     <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
-        
+
         <TextBlock Grid.Row="0" Text="Options"
                    Margin="0,20"
-                   Classes="Header"/>
-        
+                   Classes="Header" />
+
         <StackPanel Grid.Row="1" Spacing="10" VerticalAlignment="Center">
-            
+
             <settings1:SettingsMenuItem Icon="House"
-                                       Header="Accueil"
-                                       HasSoonBadge="True"
-                                       Command="{Binding GoToHomeCommand}"/>
-            
+                                        Header="Accueil"
+                                        HasSoonBadge="True"
+                                        Command="{Binding GoToHomeCommand}" />
+
             <settings1:SettingsMenuItem Icon="Calendar"
                                         Header="Emploi du Temps"
-                                        Command="{Binding GoToEdtCommand}"/>
-            
+                                        Command="{Binding GoToEdtCommand}" />
+
             <settings1:SettingsMenuItem Icon="NotebookPen"
                                         Header="Bulletin"
-                                        Command="{Binding GoToBulletinCommand}"/>
-            
+                                        HasSoonBadge="True"
+                                        Command="{Binding GoToBulletinCommand}" />
+
             <settings1:SettingsMenuItem Icon="WandSparkles"
                                         Header="Personalisation"
-                                        Command="{Binding GoToPersonalisationCommand}"/>
-            
+                                        Command="{Binding GoToPersonalisationCommand}" />
+
         </StackPanel>
-        
+
         <TextBlock Grid.Row="2" TextAlignment="Center"
                    Margin="0,20"
-                   Classes="Quote" Text="{Binding  Version}"/>
-        
+                   Classes="Quote" Text="{Binding  Version}" />
+
     </Grid>
 </UserControl>

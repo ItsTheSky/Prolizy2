@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
              xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
              mc:Ignorable="d" d:DesignWidth="320"
              x:DataType="bm:StudentInfo"
@@ -34,9 +33,9 @@
 
         <StackPanel Spacing="8">
             <Grid ColumnDefinitions="Auto,*,Auto">
-                <iconPacks:PackIconLucide Kind="Cake" Width="14" Height="14"
-                                          VerticalAlignment="Center"
-                                          Foreground="{DynamicResource SukiLowText}" />
+                <LucideIcon Kind="Cake" Size="14"
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource SukiLowText}" />
                 <TextBlock Grid.Column="1" Text="Né le" Margin="10,0"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource SukiLowText}" />
@@ -44,9 +43,9 @@
                            FontWeight="SemiBold" VerticalAlignment="Center" />
             </Grid>
             <Grid ColumnDefinitions="Auto,*,Auto">
-                <iconPacks:PackIconLucide Kind="BadgeInfo" Width="14" Height="14"
-                                          VerticalAlignment="Center"
-                                          Foreground="{DynamicResource SukiLowText}" />
+                <LucideIcon Kind="BadgeInfo" Size="14"
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource SukiLowText}" />
                 <TextBlock Grid.Column="1" Text="Numéro étudiant" Margin="10,0"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource SukiLowText}" />
@@ -54,9 +53,9 @@
                            FontWeight="SemiBold" VerticalAlignment="Center" />
             </Grid>
             <Grid ColumnDefinitions="Auto,*,Auto">
-                <iconPacks:PackIconLucide Kind="Hash" Width="14" Height="14"
-                                          VerticalAlignment="Center"
-                                          Foreground="{DynamicResource SukiLowText}" />
+                <LucideIcon Kind="Hash" Size="14"
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource SukiLowText}" />
                 <TextBlock Grid.Column="1" Text="Code INE" Margin="10,0"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource SukiLowText}" />

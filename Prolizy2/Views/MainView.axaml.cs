@@ -5,7 +5,7 @@ using Avalonia.Input;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using IconPacks.Avalonia.Lucide;
+using Lucide.Avalonia;
 using Prolizy2.Utilities.Storage;
 using Prolizy2.ViewModels;
 using Prolizy2.ViewModels.Common;

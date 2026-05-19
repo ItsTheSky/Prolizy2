@@ -1,8 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Prolizy2.Styles.Controls"
-        xmlns:suki="https://github.com/kikipoulet/SukiUI"
-        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+        xmlns:suki="https://github.com/kikipoulet/SukiUI">
     <Design.PreviewWith>
         <StackPanel Orientation="Vertical" Spacing="5">
             <controls:Badge Text="Hello" />
@@ -35,11 +34,11 @@
                                 
                                 Padding="5,2">
                     <StackPanel Orientation="Horizontal" Spacing="5">
-                        <iconPacks:PackIconLucide IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                                  Kind="{TemplateBinding Icon}"
-                                                  Width="14" Height="14" 
-                                                  VerticalAlignment="Center"
-                                                  Foreground="{DynamicResource SukiPrimaryColor}"/>
+                        <LucideIcon IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                    Kind="{TemplateBinding Icon}"
+                                    Size="14"
+                                    VerticalAlignment="Center"
+                                    Foreground="{DynamicResource SukiPrimaryColor}"/>
                         
                         <TextBlock Text="{TemplateBinding Text}" VerticalAlignment="Center" />
                     </StackPanel>

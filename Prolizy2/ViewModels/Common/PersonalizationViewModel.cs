@@ -4,7 +4,7 @@ using System.Linq;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using IconPacks.Avalonia.Lucide;
+using Lucide.Avalonia;
 using Prolizy2.Utilities;
 using Prolizy2.ViewModels.Tabs;
 using Prolizy2.Views.Tabs;
@@ -61,7 +61,7 @@ public partial class PersonalizationViewModel : ViewModelBase
     {
         MainView.NavigateTo(new TabItemEntry(MainView)
         {
-            Icon = PackIconLucideKind.MonitorCog,
+            Icon = LucideIconKind.MonitorCog,
             Title = "TabDebug",
             Content = new DebugTab()
         });

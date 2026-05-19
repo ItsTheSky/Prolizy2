@@ -2,7 +2,7 @@
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using CommunityToolkit.Mvvm.Input;
-using IconPacks.Avalonia.Lucide;
+using Lucide.Avalonia;
 
 namespace Prolizy2.Styles.Controls.Settings;
 
@@ -11,8 +11,8 @@ public class SettingsMenuItem : TemplatedControl
     public static readonly StyledProperty<string> HeaderProperty =
         AvaloniaProperty.Register<SettingsMenuItem, string>(nameof(Header));
 
-    public static readonly StyledProperty<PackIconLucideKind?> IconProperty =
-        AvaloniaProperty.Register<SettingsMenuItem, PackIconLucideKind?>(nameof(Icon));
+    public static readonly StyledProperty<LucideIconKind?> IconProperty =
+        AvaloniaProperty.Register<SettingsMenuItem, LucideIconKind?>(nameof(Icon));
 
     public static readonly StyledProperty<IRelayCommand?> CommandProperty =
         AvaloniaProperty.Register<SettingsMenuItem, IRelayCommand?>(nameof(Command));
@@ -27,7 +27,7 @@ public class SettingsMenuItem : TemplatedControl
         set => SetValue(HeaderProperty, value);
     }
     
-    public PackIconLucideKind? Icon
+    public LucideIconKind? Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);

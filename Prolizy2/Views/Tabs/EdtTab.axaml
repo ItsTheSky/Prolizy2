@@ -6,7 +6,6 @@
              xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Tabs"
 
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
-             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
              xmlns:controls="clr-namespace:Prolizy2.Styles.Controls"
              mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="800"
              x:DataType="tabs:EdtViewModel"
@@ -26,7 +25,7 @@
                                FontSize="24" FontWeight="SemiBold" />
 
                     <Button HorizontalAlignment="Stretch"
-                            suki:ButtonExtensions.Icon="{iconPacks:Lucide Calendar}"
+                            suki:ButtonExtensions.Icon="{LucideIconContent Calendar}"
                             suki:ButtonExtensions.ShowProgress="{Binding IsLoading}"
                             Command="{Binding OpenCalendarCommand}">
                         <TextBlock VerticalAlignment="Center" Text="{DynamicResource EdtSelectDateTitle}" />
@@ -37,7 +36,7 @@
                 <!-- Single column view (no secondary group) -->
                 <TransitioningContentControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
                                              VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                                             Content="{Binding CurrentDailyControl}"
+                                             Content="{Binding SingleViewDailyControl}"
                                              PageTransition="{Binding DailyItemsTransition}"
                                              IsVisible="{Binding !HasSecondaryGroup}" />
 
@@ -48,21 +47,19 @@
                       IsVisible="{Binding HasSecondaryGroup}">
 
                     <!-- Labels -->
-                    <suki:GlassCard Grid.Row="0" Grid.Column="0" Padding="10"
-                                    Classes="Accent"
-                                    CornerRadius="8" Margin="0,0,0,10">
+                    <Border Grid.Row="0" Grid.Column="0" Padding="10" Background="{DynamicResource SukiCardBackground}"
+                            CornerRadius="8" Margin="0,0,0,10">
                         <TextBlock Text="{Binding PrimaryGroupName, FallbackValue='Groupe 1'}"
                                    FontSize="14" FontWeight="SemiBold"
                                    HorizontalAlignment="Center" />
-                    </suki:GlassCard>
+                    </Border>
 
-                    <suki:GlassCard Grid.Row="0" Grid.Column="2" Padding="10"
-                                    Classes="Accent"
-                                    CornerRadius="8" Margin="0,0,0,10">
+                    <Border Grid.Row="0" Grid.Column="2" Padding="10" Background="{DynamicResource SukiCardBackground}"
+                            CornerRadius="8" Margin="0,0,0,10">
                         <TextBlock Text="{Binding SecondaryGroupName, FallbackValue='Groupe 2'}"
                                    FontSize="14" FontWeight="SemiBold"
                                    HorizontalAlignment="Center" />
-                    </suki:GlassCard>
+                    </Border>
 
                     <!-- Schedule controls -->
                     <TransitioningContentControl Grid.Row="1" Grid.Column="0"
@@ -77,8 +74,8 @@
                 </Grid>
 
                 <Button Grid.Row="2" Grid.Column="0"
+                        suki:ButtonExtensions.Icon="{LucideIconContent ChevronLeft}"
                         suki:ButtonExtensions.ShowProgress="{Binding IsLoading}"
-                        suki:ButtonExtensions.Icon="{iconPacks:Lucide ChevronLeft}"
                         HorizontalAlignment="Stretch" Command="{Binding PreviousDayCommand}">
                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource EdtPrevious}" />
                 </Button>
@@ -87,8 +84,8 @@
                         suki:ButtonExtensions.ShowProgress="{Binding IsLoading}"
                         Command="{Binding GoToTodayCommand}"
                         Padding="10">
-                    <iconPacks:PackIconLucide Kind="House" VerticalAlignment="Center"
-                                              Width="16" Height="16" />
+                    <LucideIcon Kind="House" VerticalAlignment="Center"
+                                Size="16" />
                 </Button>
 
                 <Button Grid.Row="2" Grid.Column="2"
@@ -97,8 +94,8 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                 Spacing="10">
                         <TextBlock VerticalAlignment="Center" Text="{DynamicResource EdtNext}" />
-                        <iconPacks:PackIconLucide Kind="ChevronRight" VerticalAlignment="Center"
-                                                  Width="12" Height="12" />
+                        <LucideIcon Kind="ChevronRight" VerticalAlignment="Center"
+                                    Size="12" />
                     </StackPanel>
                 </Button>
 
