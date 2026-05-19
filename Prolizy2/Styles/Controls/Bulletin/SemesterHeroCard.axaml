@@ -1,0 +1,92 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls.Bulletin"
+        xmlns:badge="using:Prolizy2.Styles.Controls">
+    <Design.PreviewWith>
+        <Border Width="380" Padding="15" Background="#0E0E10">
+            <controls:SemesterHeroCard />
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|SemesterHeroCard">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border x:CompileBindings="False"
+                        DataContext="{TemplateBinding Bulletin}"
+                        CornerRadius="8"
+                        Padding="16"
+                        BorderThickness="1">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                            <GradientStop Color="#3DFF8C42" Offset="0" />
+                            <GradientStop Color="#2EB968C7" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="#FF8C42" Opacity="0.45" />
+                    </Border.BorderBrush>
+
+                    <Grid ColumnDefinitions="*,Auto">
+
+                        <StackPanel Grid.Column="0" Spacing="8" VerticalAlignment="Top">
+                            <TextBlock Text="MOYENNE SEMESTRE"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource SukiLowText}" />
+
+                            <controls:GradeText Grade="{Binding SemesterAverage}"
+                                                GradeSize="40"
+                                                HorizontalAlignment="Left" />
+
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <badge:Badge Text="{Binding DecisionBadgeText}"
+                                             BadgeType="Success"
+                                             Icon="Check" />
+                                <badge:Badge Text="{Binding RankLabel}"
+                                             BadgeType="Neutral" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Spacing="4"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Right">
+                            <TextBlock Text="UE ACQUISES"
+                                       FontSize="10"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Right"
+                                       Foreground="{DynamicResource SukiLowText}" />
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Text="{Binding AcquiredUnitCount}"
+                                           FontSize="22"
+                                           FontWeight="Bold"
+                                           Foreground="#FF8C42" />
+                                <TextBlock Text="{Binding TotalUnitCount, StringFormat='/{0}'}"
+                                           FontSize="14"
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Bottom"
+                                           Foreground="{DynamicResource SukiLowText}" />
+                            </StackPanel>
+
+                            <ItemsControl ItemsSource="{Binding Units}" HorizontalAlignment="Right">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="3" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Width="8" Height="8"
+                                                CornerRadius="2"
+                                                Background="{Binding AcquisitionDotBrush}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

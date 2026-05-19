@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using IconPacks.Avalonia.Lucide;
 using Prolizy2.Utilities;
+using Prolizy2.ViewModels.Bulletin;
 using Prolizy2.ViewModels.Common;
 using Prolizy2.ViewModels.Tabs;
 using Prolizy2.Views;

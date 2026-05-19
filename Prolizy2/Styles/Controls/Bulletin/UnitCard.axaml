@@ -1,0 +1,187 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls.Bulletin"
+        xmlns:badge="using:Prolizy2.Styles.Controls"
+        xmlns:bvm="using:Prolizy2.ViewModels.Bulletin"
+        xmlns:suki="https://github.com/kikipoulet/SukiUI"
+        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+    <Design.PreviewWith>
+        <Border Width="380" Padding="15" Background="#0E0E10">
+            <controls:UnitCard />
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|UnitCard">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <suki:GlassCard x:CompileBindings="False"
+                                Padding="0"
+                                CornerRadius="8"
+                                DataContext="{TemplateBinding Unit}">
+                    <StackPanel>
+
+                        <!-- Tappable header -->
+                        <Button x:Name="PART_Header"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                CornerRadius="0"
+                                Padding="0">
+                            <Grid ColumnDefinitions="4,*,Auto,Auto">
+
+                                <Border x:Name="PART_Stripe" Grid.Column="0"
+                                        Background="{Binding UnitBrush}" />
+
+                                <Border x:Name="PART_Body" Grid.Column="1"
+                                        Padding="12,12,8,12">
+                                    <StackPanel Spacing="3">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <TextBlock x:Name="PART_Code"
+                                                       Text="{Binding Code}"
+                                                       FontSize="11" FontWeight="Bold"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{Binding UnitBrush}" />
+                                            <TextBlock Text="·"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource SukiLowText}"
+                                                       IsVisible="{Binding ShortName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                            <TextBlock Text="{Binding ShortName}"
+                                                       FontSize="11" FontWeight="SemiBold"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource SukiLowText}"
+                                                       IsVisible="{Binding ShortName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                            <badge:Badge Text="{Binding Status}"
+                                                         BadgeType="{Binding StatusBadgeType}"
+                                                         VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding Name}"
+                                                   FontSize="13" FontWeight="SemiBold"
+                                                   TextWrapping="Wrap"
+                                                   MaxLines="2"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Border>
+
+                                <StackPanel Grid.Column="2"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Right"
+                                            Spacing="2"
+                                            Margin="4,0,4,0">
+                                    <controls:GradeText Grade="{Binding Average}"
+                                                        GradeSize="22"
+                                                        ShowMaximum="False"
+                                                        HorizontalAlignment="Right" />
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="3"
+                                                HorizontalAlignment="Right"
+                                                IsVisible="{Binding ShowRank, Source={x:Static bvm:BulletinDisplayOptions.Instance}}">
+                                        <iconPacks:PackIconLucide Kind="Hash"
+                                                                  Width="10" Height="10"
+                                                                  VerticalAlignment="Center"
+                                                                  Foreground="{DynamicResource SukiLowText}" />
+                                        <TextBlock Text="{Binding RankLabel}"
+                                                   FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource SukiLowText}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <Panel Grid.Column="3" Width="22"
+                                       Margin="0,0,8,0"
+                                       VerticalAlignment="Center">
+                                    <iconPacks:PackIconLucide Kind="ChevronDown"
+                                                              Width="16" Height="16"
+                                                              Foreground="{DynamicResource SukiLowText}"
+                                                              IsVisible="{Binding ShowChevronDown, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    <iconPacks:PackIconLucide Kind="ChevronUp"
+                                                              Width="16" Height="16"
+                                                              Foreground="{DynamicResource SukiLowText}"
+                                                              IsVisible="{Binding ShowChevronUp, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    <iconPacks:PackIconLucide Kind="ChevronRight"
+                                                              Width="16" Height="16"
+                                                              Foreground="{DynamicResource SukiLowText}"
+                                                              IsVisible="{Binding ShowChevronRight, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </Panel>
+
+                            </Grid>
+                        </Button>
+
+                        <!-- Inline expanded detail (accordion mode) -->
+                        <Border x:Name="PART_Expanded"
+                                IsVisible="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{DynamicResource SukiBorderBrush}"
+                                Padding="12,8,12,12">
+                            <StackPanel Spacing="4">
+
+                                <StackPanel Orientation="Horizontal" Spacing="6"
+                                            Margin="0,0,0,4"
+                                            IsVisible="{Binding HasBonusOrMalus}">
+                                    <badge:Badge Text="{Binding BonusLabel}"
+                                                 BadgeType="Success"
+                                                 IsVisible="{Binding HasBonus}" />
+                                    <badge:Badge Text="{Binding MalusLabel}"
+                                                 BadgeType="Error"
+                                                 IsVisible="{Binding HasMalus}" />
+                                </StackPanel>
+
+                                <ItemsControl ItemsSource="{Binding Contributions}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,3">
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding Code}"
+                                                           FontSize="10" FontWeight="Bold"
+                                                           MinWidth="48"
+                                                           VerticalAlignment="Center"
+                                                           Foreground="{Binding AccentBrush}" />
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Label}"
+                                                           FontSize="12"
+                                                           Margin="8,0"
+                                                           VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <StackPanel Grid.Column="2"
+                                                            Orientation="Horizontal"
+                                                            Spacing="8"
+                                                            VerticalAlignment="Center">
+                                                    <controls:GradeText Grade="{Binding Grade}"
+                                                                        GradeSize="13"
+                                                                        ShowMaximum="False"
+                                                                        Foreground="{Binding Grade.ToneBrush}"
+                                                                        DimBrush="{Binding Grade.ToneBrush}" />
+                                                    <TextBlock Text="{Binding CoefficientLabel}"
+                                                               FontSize="10"
+                                                               MinWidth="30"
+                                                               TextAlignment="Right"
+                                                               VerticalAlignment="Center"
+                                                               Foreground="{DynamicResource SukiLowText}"
+                                                               IsVisible="{Binding ShowCoefficients, Source={x:Static bvm:BulletinDisplayOptions.Instance}}" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </suki:GlassCard>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <!-- Density: compact removes vertical breathing room -->
+    <Style Selector="controls|UnitCard:dense /template/ Border#PART_Body">
+        <Setter Property="Padding" Value="12,8,8,8" />
+    </Style>
+
+    <!-- Colour mode: grade tone repaints the stripe and the UE code -->
+    <Style Selector="controls|UnitCard:grade-tone /template/ Border#PART_Stripe">
+        <Setter Property="Background" Value="{ReflectionBinding GradeBrush}" />
+    </Style>
+    <Style Selector="controls|UnitCard:grade-tone /template/ TextBlock#PART_Code">
+        <Setter Property="Foreground" Value="{ReflectionBinding GradeBrush}" />
+    </Style>
+</Styles>

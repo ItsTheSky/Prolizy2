@@ -131,7 +131,7 @@ public class Preferences
     /// <summary>
     /// Obtient une valeur avec fallback
     /// </summary>
-    public T Get<T>(string key, T defaultValue = default)
+    public T Get<T>(string key, T defaultValue = default!)
     {
         lock (_lock)
         {
@@ -142,7 +142,7 @@ public class Preferences
 
                 if (value is JsonElement jsonElement)
                 {
-                    return JsonSerializer.Deserialize<T>(jsonElement.GetRawText(), _jsonOptions);
+                    return JsonSerializer.Deserialize<T>(jsonElement.GetRawText(), _jsonOptions)!;
                 }
 
                 if (value is T typedValue)
@@ -152,7 +152,7 @@ public class Preferences
 
                 // Tentative de conversion via JSON
                 var json = JsonSerializer.Serialize(value, _jsonOptions);
-                return JsonSerializer.Deserialize<T>(json, _jsonOptions);
+                return JsonSerializer.Deserialize<T>(json, _jsonOptions)!;
             }
             catch (Exception ex)
             {

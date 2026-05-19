@@ -29,7 +29,10 @@ public partial class MainSettingsViewModel(SettingsViewModel settingsViewModel) 
     [RelayCommand]
     public void GoToBulletin()
     {
-        
+        settingsViewModel.SwitchToPage(new BulletinSettingsView()
+        {
+            DataContext = new BulletinSettingsViewModel(settingsViewModel.MainViewModel, settingsViewModel)
+        });
     }
 
     [RelayCommand]

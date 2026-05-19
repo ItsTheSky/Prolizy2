@@ -1,0 +1,43 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls.Bulletin"
+        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+    <Design.PreviewWith>
+        <StackPanel Margin="20" Background="#0E0E10">
+            <controls:SectionHeader Icon="Layers" Title="Unités d'enseignement" Hint="6 UE" />
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|SectionHeader">
+        <Setter Property="Margin" Value="2,18,2,8" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="Auto,*,Auto">
+
+                    <iconPacks:PackIconLucide Grid.Column="0"
+                                              Kind="{TemplateBinding Icon}"
+                                              Width="14" Height="14"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,8,0"
+                                              Foreground="{DynamicResource SukiLowText}" />
+
+                    <TextBlock Grid.Column="1"
+                               Text="{TemplateBinding Title}"
+                               FontSize="12"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource SukiLowText}" />
+
+                    <TextBlock Grid.Column="2"
+                               Text="{TemplateBinding Hint}"
+                               IsVisible="{TemplateBinding Hint, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               FontSize="11"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource SukiLowText}"
+                               Opacity="0.7" />
+
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

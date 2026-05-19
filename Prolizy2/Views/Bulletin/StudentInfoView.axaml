@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
+             mc:Ignorable="d" d:DesignWidth="320"
+             x:DataType="bm:StudentInfo"
+             x:Class="Prolizy2.Views.Bulletin.StudentInfoView">
+    <StackPanel Spacing="14" Width="320">
+
+        <Grid ColumnDefinitions="Auto,*">
+            <Border Width="56" Height="56" CornerRadius="28">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                        <GradientStop Color="#FF8C42" Offset="0" />
+                        <GradientStop Color="#B968C7" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <TextBlock Text="{Binding Initials}"
+                           FontSize="20" FontWeight="Bold"
+                           Foreground="White"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </Border>
+
+            <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center" Spacing="2">
+                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" />
+                <TextBlock Text="{Binding ProgramLine}"
+                           FontSize="12"
+                           Foreground="{DynamicResource SukiLowText}" />
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Spacing="8">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <iconPacks:PackIconLucide Kind="Cake" Width="14" Height="14"
+                                          VerticalAlignment="Center"
+                                          Foreground="{DynamicResource SukiLowText}" />
+                <TextBlock Grid.Column="1" Text="Né le" Margin="10,0"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource SukiLowText}" />
+                <TextBlock Grid.Column="2" Text="{Binding BirthDate}"
+                           FontWeight="SemiBold" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <iconPacks:PackIconLucide Kind="BadgeInfo" Width="14" Height="14"
+                                          VerticalAlignment="Center"
+                                          Foreground="{DynamicResource SukiLowText}" />
+                <TextBlock Grid.Column="1" Text="Numéro étudiant" Margin="10,0"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource SukiLowText}" />
+                <TextBlock Grid.Column="2" Text="{Binding StudentId}"
+                           FontWeight="SemiBold" VerticalAlignment="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <iconPacks:PackIconLucide Kind="Hash" Width="14" Height="14"
+                                          VerticalAlignment="Center"
+                                          Foreground="{DynamicResource SukiLowText}" />
+                <TextBlock Grid.Column="1" Text="Code INE" Margin="10,0"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource SukiLowText}" />
+                <TextBlock Grid.Column="2" Text="{Binding Ine}"
+                           FontWeight="SemiBold" VerticalAlignment="Center" />
+            </Grid>
+        </StackPanel>
+
+        <TextBlock Text="Ce relevé de notes est provisoire. Il est fourni à titre informatif et n'a aucune valeur universitaire officielle."
+                   FontSize="11"
+                   TextWrapping="Wrap"
+                   Foreground="{DynamicResource SukiLowText}" />
+
+    </StackPanel>
+</UserControl>

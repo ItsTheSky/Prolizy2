@@ -1,0 +1,97 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
+             xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
+             xmlns:bvm="clr-namespace:Prolizy2.ViewModels.Bulletin"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="850"
+             x:DataType="bvm:EvaluationDetailViewModel"
+             x:Class="Prolizy2.Views.Bulletin.EvaluationDetailView">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="0,0,0,40">
+
+            <bc:DetailHeaderBar Title="{Binding Group.Code}"
+                                Subtitle="{Binding KindLabel}"
+                                Accent="{Binding AccentBrush}"
+                                BackCommand="{Binding BackCommand}" />
+
+            <Border Background="{Binding Group.AccentSoftBrush}"
+                    BorderBrush="{Binding Group.AccentBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="14">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="{Binding Group.Label}"
+                               FontSize="12" FontWeight="SemiBold"
+                               Foreground="{DynamicResource SukiLowText}"
+                               TextWrapping="Wrap" />
+                    <bc:GradeText Grade="{Binding Group.Average}"
+                                  GradeSize="32"
+                                  HorizontalAlignment="Left" />
+                    <TextBlock Text="{Binding Group.EvaluationCountLabel}"
+                               FontSize="11"
+                               Foreground="{DynamicResource SukiLowText}" />
+                </StackPanel>
+            </Border>
+
+            <bc:SectionHeader Icon="ListChecks" Title="Évaluations" />
+
+            <suki:GlassCard Padding="16" CornerRadius="8"
+                            IsVisible="{Binding !Group.HasEvaluations}">
+                <StackPanel HorizontalAlignment="Center" Spacing="6">
+                    <iconPacks:PackIconLucide Kind="Inbox" Width="24" Height="24"
+                                              HorizontalAlignment="Center"
+                                              Foreground="{DynamicResource SukiLowText}" />
+                    <TextBlock Text="Aucune évaluation enregistrée"
+                               FontSize="12" FontStyle="Italic"
+                               Foreground="{DynamicResource SukiLowText}" />
+                </StackPanel>
+            </suki:GlassCard>
+
+            <ItemsControl ItemsSource="{Binding Group.Evaluations}"
+                          IsVisible="{Binding Group.HasEvaluations}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="6" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="bm:EvaluationInfo">
+                        <suki:GlassCard x:CompileBindings="False"
+                                        Padding="10,8" CornerRadius="8">
+                            <Grid ColumnDefinitions="*,Auto,Auto">
+                                <TextBlock Grid.Column="0"
+                                           Text="{Binding Name}"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" />
+                                <bc:GradeText Grid.Column="1"
+                                              Grade="{Binding Grade}"
+                                              GradeSize="13"
+                                              ShowMaximum="False"
+                                              Margin="10,0,0,0"
+                                              VerticalAlignment="Center"
+                                              Foreground="{Binding Grade.ToneBrush}"
+                                              DimBrush="{Binding Grade.ToneBrush}" />
+                                <TextBlock Grid.Column="2"
+                                           Text="{Binding CoefficientLabel}"
+                                           FontSize="10"
+                                           MinWidth="34"
+                                           Margin="10,0,0,0"
+                                           TextAlignment="Right"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource SukiLowText}"
+                                           IsVisible="{Binding ShowCoefficients, Source={x:Static bvm:BulletinDisplayOptions.Instance}}" />
+                            </Grid>
+                        </suki:GlassCard>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

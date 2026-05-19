@@ -34,7 +34,7 @@ public partial class GroupSelectionDialogViewModel(ISukiDialog dialog, EdtSettin
     }
 
     [RelayCommand]
-    public async Task ValidateSelection()
+    public Task ValidateSelection()
     {
         if (isSecondaryGroup)
         {
@@ -60,6 +60,7 @@ public partial class GroupSelectionDialogViewModel(ISukiDialog dialog, EdtSettin
         }
 
         dialog.Dismiss();
+        return Task.CompletedTask;
     }
 
     partial void OnSelectedGroupChanged(string? value)

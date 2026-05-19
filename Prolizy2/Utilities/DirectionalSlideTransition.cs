@@ -64,15 +64,15 @@ public class DirectionalSlideTransition : IPageTransition
                 // Animation de la page sortante (from)
                 var fromAnimation = compositor!.CreateVector3KeyFrameAnimation();
                 fromAnimation.Target = "Offset";
-                fromAnimation.InsertKeyFrame(0f, new Vector3(0, 0, 0), Easing);
-                fromAnimation.InsertKeyFrame(1f, new Vector3((float)(-width * slideMultiplier), 0, 0), Easing);
+                fromAnimation.InsertKeyFrame(0f, new Vector3(0, 0, 0), Easing!);
+                fromAnimation.InsertKeyFrame(1f, new Vector3((float)(-width * slideMultiplier), 0, 0), Easing!);
                 fromAnimation.Duration = Duration;
                 
                 // Animation de la page entrante (to)
                 var toAnimation = compositor.CreateVector3KeyFrameAnimation();
                 toAnimation.Target = "Offset";
-                toAnimation.InsertKeyFrame(0f, new Vector3((float)(width * slideMultiplier), 0, 0), Easing);
-                toAnimation.InsertKeyFrame(1f, new Vector3(0, 0, 0), Easing);
+                toAnimation.InsertKeyFrame(0f, new Vector3((float)(width * slideMultiplier), 0, 0), Easing!);
+                toAnimation.InsertKeyFrame(1f, new Vector3(0, 0, 0), Easing!);
                 toAnimation.Duration = Duration;
                 
                 fromVisual.StartAnimation("Offset", fromAnimation);

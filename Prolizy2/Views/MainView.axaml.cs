@@ -24,8 +24,6 @@ public partial class MainView : UserControl
     public static Preferences Preferences = new Preferences("Prolizy2");
     public static SukiMainHost SukiHost { get; set; }
     public static TopLevel TopLevel { get; set; }
-    
-    private Vector? lastScrollVector;
 
     public MainView()
     {
