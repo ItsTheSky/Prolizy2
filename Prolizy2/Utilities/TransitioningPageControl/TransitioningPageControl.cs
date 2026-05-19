@@ -12,6 +12,9 @@ using System.Numerics;
 using System.Linq;
 using Avalonia.Controls.Metadata;
 using Prolizy2.Utilities.Gestures;
+using SwipeDirection = Prolizy2.Utilities.Gestures.SwipeDirection;
+using SwipeGestureEndedEventArgs = Prolizy2.Utilities.Gestures.SwipeGestureEndedEventArgs;
+using SwipeGestureEventArgs = Prolizy2.Utilities.Gestures.SwipeGestureEventArgs;
 
 namespace Prolizy2.Utilities.TransitioningPageControl;
 

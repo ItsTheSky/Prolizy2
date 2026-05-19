@@ -1,9 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Prolizy2.Styles.Controls"
-        xmlns:suki="https://github.com/kikipoulet/SukiUI"
-        
-        xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia">
+        xmlns:suki="https://github.com/kikipoulet/SukiUI">
     <Design.PreviewWith>
         <controls:ModuleCard Width="300" Height="200" Margin="20" 
                              Title="Test"
@@ -22,10 +20,10 @@
                     <Grid RowDefinitions="Auto,*" RowSpacing="10"
                                          ColumnDefinitions="Auto,*" ColumnSpacing="10">
 
-                        <iconPacks:PackIconLucide Grid.Row="0" Grid.Column="0"
-                                                  Kind="{TemplateBinding Icon}" 
-                                                  Foreground="{DynamicResource SukiPrimaryColor}"
-                                                  Height="24" Width="24"/>
+                        <LucideIcon Grid.Row="0" Grid.Column="0"
+                                    Kind="{TemplateBinding Icon}"
+                                    Foreground="{DynamicResource SukiPrimaryColor}"
+                                    Size="24"/>
 
                         <TextBlock Grid.Row="0" Grid.Column="1" 
                                    FontSize="18" FontWeight="SemiBold"

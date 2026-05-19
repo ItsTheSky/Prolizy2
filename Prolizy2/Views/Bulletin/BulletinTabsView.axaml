@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
              xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
@@ -23,8 +22,8 @@
                 <TabItem>
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" Spacing="6">
-                            <iconPacks:PackIconLucide Kind="ListChecks" Width="14" Height="14"
-                                                      VerticalAlignment="Center" />
+                            <LucideIcon Kind="ListChecks" Size="14"
+                                        VerticalAlignment="Center" />
                             <TextBlock Text="Synthèse" VerticalAlignment="Center" />
                         </StackPanel>
                     </TabItem.Header>
@@ -70,8 +69,8 @@
                 <TabItem>
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" Spacing="6">
-                            <iconPacks:PackIconLucide Kind="BookOpen" Width="14" Height="14"
-                                                      VerticalAlignment="Center" />
+                            <LucideIcon Kind="BookOpen" Size="14"
+                                        VerticalAlignment="Center" />
                             <TextBlock Text="Ressources" VerticalAlignment="Center" />
                         </StackPanel>
                     </TabItem.Header>
@@ -97,8 +96,8 @@
                 <TabItem>
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" Spacing="6">
-                            <iconPacks:PackIconLucide Kind="WandSparkles" Width="14" Height="14"
-                                                      VerticalAlignment="Center" />
+                            <LucideIcon Kind="WandSparkles" Size="14"
+                                        VerticalAlignment="Center" />
                             <TextBlock Text="SAÉ" VerticalAlignment="Center" />
                         </StackPanel>
                     </TabItem.Header>

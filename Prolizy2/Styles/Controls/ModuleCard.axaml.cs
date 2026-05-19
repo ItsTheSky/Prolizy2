@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using IconPacks.Avalonia.Lucide;
+using Lucide.Avalonia;
 
 namespace Prolizy2.Styles.Controls;
 
@@ -11,8 +11,8 @@ public class ModuleCard : ContentControl
     public static readonly StyledProperty<string> TitleProperty =
         AvaloniaProperty.Register<ModuleCard, string>(nameof(Title));
     
-    public static readonly StyledProperty<PackIconLucideKind> IconProperty =
-        AvaloniaProperty.Register<ModuleCard, PackIconLucideKind>(nameof(Icon));
+    public static readonly StyledProperty<LucideIconKind> IconProperty =
+        AvaloniaProperty.Register<ModuleCard, LucideIconKind>(nameof(Icon));
     
     public string Title
     {
@@ -20,7 +20,7 @@ public class ModuleCard : ContentControl
         set => SetValue(TitleProperty, value);
     }
     
-    public PackIconLucideKind Icon
+    public LucideIconKind Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);

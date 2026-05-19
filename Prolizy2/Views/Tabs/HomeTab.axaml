@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
-             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
              xmlns:model="clr-namespace:Prolizy2.Model"
              xmlns:viewModels="clr-namespace:Prolizy2"
              xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Tabs"
@@ -25,9 +24,9 @@
                       ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5"
                       IsVisible="{Binding NextScheduleItem, Converter={x:Static ObjectConverters.IsNotNull}}">
                     
-                    <iconPacks:PackIconLucide Grid.Row="0" Grid.Column="0" 
-                                              Kind="CalendarClock"
-                                              Width="20" Height="20" FontSize="20"/>
+                    <LucideIcon Grid.Row="0" Grid.Column="0"
+                                Kind="CalendarClock"
+                                Size="20"/>
                     
                     <TextBlock Grid.Row="0" Grid.Column="1" 
                                VerticalAlignment="Center"
@@ -35,10 +34,10 @@
                     
                     <controls:Badge Grid.Row="0" Grid.Column="2" Text="{Binding NextScheduleItem.Room}"/>
                     
-                    <iconPacks:PackIconLucide Grid.Row="1" Grid.Column="2" Grid.RowSpan="2"
-                                              HorizontalAlignment="Right" VerticalAlignment="Center"
-                                              Width="24" Height="24" FontSize="24"
-                                              Kind="ArrowRight"/>
+                    <LucideIcon Grid.Row="1" Grid.Column="2" Grid.RowSpan="2"
+                                HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Size="24"
+                                Kind="ArrowRight"/>
                     
                     <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                                TextWrapping="Wrap"

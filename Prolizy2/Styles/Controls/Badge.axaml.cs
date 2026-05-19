@@ -2,7 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Reactive;
-using IconPacks.Avalonia.Lucide;
+using Lucide.Avalonia;
 
 namespace Prolizy2.Styles.Controls;
 
@@ -12,8 +12,8 @@ public class Badge : TemplatedControl
     public static readonly StyledProperty<string> TextProperty =
         AvaloniaProperty.Register<Badge, string>(nameof(Text));
     
-    public static readonly StyledProperty<PackIconLucideKind?> IconProperty =
-        AvaloniaProperty.Register<Badge, PackIconLucideKind?>(nameof(Icon));
+    public static readonly StyledProperty<LucideIconKind?> IconProperty =
+        AvaloniaProperty.Register<Badge, LucideIconKind?>(nameof(Icon));
     
     public static readonly StyledProperty<BadgeType> BadgeTypeProperty =
         AvaloniaProperty.Register<Badge, BadgeType>(nameof(BadgeType), defaultValue: BadgeType.Default);
@@ -73,7 +73,7 @@ public class Badge : TemplatedControl
         set => SetValue(TextProperty, value);
     }
     
-    public PackIconLucideKind? Icon
+    public LucideIconKind? Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);

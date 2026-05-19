@@ -3,8 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
-             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
-             
+
              xmlns:viewModels="clr-namespace:Prolizy2.ViewModels"
              mc:Ignorable="d"
              d:DesignWidth="450" d:DesignHeight="800"
@@ -59,10 +58,10 @@
                     <Border Width="100" Height="100" 
                             CornerRadius="24" 
                             Background="{DynamicResource SukiPrimaryColor}">
-                        <iconPacks:PackIconLucide Kind="GraduationCap" 
-                                                  Width="50" Height="50"
-                                                  HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center" />
+                        <LucideIcon Kind="GraduationCap"
+                                    Size="50"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
                     </Border>
                 
                     <!-- Badge étoile -->
@@ -72,10 +71,10 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Margin="0,-8,-8,0">
-                        <iconPacks:PackIconLucide Kind="Sparkles" 
-                                                  Width="18" Height="18"
-                                                  HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center" />
+                        <LucideIcon Kind="Sparkles"
+                                    Size="18"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
                     </Border>
                 </Grid>
             
@@ -99,13 +98,13 @@
                     <Grid RowDefinitions="*,*" RowSpacing="0"
                                          ColumnDefinitions="Auto,*" ColumnSpacing="10">
                         
-                        <iconPacks:PackIconLucide Grid.Row="0" Grid.RowSpan="2"
-                                                  Grid.Column="0" 
-                                                  Kind="Calendar" 
-                                                  Width="28" Height="28"
-                                                  Foreground="#1976D2"
-                                                  HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center" />
+                        <LucideIcon Grid.Row="0" Grid.RowSpan="2"
+                                    Grid.Column="0"
+                                    Kind="Calendar"
+                                    Size="28"
+                                    Foreground="#1976D2"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
                         
                         <TextBlock Grid.Row="0" Grid.Column="1"
                                    Text="Emploi du temps" Classes="FeatureTitle" />
@@ -118,13 +117,13 @@
                     <Grid RowDefinitions="*,*" RowSpacing="0"
                                          ColumnDefinitions="Auto,*" ColumnSpacing="10">
                         
-                        <iconPacks:PackIconLucide Grid.Row="0" Grid.RowSpan="2"
-                                                  Grid.Column="0" 
-                                                  Kind="BookOpen" 
-                                                  Width="28" Height="28"
-                                                  Foreground="#7B1FA2"
-                                                  HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center" />
+                        <LucideIcon Grid.Row="0" Grid.RowSpan="2"
+                                    Grid.Column="0"
+                                    Kind="BookOpen"
+                                    Size="28"
+                                    Foreground="#7B1FA2"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
                         
                         <TextBlock Grid.Row="0" Grid.Column="1"
                                    Text="Bulletin &amp; Notes" Classes="FeatureTitle" />
@@ -137,13 +136,13 @@
                     <Grid RowDefinitions="*,*" RowSpacing="0"
                                          ColumnDefinitions="Auto,*" ColumnSpacing="10">
                         
-                        <iconPacks:PackIconLucide Grid.Row="0" Grid.RowSpan="2"
-                                                  Grid.Column="0"
-                                                  Kind="Clock" 
-                                                  Width="28" Height="28"
-                                                  Foreground="#388E3C"
-                                                  HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center" />
+                        <LucideIcon Grid.Row="0" Grid.RowSpan="2"
+                                    Grid.Column="0"
+                                    Kind="Clock"
+                                    Size="28"
+                                    Foreground="#388E3C"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
                         
                         <TextBlock Grid.Row="0" Grid.Column="1"
                                    Text="Notifications" Classes="FeatureTitle" />
@@ -164,8 +163,8 @@
                                    HorizontalAlignment="Center" 
                                    VerticalAlignment="Center" />
                         
-                        <iconPacks:PackIconLucide Kind="ArrowRight" VerticalAlignment="Center"
-                                                  Height="14" Width="14"/>
+                        <LucideIcon Kind="ArrowRight" VerticalAlignment="Center"
+                                    Size="14"/>
                     </StackPanel>
                 </Button>
                 

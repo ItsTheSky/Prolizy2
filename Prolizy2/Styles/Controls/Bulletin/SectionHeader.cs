@@ -1,6 +1,6 @@
 using Avalonia;
 using Avalonia.Controls.Primitives;
-using IconPacks.Avalonia.Lucide;
+using Lucide.Avalonia;
 
 namespace Prolizy2.Styles.Controls.Bulletin;
 
@@ -10,8 +10,8 @@ namespace Prolizy2.Styles.Controls.Bulletin;
 /// </summary>
 public class SectionHeader : TemplatedControl
 {
-    public static readonly StyledProperty<PackIconLucideKind> IconProperty =
-        AvaloniaProperty.Register<SectionHeader, PackIconLucideKind>(nameof(Icon), PackIconLucideKind.Layers);
+    public static readonly StyledProperty<LucideIconKind> IconProperty =
+        AvaloniaProperty.Register<SectionHeader, LucideIconKind>(nameof(Icon), LucideIconKind.Layers);
 
     public static readonly StyledProperty<string> TitleProperty =
         AvaloniaProperty.Register<SectionHeader, string>(nameof(Title), string.Empty);
@@ -19,7 +19,7 @@ public class SectionHeader : TemplatedControl
     public static readonly StyledProperty<string?> HintProperty =
         AvaloniaProperty.Register<SectionHeader, string?>(nameof(Hint));
 
-    public PackIconLucideKind Icon
+    public LucideIconKind Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);

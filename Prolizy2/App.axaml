@@ -13,7 +13,6 @@
     <Application.Styles>
         <sukiUi:SukiTheme ThemeColor="Orange" Locale="en-US" />
         
-        <StyleInclude Source="avares://IconPacks.Avalonia/Icons.axaml" />
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Simple/AvaloniaEdit.xaml" />
         
         <StyleInclude Source="avares://Prolizy2/Styles/Overrides/FixedDialogs.axaml" />

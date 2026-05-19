@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
              xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
@@ -109,11 +108,11 @@
                                         CornerRadius="8"
                                         Background="#2910B981"
                                         VerticalAlignment="Center">
-                                    <iconPacks:PackIconLucide Kind="BookOpen"
-                                                              Width="18" Height="18"
-                                                              HorizontalAlignment="Center"
-                                                              VerticalAlignment="Center"
-                                                              Foreground="#10B981" />
+                                    <LucideIcon Kind="BookOpen"
+                                                Size="18"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Foreground="#10B981" />
                                 </Border>
                                 <StackPanel Grid.Column="1" Margin="12,0" Spacing="2"
                                             VerticalAlignment="Center">
@@ -123,11 +122,11 @@
                                                FontSize="11"
                                                Foreground="{DynamicResource SukiLowText}" />
                                 </StackPanel>
-                                <iconPacks:PackIconLucide Grid.Column="3"
-                                                          Kind="ChevronRight"
-                                                          Width="16" Height="16"
-                                                          VerticalAlignment="Center"
-                                                          Foreground="{DynamicResource SukiLowText}" />
+                                <LucideIcon Grid.Column="3"
+                                            Kind="ChevronRight"
+                                            Size="16"
+                                            VerticalAlignment="Center"
+                                            Foreground="{DynamicResource SukiLowText}" />
                             </Grid>
                         </Button>
                     </suki:GlassCard>
@@ -146,11 +145,11 @@
                                         CornerRadius="8"
                                         Background="#29B968C7"
                                         VerticalAlignment="Center">
-                                    <iconPacks:PackIconLucide Kind="WandSparkles"
-                                                              Width="18" Height="18"
-                                                              HorizontalAlignment="Center"
-                                                              VerticalAlignment="Center"
-                                                              Foreground="#B968C7" />
+                                    <LucideIcon Kind="WandSparkles"
+                                                Size="18"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Foreground="#B968C7" />
                                 </Border>
                                 <StackPanel Grid.Column="1" Margin="12,0" Spacing="2"
                                             VerticalAlignment="Center">
@@ -160,11 +159,11 @@
                                                FontSize="11"
                                                Foreground="{DynamicResource SukiLowText}" />
                                 </StackPanel>
-                                <iconPacks:PackIconLucide Grid.Column="3"
-                                                          Kind="ChevronRight"
-                                                          Width="16" Height="16"
-                                                          VerticalAlignment="Center"
-                                                          Foreground="{DynamicResource SukiLowText}" />
+                                <LucideIcon Grid.Column="3"
+                                            Kind="ChevronRight"
+                                            Size="16"
+                                            VerticalAlignment="Center"
+                                            Foreground="{DynamicResource SukiLowText}" />
                             </Grid>
                         </Button>
                     </suki:GlassCard>

@@ -11,7 +11,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
-using IconPacks.Avalonia.Lucide;
+using Lucide.Avalonia;
 using Prolizy2.API.Utils;
 using Prolizy2.Model;
 using Prolizy2.Utilities;
@@ -296,12 +296,11 @@ public class DailyScheduleControl : TemplatedControl
             Spacing = 10,
             Children =
             {
-                new PackIconLucide()
+                new LucideIcon()
                 {
-                    Kind = PackIconLucideKind.MoonStar,
+                    Kind = LucideIconKind.MoonStar,
                     Foreground = item.ForegroundColor,
-                    Height = 28,
-                    Width = 28,
+                    Size = 28,
                     HorizontalAlignment = HorizontalAlignment.Center
                 },
                 new TextBlock
