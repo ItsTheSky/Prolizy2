@@ -8,6 +8,8 @@
     <system:String x:Key="Confirm">Confirmer</system:String>
     <system:String x:Key="Ok">Ok</system:String>
 
+    <system:String x:Key="WelcomeSubtitle">Bienvenue</system:String>
+
     <system:String x:Key="TabHome">Accueil</system:String>
     <system:String x:Key="TabEdt">EDT</system:String>
     <system:String x:Key="TabBulletin">Bulletin</system:String>
@@ -41,5 +43,75 @@
     <system:String x:Key="EdtSettingsChangeSecondaryGroup">Changer le Groupe Secondaire</system:String>
     <system:String x:Key="EdtSettingsComplexItemCard">Détails des cours</system:String> 
     <system:String x:Key="EdtSettingsComplexItemCardDesc">Active/désactive la grille de détails sur les cartes de l'emploi du temps. Les détails seront toujours accessible, une fois une carte cliquée. Une baisse de performance (surtout avec deux groupes de configurés) peut être sentie si cette option est activée.</system:String>
-    
+
+    <!-- Bulletin -->
+    <system:String x:Key="BulletinLoading">Chargement du bulletin…</system:String>
+    <system:String x:Key="BulletinUnavailableTitle">Bulletin indisponible</system:String>
+    <system:String x:Key="BulletinRetry">Réessayer</system:String>
+    <system:String x:Key="BulletinNotConfiguredTitle">Bulletin non configuré</system:String>
+    <system:String x:Key="BulletinNotConfiguredDesc">Renseigne tes identifiants ScoDoc dans les paramètres pour afficher ton bulletin.</system:String>
+    <system:String x:Key="BulletinOpenSettings">Ouvrir les paramètres</system:String>
+    <system:String x:Key="BulletinSettingsCredentialsTitle">Identifiants ScoDoc</system:String>
+    <system:String x:Key="BulletinSettingsCredentialsDesc">Tes identifiants CAS UVSQ sont stockés chiffrés sur cet appareil et utilisés pour récupérer ton bulletin.</system:String>
+    <system:String x:Key="BulletinSettingsUsernameWatermark">Identifiant</system:String>
+    <system:String x:Key="BulletinSettingsPasswordWatermark">Mot de passe</system:String>
+    <system:String x:Key="BulletinSettingsSaveButton">Tester et enregistrer</system:String>
+    <system:String x:Key="BulletinSettingsDeleteButton">Supprimer les identifiants</system:String>
+    <system:String x:Key="BulletinSettingsVariantTitle">Variante d'affichage</system:String>
+    <system:String x:Key="BulletinSettingsVariantDesc">Choisit la manière dont le bulletin organise les unités d'enseignement, les ressources et les SAÉ.</system:String>
+    <system:String x:Key="BulletinSettingsVariantTabs">Onglets</system:String>
+    <system:String x:Key="BulletinSettingsVariantDrillDown">Drill-down</system:String>
+    <system:String x:Key="BulletinSettingsDensityTitle">Densité</system:String>
+    <system:String x:Key="BulletinSettingsDensityDesc">Le mode compact resserre les lignes pour afficher davantage d'information à l'écran.</system:String>
+    <system:String x:Key="BulletinSettingsDensityComfort">Confort</system:String>
+    <system:String x:Key="BulletinSettingsDensityCompact">Compact</system:String>
+    <system:String x:Key="BulletinSettingsSortTitle">Tri des unités d'enseignement</system:String>
+    <system:String x:Key="BulletinSettingsSortDesc">Ordonne les UE par leur code ou par leur moyenne décroissante.</system:String>
+    <system:String x:Key="BulletinSettingsSortByCode">Par code</system:String>
+    <system:String x:Key="BulletinSettingsSortByAverage">Par moyenne</system:String>
+    <system:String x:Key="BulletinSettingsColorTitle">Couleur des UE</system:String>
+    <system:String x:Key="BulletinSettingsColorDesc">La bande colorée d'une UE suit sa couleur propre, ou une teinte calculée depuis la moyenne.</system:String>
+    <system:String x:Key="BulletinSettingsColorByUnit">Par UE</system:String>
+    <system:String x:Key="BulletinSettingsColorByGrade">Par note</system:String>
+    <system:String x:Key="BulletinSettingsDetailsTitle">Détails affichés</system:String>
+    <system:String x:Key="BulletinSettingsShowRankLabel">Afficher le rang</system:String>
+    <system:String x:Key="BulletinSettingsShowRankDesc">Position dans la promotion sur chaque UE.</system:String>
+    <system:String x:Key="BulletinSettingsShowCoeffLabel">Afficher les coefficients</system:String>
+    <system:String x:Key="BulletinSettingsShowCoeffDesc">Poids de chaque ressource et évaluation.</system:String>
+    <system:String x:Key="BulletinSettingsShowWeightChartLabel">Mini-graphe des poids</system:String>
+    <system:String x:Key="BulletinSettingsShowWeightChartDesc">Histogramme des coefficients sur le détail d'une UE.</system:String>
+    <system:String x:Key="BulletinSectionUnits">Unités d'enseignement</system:String>
+    <system:String x:Key="BulletinSectionCompetencies">Compétences (RCUE)</system:String>
+    <system:String x:Key="BulletinSectionAllDetails">Tout détailler</system:String>
+    <system:String x:Key="BulletinAllResources">Toutes les ressources</system:String>
+    <system:String x:Key="BulletinAllSae">Toutes les SAÉ</system:String>
+    <system:String x:Key="BulletinStudentBornOn">Né le</system:String>
+    <system:String x:Key="BulletinStudentNumber">Numéro étudiant</system:String>
+    <system:String x:Key="BulletinStudentIneCode">Code INE</system:String>
+    <system:String x:Key="BulletinStudentDisclaimer">Ce relevé de notes est provisoire. Il est fourni à titre informatif et n'a aucune valeur universitaire officielle.</system:String>
+    <system:String x:Key="BulletinEvaluations">Évaluations</system:String>
+    <system:String x:Key="BulletinNoEvaluationRecorded">Aucune évaluation enregistrée</system:String>
+    <system:String x:Key="BulletinNoEvaluation">Aucune évaluation</system:String>
+    <system:String x:Key="BulletinTabSummary">Synthèse</system:String>
+    <system:String x:Key="BulletinTabResources">Ressources</system:String>
+    <system:String x:Key="BulletinTabSae">SAÉ</system:String>
+    <system:String x:Key="BulletinUnitAverage">MOYENNE UE</system:String>
+    <system:String x:Key="BulletinUnitWeight">POIDS</system:String>
+    <system:String x:Key="BulletinUnitContributingResources">Ressources contributives</system:String>
+    <system:String x:Key="BulletinUnitContributingSae">SAÉ contributives</system:String>
+    <system:String x:Key="BulletinUnitPortfolio">Portfolio</system:String>
+    <system:String x:Key="BulletinSemesterAverage">MOYENNE SEMESTRE</system:String>
+    <system:String x:Key="BulletinUnitsAcquired">UE ACQUISES</system:String>
+    <system:String x:Key="BulletinErrorLoginRefused">Connexion refusée — vérifie tes identifiants.</system:String>
+    <system:String x:Key="BulletinErrorFetchFailed">Impossible de récupérer le bulletin : </system:String>
+    <system:String x:Key="BulletinErrorSemesterLoadFailed">Impossible de charger ce semestre.</system:String>
+    <system:String x:Key="BulletinErrorSemesterLoad">Erreur lors du chargement du semestre : </system:String>
+    <system:String x:Key="BulletinStudentInfoTitle">Informations étudiant</system:String>
+    <system:String x:Key="BulletinSettingsCredentialsSaved">Identifiants enregistrés</system:String>
+    <system:String x:Key="BulletinSettingsCredentialsRequired">Identifiant et mot de passe requis</system:String>
+    <system:String x:Key="BulletinSettingsConnecting">Connexion en cours…</system:String>
+    <system:String x:Key="BulletinSettingsConnectionFailed">Échec de la connexion</system:String>
+    <system:String x:Key="BulletinSettingsCredentialsDeleted">Identifiants supprimés</system:String>
+    <system:String x:Key="BulletinSettingsError">Erreur</system:String>
+
 </ResourceDictionary>

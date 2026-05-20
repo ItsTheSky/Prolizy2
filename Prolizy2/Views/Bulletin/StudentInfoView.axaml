@@ -3,10 +3,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
-             mc:Ignorable="d" d:DesignWidth="320"
+             mc:Ignorable="d"
              x:DataType="bm:StudentInfo"
              x:Class="Prolizy2.Views.Bulletin.StudentInfoView">
-    <StackPanel Spacing="14" Width="320">
+    <StackPanel Spacing="14" MinWidth="240">
 
         <Grid ColumnDefinitions="Auto,*">
             <Border Width="56" Height="56" CornerRadius="28">
@@ -36,7 +36,7 @@
                 <LucideIcon Kind="Cake" Size="14"
                             VerticalAlignment="Center"
                             Foreground="{DynamicResource SukiLowText}" />
-                <TextBlock Grid.Column="1" Text="Né le" Margin="10,0"
+                <TextBlock Grid.Column="1" Text="{DynamicResource BulletinStudentBornOn}" Margin="10,0"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource SukiLowText}" />
                 <TextBlock Grid.Column="2" Text="{Binding BirthDate}"
@@ -46,7 +46,7 @@
                 <LucideIcon Kind="BadgeInfo" Size="14"
                             VerticalAlignment="Center"
                             Foreground="{DynamicResource SukiLowText}" />
-                <TextBlock Grid.Column="1" Text="Numéro étudiant" Margin="10,0"
+                <TextBlock Grid.Column="1" Text="{DynamicResource BulletinStudentNumber}" Margin="10,0"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource SukiLowText}" />
                 <TextBlock Grid.Column="2" Text="{Binding StudentId}"
@@ -56,7 +56,7 @@
                 <LucideIcon Kind="Hash" Size="14"
                             VerticalAlignment="Center"
                             Foreground="{DynamicResource SukiLowText}" />
-                <TextBlock Grid.Column="1" Text="Code INE" Margin="10,0"
+                <TextBlock Grid.Column="1" Text="{DynamicResource BulletinStudentIneCode}" Margin="10,0"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource SukiLowText}" />
                 <TextBlock Grid.Column="2" Text="{Binding Ine}"
@@ -64,7 +64,7 @@
             </Grid>
         </StackPanel>
 
-        <TextBlock Text="Ce relevé de notes est provisoire. Il est fourni à titre informatif et n'a aucune valeur universitaire officielle."
+        <TextBlock Text="{DynamicResource BulletinStudentDisclaimer}"
                    FontSize="11"
                    TextWrapping="Wrap"
                    Foreground="{DynamicResource SukiLowText}" />

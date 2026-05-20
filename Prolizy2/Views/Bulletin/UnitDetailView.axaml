@@ -7,6 +7,7 @@
              xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
              xmlns:badge="clr-namespace:Prolizy2.Styles.Controls"
              xmlns:bvm="clr-namespace:Prolizy2.ViewModels.Bulletin"
+             xmlns:util="clr-namespace:Prolizy2.Utilities"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="850"
              x:DataType="bvm:UnitDetailViewModel"
              x:Class="Prolizy2.Views.Bulletin.UnitDetailView">
@@ -14,15 +15,13 @@
     <UserControl.Resources>
         <DataTemplate x:Key="ContributionRow" x:DataType="bm:ContributionInfo">
             <suki:GlassCard Padding="0" CornerRadius="8">
-                <Button x:CompileBindings="False"
+                <Border x:CompileBindings="False"
                         Background="Transparent"
-                        BorderThickness="0"
-                        CornerRadius="0"
                         Padding="10,8"
+                        Cursor="Hand"
                         HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Stretch"
-                        Command="{Binding $parent[UserControl].DataContext.OpenContributionCommand}"
-                        CommandParameter="{Binding}">
+                        util:TappedCommand.Command="{Binding $parent[UserControl].DataContext.OpenContributionCommand}"
+                        util:TappedCommand.CommandParameter="{Binding}">
                     <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
                         <Border Grid.Column="0"
                                 Background="{Binding AccentSoftBrush}"
@@ -41,7 +40,7 @@
                                    FontSize="12"
                                    Margin="8,0"
                                    VerticalAlignment="Center"
-                                   TextTrimming="CharacterEllipsis" />
+                                   TextWrapping="Wrap" />
                         <bc:GradeText Grid.Column="2"
                                       Grade="{Binding Grade}"
                                       GradeSize="13"
@@ -64,7 +63,7 @@
                                     VerticalAlignment="Center"
                                     Foreground="{DynamicResource SukiLowText}" />
                     </Grid>
-                </Button>
+                </Border>
             </suki:GlassCard>
         </DataTemplate>
     </UserControl.Resources>
@@ -89,7 +88,7 @@
                                TextWrapping="Wrap" />
                     <Grid ColumnDefinitions="*,Auto">
                         <StackPanel Grid.Column="0" Spacing="8">
-                            <TextBlock Text="MOYENNE UE"
+                            <TextBlock Text="{DynamicResource BulletinUnitAverage}"
                                        FontSize="10" FontWeight="Bold"
                                        Foreground="{DynamicResource SukiLowText}" />
                             <bc:GradeText Grade="{Binding Unit.Average}"
@@ -114,7 +113,7 @@
                                     VerticalAlignment="Bottom"
                                     Spacing="4"
                                     IsVisible="{Binding Options.ShowWeightBars}">
-                            <TextBlock Text="POIDS"
+                            <TextBlock Text="{DynamicResource BulletinUnitWeight}"
                                        FontSize="9" FontWeight="Bold"
                                        HorizontalAlignment="Right"
                                        Foreground="{DynamicResource SukiLowText}" />
@@ -146,7 +145,7 @@
 
             <!-- Resources -->
             <bc:SectionHeader Icon="BookOpen"
-                              Title="Ressources contributives"
+                              Title="{DynamicResource BulletinUnitContributingResources}"
                               IsVisible="{Binding Unit.HasResourceContributions}" />
             <ItemsControl ItemsSource="{Binding Unit.ResourceContributions}"
                           ItemTemplate="{StaticResource ContributionRow}"
@@ -160,7 +159,7 @@
 
             <!-- SAÉ -->
             <bc:SectionHeader Icon="WandSparkles"
-                              Title="SAÉ contributives"
+                              Title="{DynamicResource BulletinUnitContributingSae}"
                               IsVisible="{Binding Unit.HasSaeContributions}" />
             <ItemsControl ItemsSource="{Binding Unit.SaeContributions}"
                           ItemTemplate="{StaticResource ContributionRow}"
@@ -174,7 +173,7 @@
 
             <!-- Portfolio -->
             <bc:SectionHeader Icon="Folder"
-                              Title="Portfolio"
+                              Title="{DynamicResource BulletinUnitPortfolio}"
                               IsVisible="{Binding Unit.HasPortfolioContributions}" />
             <ItemsControl ItemsSource="{Binding Unit.PortfolioContributions}"
                           ItemTemplate="{StaticResource ContributionRow}"

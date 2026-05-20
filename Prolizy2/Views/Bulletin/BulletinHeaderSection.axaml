@@ -32,9 +32,9 @@
 
     <StackPanel Spacing="10">
 
-        <bc:BulletinHeaderBar Title="Bulletin"
+        <bc:BulletinHeaderBar Title="{DynamicResource TabBulletin}"
                               StudentCommand="{Binding OpenStudentInfoCommand}"
-                              DownloadCommand="{Binding OpenStudentInfoCommand}" />
+                              RefreshCommand="{Binding RefreshDatasCommand}" />
 
         <ListBox Classes="SemesterChips"
                  ItemsSource="{Binding Data.Semesters}"

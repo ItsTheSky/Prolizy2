@@ -1,0 +1,156 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
+             xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
+             xmlns:badge="clr-namespace:Prolizy2.Styles.Controls"
+             xmlns:bv="clr-namespace:Prolizy2.Views.Bulletin"
+             xmlns:bvm="clr-namespace:Prolizy2.ViewModels.Bulletin"
+             xmlns:util="clr-namespace:Prolizy2.Utilities"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="850"
+             x:DataType="bvm:BulletinCoreViewModel"
+             x:Class="Prolizy2.Views.Bulletin.BulletinMasterView">
+
+    <!-- Master page of the drill-down variant. It is hosted, like every detail
+         screen, inside the BulletinDrillDownView TransitioningContentControl so
+         navigation animates the whole page over a constant background. -->
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="0,0,0,40">
+
+            <bv:BulletinHeaderSection />
+
+            <bc:SectionHeader Icon="Layers"
+                              Title="{DynamicResource BulletinSectionUnits}"
+                              Hint="{Binding SortedUnits.Count, StringFormat='{}{0} UE'}" />
+
+            <ItemsControl ItemsSource="{Binding SortedUnits}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="6" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="bm:TeachingUnitInfo">
+                        <bc:UnitCard x:CompileBindings="False"
+                                     Unit="{Binding}"
+                                     DisplayMode="Compact"
+                                     Command="{Binding $parent[ItemsControl].DataContext.OpenUnitCommand}"
+                                     CommandParameter="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <bc:SectionHeader Icon="LayoutGrid" Title="{DynamicResource BulletinSectionCompetencies}" />
+
+            <suki:GlassCard Padding="12" CornerRadius="8">
+                <ItemsControl ItemsSource="{Binding Data.Competences}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="7" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="bm:CompetenceInfo">
+                            <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                                <Border Grid.Column="0"
+                                        Width="8" Height="8"
+                                        CornerRadius="4"
+                                        VerticalAlignment="Center"
+                                        Background="{Binding DotBrush}" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding Name}"
+                                           Margin="8,0"
+                                           FontSize="12" FontWeight="SemiBold"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="2"
+                                           Text="{Binding UnitCode}"
+                                           FontSize="11"
+                                           Margin="0,0,8,0"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource SukiLowText}" />
+                                <badge:Badge Grid.Column="3"
+                                             Text="{Binding Status}"
+                                             BadgeType="{Binding StatusBadgeType}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </suki:GlassCard>
+
+            <bc:SectionHeader Icon="FolderTree" Title="{DynamicResource BulletinSectionAllDetails}" />
+
+            <StackPanel Spacing="6">
+
+                <suki:GlassCard Padding="0" CornerRadius="8">
+                    <Border Background="Transparent"
+                            Padding="12"
+                            util:TappedCommand.Command="{Binding OpenAllResourcesCommand}">
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                            <Border Grid.Column="0"
+                                    Width="32" Height="32"
+                                    CornerRadius="8"
+                                    Background="#2910B981"
+                                    VerticalAlignment="Center">
+                                <LucideIcon Kind="BookOpen"
+                                            Size="18"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Foreground="#10B981" />
+                            </Border>
+                            <StackPanel Grid.Column="1" Margin="12,0" Spacing="2"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="{DynamicResource BulletinAllResources}"
+                                           FontSize="14" FontWeight="SemiBold" />
+                                <TextBlock Text="{Binding Data.Resources.Count, StringFormat='{}{0} éléments'}"
+                                           FontSize="11"
+                                           Foreground="{DynamicResource SukiLowText}" />
+                            </StackPanel>
+                            <LucideIcon Grid.Column="3"
+                                        Kind="ChevronRight"
+                                        Size="16"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource SukiLowText}" />
+                        </Grid>
+                    </Border>
+                </suki:GlassCard>
+
+                <suki:GlassCard Padding="0" CornerRadius="8">
+                    <Border Background="Transparent"
+                            Padding="12"
+                            util:TappedCommand.Command="{Binding OpenAllSaesCommand}">
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                            <Border Grid.Column="0"
+                                    Width="32" Height="32"
+                                    CornerRadius="8"
+                                    Background="#29B968C7"
+                                    VerticalAlignment="Center">
+                                <LucideIcon Kind="WandSparkles"
+                                            Size="18"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Foreground="#B968C7" />
+                            </Border>
+                            <StackPanel Grid.Column="1" Margin="12,0" Spacing="2"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="{DynamicResource BulletinAllSae}"
+                                           FontSize="14" FontWeight="SemiBold" />
+                                <TextBlock Text="{Binding Data.Saes.Count, StringFormat='{}{0} éléments'}"
+                                           FontSize="11"
+                                           Foreground="{DynamicResource SukiLowText}" />
+                            </StackPanel>
+                            <LucideIcon Grid.Column="3"
+                                        Kind="ChevronRight"
+                                        Size="16"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource SukiLowText}" />
+                        </Grid>
+                    </Border>
+                </suki:GlassCard>
+
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

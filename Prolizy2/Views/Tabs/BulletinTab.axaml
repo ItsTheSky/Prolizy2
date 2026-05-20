@@ -4,11 +4,68 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:bv="clr-namespace:Prolizy2.Views.Bulletin"
              xmlns:bvm="clr-namespace:Prolizy2.ViewModels.Bulletin"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:controls="clr-namespace:Prolizy2.Styles.Controls"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="850"
              x:DataType="bvm:BulletinCoreViewModel"
              x:Class="Prolizy2.Views.Tabs.BulletinTab">
     <Panel>
-        <bv:BulletinTabsView IsVisible="{Binding Options.IsTabsVariant}" />
-        <bv:BulletinDrillDownView IsVisible="{Binding Options.IsDrillDownVariant}" />
+        <suki:BusyArea BusyText="{DynamicResource BulletinLoading}"
+                       IsBusy="{Binding IsLoading}"
+                       IsEnabled="{Binding IsConfigured}">
+            <Panel>
+                <bv:BulletinTabsView IsVisible="{Binding Options.IsTabsVariant}" />
+                <bv:BulletinDrillDownView IsVisible="{Binding Options.IsDrillDownVariant}" />
+            </Panel>
+        </suki:BusyArea>
+
+        <!-- Error overlay (configured, has error) -->
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                ClipToBounds="True" CornerRadius="10"
+                Background="#99000000"
+                IsVisible="{Binding HasError}">
+            <suki:GlassCard HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Margin="20"
+                            MaxWidth="360"
+                            Padding="20"
+                            CornerRadius="12">
+                <StackPanel Spacing="14" HorizontalAlignment="Stretch">
+                    <Border Width="48" Height="48"
+                            HorizontalAlignment="Center"
+                            CornerRadius="24"
+                            Background="#33DC2626">
+                        <LucideIcon Kind="OctagonAlert" Size="26"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Foreground="#FCA5A5" />
+                    </Border>
+                    <TextBlock Text="{DynamicResource BulletinUnavailableTitle}"
+                               FontSize="16" FontWeight="DemiBold"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="{Binding LoadError}"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               Foreground="{DynamicResource SukiLowText}" />
+                    <Button HorizontalAlignment="Stretch"
+                            Classes="Flat"
+                            suki:ButtonExtensions.Icon="{LucideIconContent RefreshCw}"
+                            Command="{Binding RetryCommand}"
+                            Content="{DynamicResource BulletinRetry}" />
+                </StackPanel>
+            </suki:GlassCard>
+        </Border>
+
+        <!-- Not configured overlay -->
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                ClipToBounds="True" CornerRadius="10"
+                Background="#55000000"
+                IsVisible="{Binding !IsConfigured}">
+            <controls:PresentationBlock
+                Icon="NotebookPen"
+                Title="{DynamicResource BulletinNotConfiguredTitle}"
+                Description="{DynamicResource BulletinNotConfiguredDesc}"
+                ButtonText="{DynamicResource BulletinOpenSettings}"
+                ButtonIcon="ArrowRight"
+                ButtonCommand="{Binding OpenSettingsCommand}" />
+        </Border>
     </Panel>
 </UserControl>

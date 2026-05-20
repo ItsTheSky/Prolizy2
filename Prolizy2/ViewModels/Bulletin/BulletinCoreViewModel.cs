@@ -1,15 +1,24 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Animation;
 using Avalonia.Animation.Easings;
+using Avalonia.Controls;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Prolizy2.Model.Bulletin;
+using Prolizy2.Services;
 using Prolizy2.Utilities;
+using Prolizy2.ViewModels.Tabs;
+using Prolizy2.ViewModels.Common;
+using Prolizy2.ViewModels.Tabs.Settings;
 using Prolizy2.Views;
 using Prolizy2.Views.Bulletin;
+using Prolizy2.Views.Tabs.Settings;
 using SukiUI.Dialogs;
 
 namespace Prolizy2.ViewModels.Bulletin;
@@ -32,15 +41,37 @@ public partial class BulletinCoreViewModel : ViewModelBase
 
     [ObservableProperty] private SemesterInfo? _selectedSemester;
 
+    /// <summary>True when credentials are present and the bulletin can be queried.</summary>
+    [ObservableProperty] private bool _isConfigured;
+
+    /// <summary>True while an HTTP fetch is in flight.</summary>
+    [ObservableProperty] private bool _isLoading;
+
+    /// <summary>Last fatal error encountered while fetching; null on success.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasError))]
+    private string? _loadError;
+
+    public bool HasError => !string.IsNullOrEmpty(LoadError);
+
+    private bool _suppressSemesterReload;
+
     #region Drill-down navigation
 
     private readonly System.Collections.Generic.Stack<ViewModelBase> _navigationStack = new();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasDetail))]
+    [NotifyPropertyChangedFor(nameof(CurrentPage))]
     private ViewModelBase? _currentDetail;
 
     public bool HasDetail => CurrentDetail is not null;
+
+    /// <summary>
+    /// The view-model currently shown by the drill-down's TransitioningContentControl —
+    /// either the active detail or the core VM itself (templated to the master view).
+    /// </summary>
+    public object CurrentPage => CurrentDetail ?? (object)this;
 
     private static readonly IPageTransition ForwardTransition = new DirectionalSlideTransition(
         DirectionalSlideTransition.SlideDirection.RightToLeft,
@@ -61,13 +92,140 @@ public partial class BulletinCoreViewModel : ViewModelBase
     public BulletinCoreViewModel(MainViewModel mainVm)
     {
         MainVm = mainVm;
-        _data = BulletinSampleData.Create();
 
-        SelectedSemester = Data.Semesters.FirstOrDefault(s => s.IsCurrent)
-                           ?? Data.Semesters.FirstOrDefault(s => !s.IsFuture);
+        if (Design.IsDesignMode)
+        {
+            _data = BulletinSampleData.Create();
+            SelectedSemester = Data.Semesters.FirstOrDefault(s => s.IsCurrent)
+                               ?? Data.Semesters.FirstOrDefault(s => !s.IsFuture);
+            RefreshSortedUnits();
+            Options.PropertyChanged += OnOptionsChanged;
+            IsConfigured = true;
+            return;
+        }
+
+        _data = new BulletinData();
+        IsConfigured = MainVm.BulletinService.IsConfigured;
 
         RefreshSortedUnits();
         Options.PropertyChanged += OnOptionsChanged;
+
+        if (IsConfigured)
+            _ = LoadAsync();
+    }
+
+    /// <summary>
+    /// Reloads everything — called on first display, after credentials change,
+    /// and from the retry button when an error is shown.
+    /// </summary>
+    public async Task LoadAsync()
+    {
+        IsConfigured = MainVm.BulletinService.IsConfigured;
+        if (!IsConfigured)
+            return;
+
+        if (IsLoading)
+            return;
+
+        IsLoading = true;
+        LoadError = null;
+        try
+        {
+            var root = await MainVm.BulletinService.LoadInitialAsync();
+            if (root is null)
+            {
+                LoadError = LangViewModel.Translate("BulletinErrorLoginRefused");
+                return;
+            }
+
+            var data = BulletinMapper.Map(root);
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                _suppressSemesterReload = true;
+                Data = data;
+                SelectedSemester = Data.Semesters.FirstOrDefault(s => s.IsCurrent)
+                                   ?? Data.Semesters.FirstOrDefault(s => !s.IsFuture);
+                _suppressSemesterReload = false;
+                RefreshSortedUnits();
+            });
+        }
+        catch (Exception ex)
+        {
+            Logs.Error(ex);
+            LoadError = LangViewModel.Translate("BulletinErrorFetchFailed") + ex.Message;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// Notifies the view model that credentials were saved or removed so it can
+    /// rebuild its state.
+    /// </summary>
+    public async Task RefreshConfigurationAsync()
+    {
+        IsConfigured = MainVm.BulletinService.IsConfigured;
+        if (IsConfigured)
+        {
+            await LoadAsync();
+        }
+        else
+        {
+            Data = new BulletinData();
+            RefreshSortedUnits();
+            LoadError = null;
+        }
+    }
+
+    [RelayCommand]
+    private async Task Retry() => await LoadAsync();
+
+    private async Task ReloadSemesterAsync(SemesterInfo semester)
+    {
+        if (semester.IsFuture)
+            return;
+
+        if (!int.TryParse(semester.Id, NumberStyles.Integer, CultureInfo.InvariantCulture, out var formsemestreId))
+            return;
+
+        if (IsLoading)
+            return;
+
+        IsLoading = true;
+        LoadError = null;
+        try
+        {
+            var root = await MainVm.BulletinService.LoadSemesterAsync(formsemestreId);
+            if (root is null)
+            {
+                LoadError = LangViewModel.Translate("BulletinErrorSemesterLoadFailed");
+                return;
+            }
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                BulletinMapper.MapSemesterInto(root, Data);
+                RefreshSortedUnits();
+            });
+        }
+        catch (Exception ex)
+        {
+            Logs.Error(ex);
+            LoadError = LangViewModel.Translate("BulletinErrorSemesterLoad") + ex.Message;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    partial void OnSelectedSemesterChanged(SemesterInfo? value)
+    {
+        if (_suppressSemesterReload || value is null || Design.IsDesignMode)
+            return;
+        _ = ReloadSemesterAsync(value);
     }
 
     private void OnOptionsChanged(object? sender, PropertyChangedEventArgs e)
@@ -91,10 +249,23 @@ public partial class BulletinCoreViewModel : ViewModelBase
     private void OpenStudentInfo()
     {
         MainView.DialogManager.CreateDialog()
-            .WithTitle("Informations étudiant")
+            .WithTitle(LangViewModel.Translate("BulletinStudentInfoTitle"))
             .WithContent(new StudentInfoView { DataContext = Data.Student })
             .WithActionButton("Fermer", _ => { }, true)
             .TryShow();
+    }
+
+    [RelayCommand]
+    private async Task RefreshDatas() => await LoadAsync();
+
+    [RelayCommand]
+    private void OpenSettings()
+    {
+        MainVm.NavigateTo(typeof(SettingsViewModel));
+        MainVm.SettingsViewModel.SwitchToPage(new BulletinSettingsView
+        {
+            DataContext = new BulletinSettingsViewModel(MainVm, MainVm.SettingsViewModel)
+        });
     }
 
     #endregion

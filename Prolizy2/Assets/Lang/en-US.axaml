@@ -3,14 +3,23 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <system:String x:Key="Yes">Yes</system:String>
     <system:String x:Key="No">No</system:String>
+    <system:String x:Key="Loading">Loading...</system:String>
+    <system:String x:Key="Cancel">Cancel</system:String>
+    <system:String x:Key="Confirm">Confirm</system:String>
+    <system:String x:Key="Ok">Ok</system:String>
 
     <system:String x:Key="WelcomeSubtitle">No</system:String>
-    
+
     <system:String x:Key="TabHome">Home</system:String>
     <system:String x:Key="TabEdt">TimeTable</system:String>
     <system:String x:Key="TabBulletin">Notes</system:String>
     <system:String x:Key="TabSettings">Settings</system:String>
-    
+
+    <system:String x:Key="EdtNotConfiguredTitle">Group not configured</system:String>
+    <system:String x:Key="EdtNotConfiguredDescription">Please configure your group in settings. The group determines which classes to display!</system:String>
+    <system:String x:Key="EdtGoToSettings">Configure Group</system:String>
+
+    <system:String x:Key="PersonalizationLanguage">Language</system:String>
     <system:String x:Key="PersonalizationBaseTheme">Base Theme</system:String>
     <system:String x:Key="PersonalizationLightMode">Light Mode</system:String>
     <system:String x:Key="PersonalizationDarkMode">Dark Mode</system:String>
@@ -18,5 +27,91 @@
     <system:String x:Key="PersonalizationBackground">Background</system:String>
     <system:String x:Key="PersonalizationBackgroundAnimated">Animated Background</system:String>
     <system:String x:Key="PersonalizationBackgroundDescription">Toggle the background animation. It may enhance performance on your device if turned off.</system:String>
-    
+    <system:String x:Key="PersonalizationOther">Other Options</system:String>
+    <system:String x:Key="PersonalizationOtherDebug">Debug Page</system:String>
+
+    <system:String x:Key="EdtSelectDateTitle">Change Date</system:String>
+    <system:String x:Key="EdtNext">Next</system:String>
+    <system:String x:Key="EdtPrevious">Previous</system:String>
+
+    <system:String x:Key="EdtSettingsDeleteGroup">Delete Group</system:String>
+    <system:String x:Key="EdtSettingsPrimaryGroup">Primary group</system:String>
+    <system:String x:Key="EdtSettingsPrimaryGroupDesc">Change the group used to fetch classes. The group is provided as a code to enter.</system:String>
+    <system:String x:Key="EdtSettingsChangePrimaryGroup">Change Group</system:String>
+    <system:String x:Key="EdtSettingsSecondaryGroup">Secondary group</system:String>
+    <system:String x:Key="EdtSettingsSecondaryGroupDesc">Add a secondary group to display two timetables side by side. This lets you compare classes from two different groups.</system:String>
+    <system:String x:Key="EdtSettingsChangeSecondaryGroup">Change Secondary Group</system:String>
+    <system:String x:Key="EdtSettingsComplexItemCard">Class details</system:String>
+    <system:String x:Key="EdtSettingsComplexItemCardDesc">Toggle the details grid on timetable cards. Details will still be accessible when a card is tapped. Performance may decrease (especially with two groups configured) when this option is enabled.</system:String>
+
+    <!-- Bulletin -->
+    <system:String x:Key="BulletinLoading">Loading bulletin…</system:String>
+    <system:String x:Key="BulletinUnavailableTitle">Bulletin unavailable</system:String>
+    <system:String x:Key="BulletinRetry">Retry</system:String>
+    <system:String x:Key="BulletinNotConfiguredTitle">Bulletin not configured</system:String>
+    <system:String x:Key="BulletinNotConfiguredDesc">Enter your ScoDoc credentials in settings to display your bulletin.</system:String>
+    <system:String x:Key="BulletinOpenSettings">Open settings</system:String>
+    <system:String x:Key="BulletinSettingsCredentialsTitle">ScoDoc Credentials</system:String>
+    <system:String x:Key="BulletinSettingsCredentialsDesc">Your CAS UVSQ credentials are stored encrypted on this device and used to retrieve your bulletin.</system:String>
+    <system:String x:Key="BulletinSettingsUsernameWatermark">Username</system:String>
+    <system:String x:Key="BulletinSettingsPasswordWatermark">Password</system:String>
+    <system:String x:Key="BulletinSettingsSaveButton">Test and save</system:String>
+    <system:String x:Key="BulletinSettingsDeleteButton">Delete credentials</system:String>
+    <system:String x:Key="BulletinSettingsVariantTitle">Display variant</system:String>
+    <system:String x:Key="BulletinSettingsVariantDesc">Choose how the bulletin organizes teaching units, resources, and SAÉ.</system:String>
+    <system:String x:Key="BulletinSettingsVariantTabs">Tabs</system:String>
+    <system:String x:Key="BulletinSettingsVariantDrillDown">Drill-down</system:String>
+    <system:String x:Key="BulletinSettingsDensityTitle">Density</system:String>
+    <system:String x:Key="BulletinSettingsDensityDesc">Compact mode tightens lines to display more information on screen.</system:String>
+    <system:String x:Key="BulletinSettingsDensityComfort">Comfort</system:String>
+    <system:String x:Key="BulletinSettingsDensityCompact">Compact</system:String>
+    <system:String x:Key="BulletinSettingsSortTitle">Teaching unit sort</system:String>
+    <system:String x:Key="BulletinSettingsSortDesc">Sort units by code or by descending average.</system:String>
+    <system:String x:Key="BulletinSettingsSortByCode">By code</system:String>
+    <system:String x:Key="BulletinSettingsSortByAverage">By average</system:String>
+    <system:String x:Key="BulletinSettingsColorTitle">Unit color</system:String>
+    <system:String x:Key="BulletinSettingsColorDesc">The colored band of a unit follows its own color, or a shade calculated from the average.</system:String>
+    <system:String x:Key="BulletinSettingsColorByUnit">By unit</system:String>
+    <system:String x:Key="BulletinSettingsColorByGrade">By grade</system:String>
+    <system:String x:Key="BulletinSettingsDetailsTitle">Displayed details</system:String>
+    <system:String x:Key="BulletinSettingsShowRankLabel">Show rank</system:String>
+    <system:String x:Key="BulletinSettingsShowRankDesc">Class rank for each unit.</system:String>
+    <system:String x:Key="BulletinSettingsShowCoeffLabel">Show coefficients</system:String>
+    <system:String x:Key="BulletinSettingsShowCoeffDesc">Weight of each resource and evaluation.</system:String>
+    <system:String x:Key="BulletinSettingsShowWeightChartLabel">Weight mini-chart</system:String>
+    <system:String x:Key="BulletinSettingsShowWeightChartDesc">Coefficient histogram on the unit detail.</system:String>
+    <system:String x:Key="BulletinSectionUnits">Teaching units</system:String>
+    <system:String x:Key="BulletinSectionCompetencies">Competencies (RCUE)</system:String>
+    <system:String x:Key="BulletinSectionAllDetails">All details</system:String>
+    <system:String x:Key="BulletinAllResources">All resources</system:String>
+    <system:String x:Key="BulletinAllSae">All SAÉ</system:String>
+    <system:String x:Key="BulletinStudentBornOn">Born on</system:String>
+    <system:String x:Key="BulletinStudentNumber">Student number</system:String>
+    <system:String x:Key="BulletinStudentIneCode">INE code</system:String>
+    <system:String x:Key="BulletinStudentDisclaimer">This transcript is provisional. It is provided for information purposes only and has no official university value.</system:String>
+    <system:String x:Key="BulletinEvaluations">Evaluations</system:String>
+    <system:String x:Key="BulletinNoEvaluationRecorded">No evaluation recorded</system:String>
+    <system:String x:Key="BulletinNoEvaluation">No evaluation</system:String>
+    <system:String x:Key="BulletinTabSummary">Summary</system:String>
+    <system:String x:Key="BulletinTabResources">Resources</system:String>
+    <system:String x:Key="BulletinTabSae">SAÉ</system:String>
+    <system:String x:Key="BulletinUnitAverage">UNIT AVERAGE</system:String>
+    <system:String x:Key="BulletinUnitWeight">WEIGHT</system:String>
+    <system:String x:Key="BulletinUnitContributingResources">Contributing resources</system:String>
+    <system:String x:Key="BulletinUnitContributingSae">Contributing SAÉ</system:String>
+    <system:String x:Key="BulletinUnitPortfolio">Portfolio</system:String>
+    <system:String x:Key="BulletinSemesterAverage">SEMESTER AVERAGE</system:String>
+    <system:String x:Key="BulletinUnitsAcquired">UNITS ACQUIRED</system:String>
+    <system:String x:Key="BulletinErrorLoginRefused">Connection refused — check your credentials.</system:String>
+    <system:String x:Key="BulletinErrorFetchFailed">Unable to retrieve bulletin: </system:String>
+    <system:String x:Key="BulletinErrorSemesterLoadFailed">Unable to load this semester.</system:String>
+    <system:String x:Key="BulletinErrorSemesterLoad">Error loading semester: </system:String>
+    <system:String x:Key="BulletinStudentInfoTitle">Student information</system:String>
+    <system:String x:Key="BulletinSettingsCredentialsSaved">Credentials saved</system:String>
+    <system:String x:Key="BulletinSettingsCredentialsRequired">Username and password required</system:String>
+    <system:String x:Key="BulletinSettingsConnecting">Connecting…</system:String>
+    <system:String x:Key="BulletinSettingsConnectionFailed">Connection failed</system:String>
+    <system:String x:Key="BulletinSettingsCredentialsDeleted">Credentials deleted</system:String>
+    <system:String x:Key="BulletinSettingsError">Error</system:String>
+
 </ResourceDictionary>

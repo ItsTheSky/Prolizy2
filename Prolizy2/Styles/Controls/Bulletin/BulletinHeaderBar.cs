@@ -13,8 +13,8 @@ public class BulletinHeaderBar : TemplatedControl
     public static readonly StyledProperty<string> TitleProperty =
         AvaloniaProperty.Register<BulletinHeaderBar, string>(nameof(Title), "Bulletin");
 
-    public static readonly StyledProperty<ICommand?> DownloadCommandProperty =
-        AvaloniaProperty.Register<BulletinHeaderBar, ICommand?>(nameof(DownloadCommand));
+    public static readonly StyledProperty<ICommand?> RefreshCommandProperty =
+        AvaloniaProperty.Register<BulletinHeaderBar, ICommand?>(nameof(RefreshCommand));
 
     public static readonly StyledProperty<ICommand?> StudentCommandProperty =
         AvaloniaProperty.Register<BulletinHeaderBar, ICommand?>(nameof(StudentCommand));
@@ -25,10 +25,10 @@ public class BulletinHeaderBar : TemplatedControl
         set => SetValue(TitleProperty, value);
     }
 
-    public ICommand? DownloadCommand
+    public ICommand? RefreshCommand
     {
-        get => GetValue(DownloadCommandProperty);
-        set => SetValue(DownloadCommandProperty, value);
+        get => GetValue(RefreshCommandProperty);
+        set => SetValue(RefreshCommandProperty, value);
     }
 
     public ICommand? StudentCommand

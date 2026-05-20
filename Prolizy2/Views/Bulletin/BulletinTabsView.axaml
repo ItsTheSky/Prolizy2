@@ -24,7 +24,7 @@
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <LucideIcon Kind="ListChecks" Size="14"
                                         VerticalAlignment="Center" />
-                            <TextBlock Text="Synthèse" VerticalAlignment="Center" />
+                            <TextBlock Text="{DynamicResource BulletinTabSummary}" VerticalAlignment="Center" />
                         </StackPanel>
                     </TabItem.Header>
                     <StackPanel Margin="0,8,0,0">
@@ -41,7 +41,7 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <bc:SectionHeader Icon="GraduationCap" Title="Compétences (RCUE)" />
+                        <bc:SectionHeader Icon="GraduationCap" Title="{DynamicResource BulletinSectionCompetencies}" />
 
                         <ItemsControl ItemsSource="{Binding Data.Competences}">
                             <ItemsControl.ItemsPanel>
@@ -71,12 +71,12 @@
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <LucideIcon Kind="BookOpen" Size="14"
                                         VerticalAlignment="Center" />
-                            <TextBlock Text="Ressources" VerticalAlignment="Center" />
+                            <TextBlock Text="{DynamicResource BulletinTabResources}" VerticalAlignment="Center" />
                         </StackPanel>
                     </TabItem.Header>
                     <StackPanel Margin="0,8,0,0">
                         <bc:SectionHeader Icon="BookOpen"
-                                          Title="Ressources"
+                                          Title="{DynamicResource BulletinTabResources}"
                                           Hint="{Binding Data.Resources.Count, StringFormat='{}{0} éléments'}" />
                         <ItemsControl ItemsSource="{Binding Data.Resources}">
                             <ItemsControl.ItemsPanel>
@@ -98,12 +98,12 @@
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <LucideIcon Kind="WandSparkles" Size="14"
                                         VerticalAlignment="Center" />
-                            <TextBlock Text="SAÉ" VerticalAlignment="Center" />
+                            <TextBlock Text="{DynamicResource BulletinTabSae}" VerticalAlignment="Center" />
                         </StackPanel>
                     </TabItem.Header>
                     <StackPanel Margin="0,8,0,0">
                         <bc:SectionHeader Icon="WandSparkles"
-                                          Title="SAÉ"
+                                          Title="{DynamicResource BulletinTabSae}"
                                           Hint="{Binding Data.Saes.Count, StringFormat='{}{0} éléments'}" />
                         <ItemsControl ItemsSource="{Binding Data.Saes}">
                             <ItemsControl.ItemsPanel>

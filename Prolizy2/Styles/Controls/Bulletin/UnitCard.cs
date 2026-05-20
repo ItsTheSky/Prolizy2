@@ -4,7 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
-using Avalonia.Interactivity;
+using Avalonia.Input;
 using Prolizy2.Model.Bulletin;
 using Prolizy2.ViewModels.Bulletin;
 
@@ -54,7 +54,7 @@ public class UnitCard : TemplatedControl
     public static readonly StyledProperty<bool> ShowChevronRightProperty =
         AvaloniaProperty.Register<UnitCard, bool>(nameof(ShowChevronRight));
 
-    private Button? _header;
+    private Border? _header;
 
     static UnitCard()
     {
@@ -126,15 +126,15 @@ public class UnitCard : TemplatedControl
         base.OnApplyTemplate(e);
 
         if (_header is not null)
-            _header.Click -= OnHeaderClick;
+            _header.Tapped -= OnHeaderTapped;
 
-        _header = e.NameScope.Find<Button>("PART_Header");
+        _header = e.NameScope.Find<Border>("PART_Header");
 
         if (_header is not null)
-            _header.Click += OnHeaderClick;
+            _header.Tapped += OnHeaderTapped;
     }
 
-    private void OnHeaderClick(object? sender, RoutedEventArgs e)
+    private void OnHeaderTapped(object? sender, TappedEventArgs e)
     {
         if (DisplayMode == UnitCardMode.Accordion)
         {

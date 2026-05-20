@@ -19,14 +19,11 @@
                                 DataContext="{TemplateBinding Unit}">
                     <StackPanel>
 
-                        <!-- Tappable header -->
-                        <Button x:Name="PART_Header"
+                        <!-- Tappable header (Border instead of Button so the
+                             grid's * column keeps a finite width to wrap into). -->
+                        <Border x:Name="PART_Header"
                                 HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                CornerRadius="0"
-                                Padding="0">
+                                Background="Transparent">
                             <Grid ColumnDefinitions="4,*,Auto,Auto">
 
                                 <Border x:Name="PART_Stripe" Grid.Column="0"
@@ -56,9 +53,7 @@
                                         </StackPanel>
                                         <TextBlock Text="{Binding Name}"
                                                    FontSize="13" FontWeight="SemiBold"
-                                                   TextWrapping="Wrap"
-                                                   MaxLines="2"
-                                                   TextTrimming="CharacterEllipsis" />
+                                                   TextWrapping="Wrap" />
                                     </StackPanel>
                                 </Border>
 
@@ -103,7 +98,7 @@
                                 </Panel>
 
                             </Grid>
-                        </Button>
+                        </Border>
 
                         <!-- Inline expanded detail (accordion mode) -->
                         <Border x:Name="PART_Expanded"
@@ -139,7 +134,7 @@
                                                            FontSize="12"
                                                            Margin="8,0"
                                                            VerticalAlignment="Center"
-                                                           TextTrimming="CharacterEllipsis" />
+                                                           TextWrapping="Wrap" />
                                                 <StackPanel Grid.Column="2"
                                                             Orientation="Horizontal"
                                                             Spacing="8"
@@ -169,6 +164,14 @@
                 </suki:GlassCard>
             </ControlTemplate>
         </Setter>
+    </Style>
+
+    <!-- Hover affordance (used to come from the Button; replicate on the Border) -->
+    <Style Selector="controls|UnitCard /template/ Border#PART_Header">
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style Selector="controls|UnitCard /template/ Border#PART_Header:pointerover">
+        <Setter Property="Background" Value="#10FFFFFF" />
     </Style>
 
     <!-- Density: compact removes vertical breathing room -->

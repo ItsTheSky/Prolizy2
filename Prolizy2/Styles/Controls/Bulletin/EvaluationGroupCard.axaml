@@ -18,13 +18,9 @@
                                 DataContext="{TemplateBinding Group}">
                     <StackPanel>
 
-                        <Button x:Name="PART_Header"
+                        <Border x:Name="PART_Header"
                                 HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                CornerRadius="0"
-                                Padding="0">
+                                Background="Transparent">
                             <Border x:Name="PART_Body" Padding="12,10">
                                 <Grid ColumnDefinitions="Auto,*,Auto,Auto">
 
@@ -46,7 +42,7 @@
                                                FontSize="13" FontWeight="SemiBold"
                                                Margin="8,0"
                                                VerticalAlignment="Center"
-                                               TextTrimming="CharacterEllipsis" />
+                                               TextWrapping="Wrap" />
 
                                     <controls:GradeText Grid.Column="2"
                                                         Grade="{Binding Average}"
@@ -69,7 +65,7 @@
 
                                 </Grid>
                             </Border>
-                        </Button>
+                        </Border>
 
                         <Border x:Name="PART_Expanded"
                                 IsVisible="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
@@ -77,7 +73,7 @@
                                 BorderBrush="{DynamicResource SukiBorderBrush}"
                                 Padding="12,8,12,10">
                             <Panel>
-                                <TextBlock Text="Aucune évaluation"
+                                <TextBlock Text="{DynamicResource BulletinNoEvaluation}"
                                            FontSize="12"
                                            FontStyle="Italic"
                                            Foreground="{DynamicResource SukiLowText}"
@@ -92,7 +88,7 @@
                                                            Text="{Binding Name}"
                                                            FontSize="12"
                                                            VerticalAlignment="Center"
-                                                           TextTrimming="CharacterEllipsis" />
+                                                           TextWrapping="Wrap" />
                                                 <controls:GradeText Grid.Column="1"
                                                                     Grade="{Binding Grade}"
                                                                     GradeSize="13"
@@ -124,5 +120,12 @@
 
     <Style Selector="controls|EvaluationGroupCard:dense /template/ Border#PART_Body">
         <Setter Property="Padding" Value="12,7" />
+    </Style>
+
+    <Style Selector="controls|EvaluationGroupCard /template/ Border#PART_Header">
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style Selector="controls|EvaluationGroupCard /template/ Border#PART_Header:pointerover">
+        <Setter Property="Background" Value="#10FFFFFF" />
     </Style>
 </Styles>
