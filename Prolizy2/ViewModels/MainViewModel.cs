@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Lucide.Avalonia;
+using Prolizy2.Services;
 using Prolizy2.Utilities;
 using Prolizy2.ViewModels.Bulletin;
 using Prolizy2.ViewModels.Common;
@@ -94,6 +95,9 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty] private SettingsViewModel _settingsViewModel;
 
     [ObservableProperty] private LangViewModel _langViewModel;
+
+    /// <summary>Shared bulletin client wrapper — credentials live in SecureStorage.</summary>
+    public BulletinService BulletinService { get; } = new();
 
     #endregion
 

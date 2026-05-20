@@ -37,7 +37,7 @@
                 </StackPanel>
             </Border>
 
-            <bc:SectionHeader Icon="ListChecks" Title="Évaluations" />
+            <bc:SectionHeader Icon="ListChecks" Title="{DynamicResource BulletinEvaluations}" />
 
             <suki:GlassCard Padding="16" CornerRadius="8"
                             IsVisible="{Binding !Group.HasEvaluations}">
@@ -45,7 +45,7 @@
                     <LucideIcon Kind="Inbox" Size="24"
                                 HorizontalAlignment="Center"
                                 Foreground="{DynamicResource SukiLowText}" />
-                    <TextBlock Text="Aucune évaluation enregistrée"
+                    <TextBlock Text="{DynamicResource BulletinNoEvaluationRecorded}"
                                FontSize="12" FontStyle="Italic"
                                Foreground="{DynamicResource SukiLowText}" />
                 </StackPanel>

@@ -29,7 +29,7 @@
                     <Grid ColumnDefinitions="*,Auto">
 
                         <StackPanel Grid.Column="0" Spacing="8" VerticalAlignment="Top">
-                            <TextBlock Text="MOYENNE SEMESTRE"
+                            <TextBlock Text="{DynamicResource BulletinSemesterAverage}"
                                        FontSize="11"
                                        FontWeight="Bold"
                                        Foreground="{DynamicResource SukiLowText}" />
@@ -50,7 +50,7 @@
                         <StackPanel Grid.Column="1" Spacing="4"
                                     VerticalAlignment="Top"
                                     HorizontalAlignment="Right">
-                            <TextBlock Text="UE ACQUISES"
+                            <TextBlock Text="{DynamicResource BulletinUnitsAcquired}"
                                        FontSize="10"
                                        FontWeight="Bold"
                                        HorizontalAlignment="Right"

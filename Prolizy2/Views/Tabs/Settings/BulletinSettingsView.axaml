@@ -5,6 +5,7 @@
              xmlns:settings="clr-namespace:Prolizy2.Styles.Controls.Settings"
              xmlns:vm="clr-namespace:Prolizy2.ViewModels.Tabs.Settings"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:badge="clr-namespace:Prolizy2.Styles.Controls"
              mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="850"
              x:DataType="vm:BulletinSettingsViewModel"
              x:Class="Prolizy2.Views.Tabs.Settings.BulletinSettingsView">
@@ -14,31 +15,74 @@
         <ScrollViewer>
             <StackPanel Classes="MainSettingSection">
 
+                <!-- Identifiants ScoDoc -->
+                <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10"
+                          ColumnDefinitions="*,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                   FontSize="16" FontWeight="DemiBold"
+                                   Text="{DynamicResource BulletinSettingsCredentialsTitle}" />
+
+                        <badge:Badge Grid.Row="0" Grid.Column="1"
+                                     Text="{Binding StatusMessage}"
+                                     BadgeType="{Binding StatusBadge}"
+                                     IsVisible="{Binding HasStatus}" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                   Foreground="{DynamicResource SukiLowText}"
+                                   TextWrapping="Wrap"
+                                   Text="{DynamicResource BulletinSettingsCredentialsDesc}" />
+
+                        <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Watermark="{DynamicResource BulletinSettingsUsernameWatermark}"
+                                 IsEnabled="{Binding !IsBusy}"
+                                 Text="{Binding Username}" />
+
+                        <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Watermark="{DynamicResource BulletinSettingsPasswordWatermark}"
+                                 PasswordChar="●"
+                                 IsEnabled="{Binding !IsBusy}"
+                                 Text="{Binding Password}" />
+
+                        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                                Classes="Flat"
+                                suki:ButtonExtensions.ShowProgress="{Binding IsBusy}"
+                                Command="{Binding SaveCredentialsCommand}"
+                                Content="{DynamicResource BulletinSettingsSaveButton}" />
+
+                        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                                Classes="Danger"
+                                IsEnabled="{Binding IsConfigured}"
+                                Command="{Binding DeleteCredentialsCommand}"
+                                Content="{DynamicResource BulletinSettingsDeleteButton}" />
+                    </Grid>
+                </suki:GlassCard>
+
                 <!-- Variante d'affichage -->
                 <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
                     <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
                           ColumnDefinitions="*,*" ColumnSpacing="10">
                         <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
                                    FontSize="16" FontWeight="DemiBold"
-                                   Text="Variante d'affichage" />
+                                   Text="{DynamicResource BulletinSettingsVariantTitle}" />
                         <TextBlock Grid.Row="1" Grid.ColumnSpan="2"
                                    Foreground="{DynamicResource SukiLowText}"
                                    TextWrapping="Wrap"
-                                   Text="Choisit la manière dont le bulletin organise les unités d'enseignement, les ressources et les SAÉ." />
+                                   Text="{DynamicResource BulletinSettingsVariantDesc}" />
 
                         <RadioButton Grid.Row="2" Grid.Column="0"
                                      Classes="GigaChips" HorizontalContentAlignment="Center"
                                      GroupName="BulletinVariant"
                                      IsChecked="{Binding Options.IsTabsVariant}">
                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
-                                       Text="Onglets" />
+                                       Text="{DynamicResource BulletinSettingsVariantTabs}" />
                         </RadioButton>
                         <RadioButton Grid.Row="2" Grid.Column="1"
                                      Classes="GigaChips" HorizontalContentAlignment="Center"
                                      GroupName="BulletinVariant"
                                      IsChecked="{Binding Options.IsDrillDownVariant}">
                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
-                                       Text="Drill-down" />
+                                       Text="{DynamicResource BulletinSettingsVariantDrillDown}" />
                         </RadioButton>
                     </Grid>
                 </suki:GlassCard>
@@ -49,25 +93,25 @@
                           ColumnDefinitions="*,*" ColumnSpacing="10">
                         <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
                                    FontSize="16" FontWeight="DemiBold"
-                                   Text="Densité" />
+                                   Text="{DynamicResource BulletinSettingsDensityTitle}" />
                         <TextBlock Grid.Row="1" Grid.ColumnSpan="2"
                                    Foreground="{DynamicResource SukiLowText}"
                                    TextWrapping="Wrap"
-                                   Text="Le mode compact resserre les lignes pour afficher davantage d'information à l'écran." />
+                                   Text="{DynamicResource BulletinSettingsDensityDesc}" />
 
                         <RadioButton Grid.Row="2" Grid.Column="0"
                                      Classes="GigaChips" HorizontalContentAlignment="Center"
                                      GroupName="BulletinDensity"
                                      IsChecked="{Binding Options.IsComfortable}">
                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
-                                       Text="Confort" />
+                                       Text="{DynamicResource BulletinSettingsDensityComfort}" />
                         </RadioButton>
                         <RadioButton Grid.Row="2" Grid.Column="1"
                                      Classes="GigaChips" HorizontalContentAlignment="Center"
                                      GroupName="BulletinDensity"
                                      IsChecked="{Binding Options.IsCompact}">
                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
-                                       Text="Compact" />
+                                       Text="{DynamicResource BulletinSettingsDensityCompact}" />
                         </RadioButton>
                     </Grid>
                 </suki:GlassCard>
@@ -78,25 +122,25 @@
                           ColumnDefinitions="*,*" ColumnSpacing="10">
                         <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
                                    FontSize="16" FontWeight="DemiBold"
-                                   Text="Tri des unités d'enseignement" />
+                                   Text="{DynamicResource BulletinSettingsSortTitle}" />
                         <TextBlock Grid.Row="1" Grid.ColumnSpan="2"
                                    Foreground="{DynamicResource SukiLowText}"
                                    TextWrapping="Wrap"
-                                   Text="Ordonne les UE par leur code ou par leur moyenne décroissante." />
+                                   Text="{DynamicResource BulletinSettingsSortDesc}" />
 
                         <RadioButton Grid.Row="2" Grid.Column="0"
                                      Classes="GigaChips" HorizontalContentAlignment="Center"
                                      GroupName="BulletinSort"
                                      IsChecked="{Binding Options.IsSortByCode}">
                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
-                                       Text="Par code" />
+                                       Text="{DynamicResource BulletinSettingsSortByCode}" />
                         </RadioButton>
                         <RadioButton Grid.Row="2" Grid.Column="1"
                                      Classes="GigaChips" HorizontalContentAlignment="Center"
                                      GroupName="BulletinSort"
                                      IsChecked="{Binding Options.IsSortByAverage}">
                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
-                                       Text="Par moyenne" />
+                                       Text="{DynamicResource BulletinSettingsSortByAverage}" />
                         </RadioButton>
                     </Grid>
                 </suki:GlassCard>
@@ -107,25 +151,25 @@
                           ColumnDefinitions="*,*" ColumnSpacing="10">
                         <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
                                    FontSize="16" FontWeight="DemiBold"
-                                   Text="Couleur des UE" />
+                                   Text="{DynamicResource BulletinSettingsColorTitle}" />
                         <TextBlock Grid.Row="1" Grid.ColumnSpan="2"
                                    Foreground="{DynamicResource SukiLowText}"
                                    TextWrapping="Wrap"
-                                   Text="La bande colorée d'une UE suit sa couleur propre, ou une teinte calculée depuis la moyenne." />
+                                   Text="{DynamicResource BulletinSettingsColorDesc}" />
 
                         <RadioButton Grid.Row="2" Grid.Column="0"
                                      Classes="GigaChips" HorizontalContentAlignment="Center"
                                      GroupName="BulletinColor"
                                      IsChecked="{Binding Options.IsColorByUnit}">
                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
-                                       Text="Par UE" />
+                                       Text="{DynamicResource BulletinSettingsColorByUnit}" />
                         </RadioButton>
                         <RadioButton Grid.Row="2" Grid.Column="1"
                                      Classes="GigaChips" HorizontalContentAlignment="Center"
                                      GroupName="BulletinColor"
                                      IsChecked="{Binding Options.IsColorByGrade}">
                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
-                                       Text="Par note" />
+                                       Text="{DynamicResource BulletinSettingsColorByGrade}" />
                         </RadioButton>
                     </Grid>
                 </suki:GlassCard>
@@ -134,12 +178,12 @@
                 <suki:GlassCard Padding="25" Margin="-15,10,-15,0">
                     <StackPanel Spacing="14">
                         <TextBlock FontSize="16" FontWeight="DemiBold"
-                                   Text="Détails affichés" />
+                                   Text="{DynamicResource BulletinSettingsDetailsTitle}" />
 
                         <Grid ColumnDefinitions="*,Auto">
                             <StackPanel Grid.Column="0" Spacing="2">
-                                <TextBlock Text="Afficher le rang" FontWeight="Medium" />
-                                <TextBlock Text="Position dans la promotion sur chaque UE."
+                                <TextBlock Text="{DynamicResource BulletinSettingsShowRankLabel}" FontWeight="Medium" />
+                                <TextBlock Text="{DynamicResource BulletinSettingsShowRankDesc}"
                                            FontSize="12"
                                            TextWrapping="Wrap"
                                            Foreground="{DynamicResource SukiLowText}" />
@@ -151,8 +195,8 @@
 
                         <Grid ColumnDefinitions="*,Auto">
                             <StackPanel Grid.Column="0" Spacing="2">
-                                <TextBlock Text="Afficher les coefficients" FontWeight="Medium" />
-                                <TextBlock Text="Poids de chaque ressource et évaluation."
+                                <TextBlock Text="{DynamicResource BulletinSettingsShowCoeffLabel}" FontWeight="Medium" />
+                                <TextBlock Text="{DynamicResource BulletinSettingsShowCoeffDesc}"
                                            FontSize="12"
                                            TextWrapping="Wrap"
                                            Foreground="{DynamicResource SukiLowText}" />
@@ -164,8 +208,8 @@
 
                         <Grid ColumnDefinitions="*,Auto">
                             <StackPanel Grid.Column="0" Spacing="2">
-                                <TextBlock Text="Mini-graphe des poids" FontWeight="Medium" />
-                                <TextBlock Text="Histogramme des coefficients sur le détail d'une UE."
+                                <TextBlock Text="{DynamicResource BulletinSettingsShowWeightChartLabel}" FontWeight="Medium" />
+                                <TextBlock Text="{DynamicResource BulletinSettingsShowWeightChartDesc}"
                                            FontSize="12"
                                            TextWrapping="Wrap"
                                            Foreground="{DynamicResource SukiLowText}" />

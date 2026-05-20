@@ -22,6 +22,7 @@ public partial class MainView : UserControl
     public static ISukiDialogManager DialogManager { get; private set; }
     public static ISukiToastManager ToastManager { get; private set; }
     public static Preferences Preferences = new Preferences("Prolizy2");
+    public static SecureStorage SecureStorage = new SecureStorage("Prolizy2");
     public static SukiMainHost SukiHost { get; set; }
     public static TopLevel TopLevel { get; set; }
     
