@@ -428,9 +428,16 @@ public partial class EdtViewModel : ViewModelBase
 
     public void UpdateHomeNextCourse()
     {
+        var home = MainVm.HomeViewModel;
+        if (home is null)
+            return;
+
         var cache = _cacheService.GetCachedItems();
-        MainVm.HomeViewModel.NextScheduleItem = EdtUtilities.FindNextOrCurrentItem(cache);
-        Logs.Debug("EDT: Updated home next course: " + (MainVm.HomeViewModel.NextScheduleItem?.Subject ?? "null") + $"Got {cache.Count} items in cache.");
+        home.NextScheduleItem = EdtUtilities.FindNextOrCurrentItem(cache);
+        // The "next course" cards read the same cache: keep them in sync.
+        home.RefreshNextCourseCards();
+
+        Logs.Debug("EDT: Updated home next course: " + (home.NextScheduleItem?.Subject ?? "null") + $"Got {cache.Count} items in cache.");
     }
     
     #endregion

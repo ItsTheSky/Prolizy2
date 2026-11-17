@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Prolizy2.Model;
 using Prolizy2.Model.Home;
-using Prolizy2.Utilities;
 using Prolizy2.ViewModels.Bulletin;
 
 namespace Prolizy2.ViewModels.Tabs;
@@ -13,38 +13,34 @@ namespace Prolizy2.ViewModels.Tabs;
 /// View-model of the home tab. It hosts the user's cards (see
 /// <see cref="HomeCardViewModel"/>) and keeps the legacy
 /// <see cref="NextScheduleItem"/> property alive for the EDT integration.
+///
+/// The cards read the EDT and bulletin view-models, which are created *after*
+/// this one. They are therefore built once those are available (see
+/// <see cref="OnMainViewModelPropertyChanged"/>), never from the constructor.
 /// </summary>
 public partial class HomeViewModel : ViewModelBase
 {
     private readonly MainViewModel _mainVm;
+    private readonly ObservableCollection<HomeCardViewModel> _cards = new();
+    private bool _built;
 
     public HomeViewModel(MainViewModel mainVm)
     {
         _mainVm = mainVm;
 
         HomeLayout.LayoutChanged += OnLayoutChanged;
-        Rebuild();
-        _mainVm.BulletinViewModel.PropertyChanged += OnBulletinPropertyChanged;
-
-        // The EDT pushes the next course here whenever its cache changes.
-        _mainVm.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName != nameof(MainViewModel.HomeViewModel))
-                return;
-
-            foreach (var card in Cards)
-            {
-                if (card.Config.Type == HomeCardType.NextCourse
-                    && card.Content is NextCourseCardViewModel next)
-                {
-                    next.Refresh();
-                }
-            }
-        };
+        _mainVm.PropertyChanged += OnMainViewModelPropertyChanged;
     }
 
     /// <summary>The cards shown on the home screen, in display order.</summary>
-    public ObservableCollection<HomeCardViewModel> Cards { get; } = new();
+    public ObservableCollection<HomeCardViewModel> Cards
+    {
+        get
+        {
+            EnsureBuilt();
+            return _cards;
+        }
+    }
 
     /// <summary>True when no card is configured.</summary>
     public bool HasNoCards => Cards.Count == 0;
@@ -55,6 +51,20 @@ public partial class HomeViewModel : ViewModelBase
     /// </summary>
     [ObservableProperty] private ScheduleItem? _nextScheduleItem;
 
+    /// <summary>
+    /// Builds the cards if it has not been done yet. Called by the
+    /// <see cref="Cards"/> getter so an early binding never sees an empty list,
+    /// and at the end of the view-model setup.
+    /// </summary>
+    private void EnsureBuilt()
+    {
+        if (_built)
+            return;
+
+        _built = true;
+        Rebuild();
+    }
+
     private HomeCardViewModel CreateCard(HomeCardConfig config)
     {
         var card = new HomeCardViewModel(_mainVm, config);
@@ -62,9 +72,32 @@ public partial class HomeViewModel : ViewModelBase
         return card;
     }
 
-    private void OnLayoutChanged() => Rebuild();
+    #region View-model wiring
 
-    private void OnBulletinPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    /// <summary>
+    /// Hooks the view-models the cards depend on as soon as they exist, and
+    /// refreshes the cards when their data changes.
+    /// </summary>
+    private void OnMainViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(MainViewModel.EdtViewModel) when _mainVm.EdtViewModel is { } edt:
+                // The next-course cards read the EDT cache: pull them up now
+                // that it exists (the first load is still running, they refresh
+                // again when it completes).
+                RefreshNextCourseCards();
+                break;
+
+            case nameof(MainViewModel.BulletinViewModel) when _mainVm.BulletinViewModel is { } bulletin:
+                bulletin.PropertyChanged += OnBulletinPropertyChanged;
+                // The bulletin cards need the view-model to exist: build them.
+                Rebuild();
+                break;
+        }
+    }
+
+    private void OnBulletinPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName is nameof(BulletinCoreViewModel.Data)
             or nameof(BulletinCoreViewModel.SelectedSemester))
@@ -74,21 +107,45 @@ public partial class HomeViewModel : ViewModelBase
         }
     }
 
+    private void OnLayoutChanged() => Rebuild();
+
+    #endregion
+
     /// <summary>Rebuilds every card from <see cref="HomeLayout.Cards"/>.</summary>
     public void Rebuild()
     {
-        Cards.Clear();
+        _cards.Clear();
         foreach (var config in HomeLayout.Cards)
-            Cards.Add(CreateCard(config));
+            _cards.Add(CreateCard(config));
 
         OnPropertyChanged(nameof(HasNoCards));
     }
 
     /// <summary>Refreshes the data of every card without recreating them.</summary>
-    private void RefreshCards()
+    public void RefreshCards()
     {
-        foreach (var card in Cards)
+        foreach (var card in _cards)
             card.RebuildContent();
+    }
+
+    /// <summary>
+    /// Recomputes the "next course" cards only. Called by the EDT view-model
+    /// whenever its week cache changes.
+    /// </summary>
+    public void RefreshNextCourseCards()
+    {
+        // Nothing to refresh before the first build (it picks the cache up).
+        if (!_built)
+            return;
+
+        foreach (var card in _cards)
+        {
+            if (card.Config.Type == HomeCardType.NextCourse
+                && card.Content is NextCourseCardViewModel next)
+            {
+                next.Refresh();
+            }
+        }
     }
 
     #region Commands

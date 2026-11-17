@@ -74,11 +74,12 @@ public partial class NextCourseCardViewModel : ViewModelBase
     /// <summary>Recomputes the card from the EDT cache.</summary>
     public void Refresh()
     {
-        if (_mainVm is null)
+        // The EDT view-model owns the only up-to-date week cache. It is created
+        // after the home view-model, so it may not exist yet.
+        if (_mainVm?.EdtViewModel is not { } edt)
             return;
 
-        // The EDT view-model owns the only up-to-date week cache: reuse it.
-        var cache = _mainVm.EdtViewModel.GetCachedItems();
+        var cache = edt.GetCachedItems();
 
         var next = EdtUtilities.FindNextOrCurrentItem(cache);
         var following = EdtUtilities.FindFollowingItems(cache, next, 3);

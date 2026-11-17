@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Prolizy2.Model.Home;
+using Prolizy2.ViewModels.Bulletin;
 using Prolizy2.ViewModels.Common;
 using Prolizy2.ViewModels.Tabs;
 
@@ -100,10 +101,9 @@ public partial class HomeCardViewModel : ViewModelBase
     {
         HomeCardType.NextCourse => new NextCourseCardViewModel(MainVm, IsCompact),
         HomeCardType.BulletinOverview =>
-            new BulletinOverviewCardViewModel(MainVm.BulletinViewModel.Data, Config.SemesterId),
-        HomeCardType.EvaluationDetail => new EvaluationDetailCardViewModel(
-            MainVm.BulletinViewModel.FindGroup(Config.GroupCode ?? string.Empty), Config.MaxItems),
-        _ => new UnitListCardViewModel(MainVm.BulletinViewModel.Data, Config.UnitCode, Config.MaxItems)
+            new BulletinOverviewCardViewModel(Bulletin?.Data, Config.SemesterId),
+        HomeCardType.EvaluationDetail => new EvaluationDetailCardViewModel(FindGroup(), Config.MaxItems),
+        _ => new UnitListCardViewModel(Bulletin?.Data, Config.UnitCode, Config.MaxItems)
     };
 
     /// <summary>Rebuilds the inner view-model — called when the bulletin data is replaced.</summary>
@@ -123,8 +123,14 @@ public partial class HomeCardViewModel : ViewModelBase
 
     }
 
+    /// <summary>
+    /// The bulletin view-model, or null while it is still being created: the
+    /// bulletin cards then show their empty state until the next refresh.
+    /// </summary>
+    private BulletinCoreViewModel? Bulletin => MainVm.BulletinViewModel;
+
     private Prolizy2.Model.Bulletin.EvaluationGroupInfo? FindGroup() =>
-        MainVm.BulletinViewModel.FindGroup(Config.GroupCode ?? string.Empty);
+        Bulletin?.FindGroup(Config.GroupCode ?? string.Empty);
 
     private string ResolveEvaluationTitle()
     {
@@ -140,7 +146,7 @@ public partial class HomeCardViewModel : ViewModelBase
         if (string.IsNullOrEmpty(Config.UnitCode))
             return LangViewModel.Translate("HomeCardTitleUnits");
 
-        var unit = MainVm.BulletinViewModel.Data.Units
+        var unit = Bulletin?.Data.Units
             .FirstOrDefault(u => string.Equals(u.Code, Config.UnitCode, StringComparison.OrdinalIgnoreCase));
 
         return unit?.Code ?? Config.UnitCode;
