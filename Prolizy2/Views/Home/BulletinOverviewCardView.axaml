@@ -1,0 +1,94 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
+             xmlns:badge="clr-namespace:Prolizy2.Styles.Controls"
+             xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
+             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Home"
+             mc:Ignorable="d"
+             d:DesignWidth="360" d:DesignHeight="240"
+             x:DataType="tabs:BulletinOverviewCardViewModel"
+             x:Class="Prolizy2.Views.Home.BulletinOverviewCardView">
+
+    <Panel>
+
+        <!-- Empty state -->
+        <StackPanel IsVisible="{Binding HasNoData}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="6">
+            <LucideIcon Kind="NotebookPen" Size="28"
+                        HorizontalAlignment="Center"
+                        Foreground="{DynamicResource SukiLowText}" />
+            <TextBlock Text="{DynamicResource HomeCardNoBulletin}"
+                       FontSize="12"
+                       FontStyle="Italic"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource SukiLowText}"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center" />
+        </StackPanel>
+
+        <!-- Data -->
+        <StackPanel IsVisible="{Binding HasData}" Spacing="8">
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="{DynamicResource HomeCardSemesterAverage}"
+                           FontSize="10" FontWeight="Bold"
+                           TextTrimming="CharacterEllipsis"
+                           Foreground="{DynamicResource SukiLowText}" />
+                <bc:GradeText Grade="{Binding Average}"
+                              GradeSize="30"
+                              HorizontalAlignment="Left" />
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                    <TextBlock Text="{Binding AcquiredUnits}"
+                               FontSize="15" FontWeight="Bold"
+                               VerticalAlignment="Bottom"
+                               Foreground="#22C55E" />
+                    <TextBlock Text="{Binding TotalUnits, StringFormat='/{0}'}"
+                               FontSize="12" FontWeight="SemiBold"
+                               VerticalAlignment="Bottom"
+                               Foreground="{DynamicResource SukiLowText}" />
+                    <TextBlock Text="{DynamicResource HomeCardUnitsAcquired}"
+                               Margin="6,0,0,1"
+                               FontSize="10" FontWeight="Bold"
+                               VerticalAlignment="Bottom"
+                               TextTrimming="CharacterEllipsis"
+                               Foreground="{DynamicResource SukiLowText}" />
+                </StackPanel>
+            </StackPanel>
+
+            <WrapPanel Orientation="Horizontal">
+                <badge:Badge Text="{Binding DecisionText}"
+                             BadgeType="{Binding DecisionBadgeType}"
+                             Margin="0,0,6,0" />
+                <badge:Badge Text="{Binding SemesterLabel}"
+                             BadgeType="Neutral"
+                             Margin="0,0,6,0" />
+            </WrapPanel>
+
+            <!-- Acquired units -->
+            <ItemsControl ItemsSource="{Binding AcquiredList}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="bm:TeachingUnitInfo">
+                        <Border Margin="0,0,5,5"
+                                Padding="5,2"
+                                CornerRadius="5"
+                                Background="#1AFFFFFF">
+                            <TextBlock Text="{Binding Code}"
+                                       FontSize="10" FontWeight="Bold"
+                                       Foreground="{DynamicResource SukiLowText}" />
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+
+    </Panel>
+</UserControl>

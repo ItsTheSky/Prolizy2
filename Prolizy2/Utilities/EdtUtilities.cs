@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Prolizy2.Model;
 
 namespace Prolizy2.Utilities;
@@ -53,5 +54,25 @@ public static class EdtUtilities
         }
 
         return null;
+    }
+
+    public static List<ScheduleItem> FindFollowingItems(List<ScheduleItem> items, ScheduleItem? item, int count)
+    {
+        if (items is null || count <= 0)
+            return new List<ScheduleItem>();
+
+        var ordered = items
+            .OrderBy(i => DateOnly.FromDateTime(i.StartTime))
+            .ThenBy(i => i.StartTime)
+            .ToList();
+
+        if (item is null)
+            return ordered.Take(count).ToList();
+
+        var index = ordered.IndexOf(item);
+        if (index < 0)
+            return ordered.Take(count).ToList();
+
+        return ordered.Skip(index + 1).Take(count).ToList();
     }
 }

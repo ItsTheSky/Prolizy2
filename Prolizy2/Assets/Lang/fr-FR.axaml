@@ -114,4 +114,62 @@
     <system:String x:Key="BulletinSettingsCredentialsDeleted">Identifiants supprimés</system:String>
     <system:String x:Key="BulletinSettingsError">Erreur</system:String>
 
+
+    <!-- Home -->
+    <system:String x:Key="HomeGreeting">Bonjour 👋</system:String>
+    <system:String x:Key="HomeEmptyHint">Ajoutez des cartes depuis les options pour composer votre page d'accueil.</system:String>
+    <system:String x:Key="HomeCardTitleNextCourse">Prochain cours</system:String>
+    <system:String x:Key="HomeCardTitleOverview">Moyenne du semestre</system:String>
+    <system:String x:Key="HomeCardTitleEvaluation">Notes détaillées</system:String>
+    <system:String x:Key="HomeCardTitleUnits">Unités d'enseignement</system:String>
+    <system:String x:Key="HomeCardNoCourse">Aucun cours à venir 🎉</system:String>
+    <system:String x:Key="HomeCardNoBulletin">Renseignez vos identifiants ScoDoc pour afficher votre moyenne.</system:String>
+    <system:String x:Key="HomeCardNoEvaluation">Choisissez une ressource ou une SAÉ à afficher.</system:String>
+    <system:String x:Key="HomeCardNoUnits">Aucune unité d'enseignement disponible.</system:String>
+    <system:String x:Key="HomeCardNoGrades">Aucune note pour l'instant.</system:String>
+    <system:String x:Key="HomeCardStatusOngoing">En cours</system:String>
+    <system:String x:Key="HomeCardStatusTomorrow">Demain</system:String>
+    <system:String x:Key="HomeCardStatusInMinutes">Dans {0} min</system:String>
+    <system:String x:Key="HomeCardStatusInHours">Dans {0} h {1:00}</system:String>
+    <system:String x:Key="HomeCardMoreEvaluations">+ {0} autre(s) évaluation(s)</system:String>
+    <system:String x:Key="HomeCardUnitCount">{0} unité(s)</system:String>
+    <system:String x:Key="HomeCardSemesterAverage">MOYENNE SEMESTRE</system:String>
+    <system:String x:Key="HomeCardUnitsAcquired">UE ACQUISES</system:String>
+    <system:String x:Key="HomeCardKindResource">Ressource</system:String>
+    <system:String x:Key="HomeCardKindSae">SAÉ</system:String>
+    <system:String x:Key="HomeCardKindPortfolio">Portfolio</system:String>
+    <system:String x:Key="HomeCardDecisionAdmitted">Admis</system:String>
+    <system:String x:Key="HomeCardDecisionDeferred">Ajourné</system:String>
+    <system:String x:Key="HomeCardDecisionFailed">Non admis</system:String>
+
+    <system:String x:Key="HomeCardTypeNextCourse">Prochain cours</system:String>
+    <system:String x:Key="HomeCardTypeOverview">Moyenne du bulletin</system:String>
+    <system:String x:Key="HomeCardTypeEvaluation">Notes d'une ressource / SAÉ</system:String>
+    <system:String x:Key="HomeCardTypeUnits">Unités d'enseignement</system:String>
+
+    <system:String x:Key="HomeSettingsEdit">Personnaliser l'accueil</system:String>
+    <system:String x:Key="HomeSettingsAddCard">Ajouter une carte</system:String>
+    <system:String x:Key="HomeSettingsCardsTitle">Cartes de l'accueil</system:String>
+    <system:String x:Key="HomeSettingsCardsDesc">Ajoutez, réordonnez et configurez les cartes affichées sur votre page d'accueil.</system:String>
+    <system:String x:Key="HomeSettingsSave">Enregistrer</system:String>
+    <system:String x:Key="HomeSettingsReset">Réinitialiser</system:String>
+    <system:String x:Key="HomeSettingsNoCards">Aucune carte pour le moment.</system:String>
+    <system:String x:Key="HomeSettingsHalf">Une colonne</system:String>
+    <system:String x:Key="HomeSettingsFull">Deux colonnes</system:String>
+    <system:String x:Key="HomeSettingsVariantClassic">Large</system:String>
+    <system:String x:Key="HomeSettingsVariantCompact">Compacte</system:String>
+    <system:String x:Key="HomeSettingsMaxItems">Nombre de lignes</system:String>
+    <system:String x:Key="HomeSettingsMoveUp">Monter</system:String>
+    <system:String x:Key="HomeSettingsMoveDown">Descendre</system:String>
+    <system:String x:Key="HomeSettingsRemoveCard">Supprimer</system:String>
+    <system:String x:Key="HomeSettingsSemesterCurrent">Semestre courant</system:String>
+    <system:String x:Key="HomeSettingsDiscardTitle">Modifications non enregistrées</system:String>
+    <system:String x:Key="HomeSettingsDiscardMessage">Vos changements ne sont pas encore enregistrés. Voulez-vous les abandonner ?</system:String>
+    <system:String x:Key="HomeSettingsDiscardKeepEditing">Rester</system:String>
+    <system:String x:Key="HomeSettingsDiscardLeave">Quitter</system:String>
+    <system:String x:Key="HomeSettingsWidth">Largeur</system:String>
+    <system:String x:Key="HomeSettingsStyle">Affichage</system:String>
+    <system:String x:Key="HomeSettingsAllUnits">Toutes les UE</system:String>
+    <system:String x:Key="HomeSettingsPickEvaluation">Choisir une ressource ou une SAÉ</system:String>
+
 </ResourceDictionary>

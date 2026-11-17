@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
+             xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
+             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Home"
+             mc:Ignorable="d"
+             d:DesignWidth="360" d:DesignHeight="300"
+             x:DataType="tabs:UnitListCardViewModel"
+             x:Class="Prolizy2.Views.Home.UnitListCardView">
+
+    <Panel>
+
+        <!-- Empty state -->
+        <StackPanel IsVisible="{Binding HasNoUnits}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="6">
+            <LucideIcon Kind="Layers" Size="28"
+                        HorizontalAlignment="Center"
+                        Foreground="{DynamicResource SukiLowText}" />
+            <TextBlock Text="{DynamicResource HomeCardNoUnits}"
+                       FontSize="12"
+                       FontStyle="Italic"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource SukiLowText}"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center" />
+        </StackPanel>
+
+        <!-- Units -->
+        <ItemsControl ItemsSource="{Binding Units}"
+                      IsVisible="{Binding HasUnits}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="bm:TeachingUnitInfo">
+                    <Grid ColumnDefinitions="4,*,Auto" ColumnSpacing="8"
+                          Margin="0,2"
+                          Height="30">
+                        <Border Grid.Column="0"
+                                CornerRadius="2"
+                                Background="{Binding UnitBrush}" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding Name}"
+                                   FontSize="12"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" />
+                        <bc:GradeText Grid.Column="2"
+                                      Grade="{Binding Average}"
+                                      GradeSize="14"
+                                      ShowMaximum="False"
+                                      VerticalAlignment="Center"
+                                      Foreground="{Binding GradeBrush}"
+                                      DimBrush="{DynamicResource SukiLowText}" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+    </Panel>
+</UserControl>

@@ -1,0 +1,96 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
+             xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
+             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Home"
+             mc:Ignorable="d"
+             d:DesignWidth="360" d:DesignHeight="300"
+             x:DataType="tabs:EvaluationDetailCardViewModel"
+             x:Class="Prolizy2.Views.Home.EvaluationDetailCardView">
+
+    <Panel>
+
+        <!-- Empty state -->
+        <StackPanel IsVisible="{Binding HasNoGroup}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="6">
+            <LucideIcon Kind="SearchX" Size="28"
+                        HorizontalAlignment="Center"
+                        Foreground="{DynamicResource SukiLowText}" />
+            <TextBlock Text="{DynamicResource HomeCardNoEvaluation}"
+                       FontSize="12"
+                       FontStyle="Italic"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource SukiLowText}"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center" />
+        </StackPanel>
+
+        <!-- Data -->
+        <StackPanel IsVisible="{Binding HasGroup}" Spacing="8">
+
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <Border Grid.Column="0"
+                        Padding="8,2"
+                        CornerRadius="6"
+                        VerticalAlignment="Center">
+                    <Border.Background>
+                        <SolidColorBrush Color="#10B981" Opacity="0.18" />
+                    </Border.Background>
+                    <TextBlock Text="{Binding Code}"
+                               FontSize="11" FontWeight="Bold"
+                               Foreground="#10B981"
+                               VerticalAlignment="Center" />
+                </Border>
+
+                <bc:GradeText Grid.Column="1"
+                              Grade="{Binding Average}"
+                              GradeSize="24"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Center" />
+            </Grid>
+
+            <Border Height="1" Background="{DynamicResource SukiBorderBrush}"
+                    IsVisible="{Binding HasEvaluations}" />
+
+            <TextBlock Text="{DynamicResource HomeCardNoGrades}"
+                       IsVisible="{Binding !HasEvaluations}"
+                       FontSize="12" FontStyle="Italic"
+                       Foreground="{DynamicResource SukiLowText}" />
+
+            <ItemsControl ItemsSource="{Binding Evaluations}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="bm:EvaluationInfo">
+                        <Grid ColumnDefinitions="*,Auto" Margin="0,2"
+                              ColumnSpacing="8">
+                            <TextBlock Grid.Column="0"
+                                       Text="{Binding Name}"
+                                       FontSize="12"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" />
+                            <bc:GradeText Grid.Column="1"
+                                          Grade="{Binding Grade}"
+                                          GradeSize="13"
+                                          ShowMaximum="False"
+                                          VerticalAlignment="Center"
+                                          Foreground="{Binding Grade.ToneBrush}"
+                                          DimBrush="{Binding Grade.ToneBrush}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="{Binding MoreCountLabel}"
+                       IsVisible="{Binding HasMore}"
+                       FontSize="11"
+                       FontStyle="Italic"
+                       Foreground="{DynamicResource SukiLowText}"
+                       HorizontalAlignment="Center"
+                       Margin="0,4,0,0" />
+
+        </StackPanel>
+
+    </Panel>
+</UserControl>

@@ -1,0 +1,222 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:Prolizy2.Styles.Controls.Settings"
+             xmlns:settingsControls="clr-namespace:Prolizy2.Views.Tabs.Settings"
+             xmlns:homeControls="clr-namespace:Prolizy2.Styles.Controls.Home"
+             xmlns:vm="clr-namespace:Prolizy2.ViewModels.Tabs.Settings"
+             xmlns:model="clr-namespace:Prolizy2.Model.Home"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="900"
+             x:DataType="vm:HomeSettingsViewModel"
+             x:Class="Prolizy2.Views.Tabs.Settings.HomeSettingsView">
+
+    <UserControl.Styles>
+        <Style Selector="Button.CardAction">
+            <Setter Property="Padding" Value="7" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="Button.CardAction:disabled">
+            <Setter Property="Opacity" Value="0.3" />
+        </Style>
+        <Style Selector="TextBlock.OptionLabel">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource SukiLowText}" />
+        </Style>
+    </UserControl.Styles>
+
+    <settings:SettingSubPage Title="Accueil"
+                             BackCommand="{Binding BackCommand}">
+
+        <settings:SettingSubPage.Actions>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Padding="12,0"
+                        Command="{Binding ResetCommand}"
+                        ToolTip.Tip="{DynamicResource HomeSettingsReset}">
+                    <LucideIcon Kind="RotateCcw" Size="16" />
+                </Button>
+                <Button Classes="Flat"
+                        Command="{Binding SaveCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <LucideIcon Kind="Save" Size="16" VerticalAlignment="Center" />
+                        <TextBlock Text="{DynamicResource HomeSettingsSave}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </settings:SettingSubPage.Actions>
+
+        <ScrollViewer>
+            <StackPanel Classes="MainSettingSection" Spacing="12">
+
+                <TextBlock Classes="Quote"
+                           TextWrapping="Wrap"
+                           Text="{DynamicResource HomeSettingsCardsDesc}" />
+
+                <!-- Cards -->
+                <ItemsControl ItemsSource="{Binding Cards}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="10" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="model:HomeCardConfig">
+                            <suki:GlassCard Padding="14">
+                                <StackPanel Spacing="12">
+
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                        <Border Width="34" Height="34" CornerRadius="10"
+                                                Background="{Binding Type, Converter={x:Static vm:HomeCardTypeConverters.AccentTint}}">
+                                            <LucideIcon Kind="{Binding Type, Converter={x:Static vm:HomeCardTypeConverters.Icon}}"
+                                                        Size="17"
+                                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                        Foreground="{Binding Type, Converter={x:Static vm:HomeCardTypeConverters.Accent}}" />
+                                        </Border>
+
+                                        <TextBlock Grid.Column="1"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="14" FontWeight="SemiBold"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Text="{Binding Type, Converter={x:Static vm:HomeCardTypeLabelConverter.Instance}}" />
+
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2">
+                                            <Button Classes="CardAction"
+                                                    Command="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).MoveUpCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    ToolTip.Tip="{DynamicResource HomeSettingsMoveUp}">
+                                                <LucideIcon Kind="ChevronUp" Size="18" />
+                                            </Button>
+                                            <Button Classes="CardAction"
+                                                    Command="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).MoveDownCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    ToolTip.Tip="{DynamicResource HomeSettingsMoveDown}">
+                                                <LucideIcon Kind="ChevronDown" Size="18" />
+                                            </Button>
+                                            <Button Classes="CardAction"
+                                                    Command="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).RemoveCardCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    ToolTip.Tip="{DynamicResource HomeSettingsRemoveCard}">
+                                                <LucideIcon Kind="Trash2" Size="17" Foreground="#EF4444" />
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Classes="OptionLabel" Text="{DynamicResource HomeSettingsWidth}" />
+                                            <homeControls:HomeSegmentToggle FirstIcon="Square"
+                                                                            SecondIcon="RectangleHorizontal"
+                                                                            FirstTip="{DynamicResource HomeSettingsHalf}"
+                                                                            SecondTip="{DynamicResource HomeSettingsFull}"
+                                                                            IsSecondSelected="{Binding Size, Converter={x:Static vm:HomeCardSizeConverter.Instance}}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Spacing="5">
+                                            <TextBlock Classes="OptionLabel" Text="{DynamicResource HomeSettingsStyle}" />
+                                            <homeControls:HomeSegmentToggle FirstIcon="Maximize2"
+                                                                            SecondIcon="Minimize2"
+                                                                            FirstTip="{DynamicResource HomeSettingsVariantClassic}"
+                                                                            SecondTip="{DynamicResource HomeSettingsVariantCompact}"
+                                                                            IsSecondSelected="{Binding Variant, Converter={x:Static vm:HomeCardVariantConverter.Instance}}" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <StackPanel Spacing="8"
+                                                IsVisible="{Binding Type, Converter={x:Static vm:CardTypeCheckConverter.Pickers}}">
+
+                                        <settingsControls:HomePickerComboBox HorizontalAlignment="Stretch"
+                                                  IsVisible="{Binding Type, Converter={x:Static vm:CardTypeCheckConverter.Semester}}"
+                                                  Choices="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).Semesters}"
+                                                  KeyPath="Id"
+                                                  DisplayPath="Label"
+                                                  SelectedKey="{Binding SemesterId}" />
+
+                                        <settingsControls:HomePickerComboBox HorizontalAlignment="Stretch"
+                                                  IsVisible="{Binding Type, Converter={x:Static vm:CardTypeCheckConverter.Evaluation}}"
+                                                  PlaceholderText="{DynamicResource HomeSettingsPickEvaluation}"
+                                                  Choices="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).Groups}"
+                                                  KeyPath="Code"
+                                                  DisplayPath="Display"
+                                                  SelectedKey="{Binding GroupCode}" />
+
+                                        <settingsControls:HomePickerComboBox HorizontalAlignment="Stretch"
+                                                  IsVisible="{Binding Type, Converter={x:Static vm:CardTypeCheckConverter.Unit}}"
+                                                  Choices="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).Units}"
+                                                  KeyPath="Code"
+                                                  DisplayPath="Display"
+                                                  SelectedKey="{Binding UnitCode}" />
+
+                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10"
+                                              IsVisible="{Binding Type, Converter={x:Static vm:CardTypeCheckConverter.List}}">
+                                            <TextBlock Grid.Column="0"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="13"
+                                                       Text="{DynamicResource HomeSettingsMaxItems}" />
+                                            <NumericUpDown Grid.Column="1"
+                                                           Width="130"
+                                                           Value="{Binding MaxItems}"
+                                                           Minimum="1" Maximum="12"
+                                                           Increment="1"
+                                                           FormatString="0" />
+                                        </Grid>
+                                    </StackPanel>
+
+                                </StackPanel>
+                            </suki:GlassCard>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock IsVisible="{Binding HasNoCards}"
+                           Classes="Quote"
+                           HorizontalAlignment="Center"
+                           Text="{DynamicResource HomeSettingsNoCards}" />
+
+                <!-- Add a card -->
+                <TextBlock FontSize="16" FontWeight="DemiBold"
+                           Margin="0,6,0,0"
+                           Text="{DynamicResource HomeSettingsAddCard}" />
+
+                <ItemsControl ItemsSource="{Binding AvailableTypes}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="2" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:HomeCardTypeOption">
+                            <suki:GlassCard Margin="0,0,8,8" Padding="12"
+                                            IsInteractive="True"
+                                            Command="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).AddCardCommand}"
+                                            CommandParameter="{Binding Type}">
+                                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="8">
+                                    <Border Width="30" Height="30" CornerRadius="9"
+                                            HorizontalAlignment="Left"
+                                            Background="{Binding Type, Converter={x:Static vm:HomeCardTypeConverters.AccentTint}}">
+                                        <LucideIcon Kind="{Binding Type, Converter={x:Static vm:HomeCardTypeConverters.Icon}}"
+                                                    Size="15"
+                                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                    Foreground="{Binding Type, Converter={x:Static vm:HomeCardTypeConverters.Accent}}" />
+                                    </Border>
+                                    <LucideIcon Grid.Column="1" Kind="Plus" Size="16"
+                                                VerticalAlignment="Top"
+                                                Foreground="{DynamicResource SukiLowText}" />
+                                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2"
+                                               FontSize="12" FontWeight="SemiBold"
+                                               TextWrapping="Wrap"
+                                               Text="{Binding Title}" />
+                                </Grid>
+                            </suki:GlassCard>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </settings:SettingSubPage>
+</UserControl>

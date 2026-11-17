@@ -1,0 +1,97 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls.Home"
+        xmlns:suki="https://github.com/kikipoulet/SukiUI"
+        xmlns:util="using:Prolizy2.Utilities">
+    <Design.PreviewWith>
+        <Border Width="360" Padding="15">
+            <controls:HomeCardShell Title="Prochain cours"
+                                    Icon="CalendarClock"
+                                    AccentHex="#FF8C42">
+                <TextBlock Text="Bonjour" />
+            </controls:HomeCardShell>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|HomeCardShell">
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <suki:GlassCard x:CompileBindings="False"
+                                IsInteractive="{TemplateBinding IsInteractive}"
+                                util:TappedCommand.Command="{TemplateBinding Command}"
+                                util:TappedCommand.CommandParameter="{TemplateBinding CommandParameter}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch">
+
+                    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
+
+                        <!-- Header -->
+                        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+
+                            <Border Grid.Column="0"
+                                    Width="{Binding IconSize, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Height="{Binding IconSize, RelativeSource={RelativeSource TemplatedParent}}"
+                                    CornerRadius="10"
+                                    Background="{TemplateBinding AccentTintBrush}"
+                                    VerticalAlignment="Center">
+                                <LucideIcon Kind="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Size="{Binding IconGlyphSize, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Foreground="{TemplateBinding AccentBrush}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
+                            </Border>
+
+                            <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           FontSize="{TemplateBinding TitleFontSize}"
+                                           FontWeight="SemiBold"
+                                           TextWrapping="Wrap"
+                                           MaxLines="2"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Text="{TemplateBinding Hint}"
+                                           IsVisible="{TemplateBinding Hint, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           FontSize="11"
+                                           Foreground="{DynamicResource SukiLowText}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+
+                            <LucideIcon Grid.Column="2"
+                                        Kind="ArrowRight"
+                                        Size="16"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource SukiLowText}" />
+
+                        </Grid>
+
+                        <!-- Content -->
+                        <ContentPresenter Grid.Row="2"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch" />
+
+                    </Grid>
+                </suki:GlassCard>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <!-- Compact variant -->
+    <Style Selector="controls|HomeCardShell:compact">
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="IconSize" Value="30" />
+        <Setter Property="IconGlyphSize" Value="15" />
+        <Setter Property="TitleFontSize" Value="13" />
+    </Style>
+
+    <Style Selector="controls|HomeCardShell /template/ suki|GlassCard:pointerover">
+        <Setter Property="Background" Value="#0AFFFFFF" />
+    </Style>
+</Styles>

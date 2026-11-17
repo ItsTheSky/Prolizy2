@@ -36,6 +36,9 @@
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Bulletin/SemesterHeroCard.axaml" />
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Bulletin/UnitCard.axaml" />
         <StyleInclude Source="avares://Prolizy2/Styles/Controls/Bulletin/EvaluationGroupCard.axaml" />
+
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Home/HomeCardShell.axaml" />
+        <StyleInclude Source="avares://Prolizy2/Styles/Controls/Home/HomeSegmentToggle.axaml" />
     </Application.Styles>
     
     <Application.Resources>
