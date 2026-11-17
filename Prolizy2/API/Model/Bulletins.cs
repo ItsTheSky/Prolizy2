@@ -174,7 +174,8 @@ public sealed class Evaluation
     [JsonPropertyName("description")] public string Description { get; init; }
     [JsonPropertyName("evaluation_type")] public int EvaluationType { get; init; }
     [JsonPropertyName("note")] public Grade Grade { get; init; }
-    [JsonPropertyName("poids")] public Dictionary<string, int> Weights { get; init; }
+    // Weights and coefficients are decimal on the server side (0.5, 1.5, ...).
+    [JsonPropertyName("poids")] public Dictionary<string, double> Weights { get; init; }
     [JsonPropertyName("url")] public string Url { get; init; }
     [JsonPropertyName("date")] public DateTime Date { get; init; }
     [JsonPropertyName("heure_debut")] public string StartTime { get; init; }
@@ -202,14 +203,14 @@ public sealed class TeachingUnit
 public sealed class TeachingUnitEntry
 {
     [JsonPropertyName("id")] public int Id { get; init; }
-    [JsonPropertyName("coef")] public int Coefficient { get; init; }
+    [JsonPropertyName("coef")] public double Coefficient { get; init; }
     [JsonPropertyName("moyenne")] public string Average { get; init; }
 }
 
 public sealed class UnitResource
 {
     [JsonPropertyName("id")] public int Id { get; init; }
-    [JsonPropertyName("coef")] public int Coefficient { get; init; }
+    [JsonPropertyName("coef")] public double Coefficient { get; init; }
     [JsonPropertyName("moyenne")] public string Average { get; init; }
 }
 
@@ -298,8 +299,9 @@ public sealed class Partition
 
 public sealed class SemesterAbsences
 {
-    [JsonPropertyName("injustifie")] public int Unjustified { get; init; }
-    [JsonPropertyName("total")] public int Total { get; init; }
+    // Counted in the unit given by "metrique" (half-days, hours...), so not always whole numbers.
+    [JsonPropertyName("injustifie")] public double Unjustified { get; init; }
+    [JsonPropertyName("total")] public double Total { get; init; }
     [JsonPropertyName("metrique")] public string Metric { get; init; }
 }
 

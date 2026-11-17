@@ -7,11 +7,21 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Prolizy2.API.Model;
+using Prolizy2.API.Utils.Converters;
 
 namespace Prolizy2.API;
 
 public class BulletinClient
 {
+
+    private static readonly JsonSerializerOptions BulletinJsonOptions = new()
+    {
+        Converters = { new LenientDoubleConverter() }
+    };
+
+    /// <summary>Parses the payload returned by the bulletin gateway.</summary>
+    public static BulletinRoot? ParseBulletin(string json) =>
+        JsonSerializer.Deserialize<BulletinRoot>(json, BulletinJsonOptions);
 
     public bool IsLoggedIn { get; private set; }
     private readonly HttpClient _client = new ();
@@ -81,7 +91,7 @@ public class BulletinClient
         var json = (await response.Content.ReadAsStringAsync().ConfigureAwait(false)).ReplaceLineEndings("")
             .Replace("\"absences\":[]", "\"absences\":{}"); // Fixing the JSON format
         
-        return JsonSerializer.Deserialize<BulletinRoot>(json);
+        return ParseBulletin(json);
     }
 
     /// <inheritdoc cref="FetchListNotes(int)"/>
