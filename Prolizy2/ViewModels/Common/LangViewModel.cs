@@ -29,8 +29,9 @@ public partial class LangViewModel : ObservableObject
     public LangViewModel(MainViewModel mainVm)
     {
         MainView = mainVm;
-        
-        CurrentCulture = new CultureInfo("en-US");
+
+        // No intermediate culture here: selecting the first entry below loads the
+        // language dictionary exactly once (it used to be loaded three times).
         List<CultureInfo> availableCultures =
         [
             new("fr-FR"),
@@ -45,8 +46,8 @@ public partial class LangViewModel : ObservableObject
     {
         if (cultureInfo != null! && !Equals(CurrentCulture, cultureInfo))
         {
+            // The generated setter already runs OnCurrentCultureChanged.
             CurrentCulture = cultureInfo;
-            OnCurrentCultureChanged(cultureInfo);
         }
     }
     
@@ -76,12 +77,7 @@ public partial class LangViewModel : ObservableObject
                 Source = new Uri($"avares://Prolizy2/Assets/Lang/{value}.axaml")
             };
             Application.Current.Resources.MergedDictionaries.Add(dict);
-            
-            foreach (var key in dict.Loaded.Keys)
-            {
-                var val = dict.TryGetResource(key, ThemeVariant.Default, out var resource);
-            }
-            
+
             CurrentCultureChanged?.Invoke(value);
             Logs.Debug($"LANG: CurrentCulture: {value}");
         }
@@ -136,15 +132,24 @@ public partial class LangEntry : ObservableObject
 {
     
     [ObservableProperty] private string _displayName;
-    [ObservableProperty] private SvgImage _icon;
     [ObservableProperty] private CultureInfo _culture;
+
+    private SvgImage? _icon;
+
+    /// <summary>
+    /// Flag of the language. Parsed on first use only: it is shown on a single
+    /// settings page, so there is no reason to load the SVG stack at start-up.
+    /// </summary>
+    public SvgImage Icon => _icon ??= new SvgImage
+    {
+        Source = SvgSource.Load($"avares://Prolizy2/Assets/Lang/Icons/{Culture}.svg", null)
+    };
 
     public LangEntry(CultureInfo cultureInfo, LangViewModel langVm)
     {
         Culture = cultureInfo;
         
         DisplayName = cultureInfo.DisplayName;
-        Icon = new SvgImage { Source = SvgSource.Load($"avares://Prolizy2/Assets/Lang/Icons/{cultureInfo}.svg", null) };
     }
     
 }

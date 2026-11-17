@@ -24,15 +24,15 @@ public partial class SettingsViewModel : ViewModelBase
 
     private static readonly IPageTransition SlideLeftTransition = new DirectionalSlideTransition(
         DirectionalSlideTransition.SlideDirection.RightToLeft,
-        TimeSpan.FromMilliseconds(400),
-        TimeSpan.FromMilliseconds(500),
+        TimeSpan.FromMilliseconds(200),
+        TimeSpan.FromMilliseconds(200),
         new CubicEaseOut()
     );
     
     private static readonly IPageTransition SlideRightTransition = new DirectionalSlideTransition(
         DirectionalSlideTransition.SlideDirection.LeftToRight,
-        TimeSpan.FromMilliseconds(400),
-        TimeSpan.FromMilliseconds(500),
+        TimeSpan.FromMilliseconds(200),
+        TimeSpan.FromMilliseconds(200),
         new CubicEaseOut()
     );
 
@@ -45,7 +45,15 @@ public partial class SettingsViewModel : ViewModelBase
         MainViewModel = mainVm;
         
         MainSettingsViewModel = new MainSettingsViewModel(this);
-        CurrentPage = new MainSettingsView { DataContext = MainSettingsViewModel };
+    }
+
+    /// <summary>
+    /// Builds the landing page the first time the settings tab is shown. It used
+    /// to be created with the view model, i.e. during application start-up.
+    /// </summary>
+    public void EnsureInitialized()
+    {
+        CurrentPage ??= new MainSettingsView { DataContext = MainSettingsViewModel };
     }
 
     public void SwitchToPage(Control? control)

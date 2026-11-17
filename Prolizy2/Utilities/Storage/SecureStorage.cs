@@ -20,6 +20,13 @@ public class SecureStorage
     private Dictionary<string, string> _cache;
     private readonly byte[] _entropy;
 
+    /// <summary>
+    /// Decrypting the store costs a PBKDF2 derivation (100 000 rounds), so it is
+    /// done once on a background thread instead of blocking the UI thread at
+    /// startup. Every accessor waits on this task before touching the cache.
+    /// </summary>
+    private readonly Task _loadTask;
+
     private const int KeySize = 256;
     private const int SaltSize = 32;
     private const int Iterations = 100000;
@@ -32,8 +39,32 @@ public class SecureStorage
         _filePath = GetSecureStoragePath(appName);
         _entropy = GetOrCreateEntropy(appName);
         _cache = new Dictionary<string, string>();
-        LoadFromDisk();
+        _loadTask = Task.Run(LoadFromDisk);
     }
+
+    /// <summary>
+    /// Cheap, non-blocking hint: true when an encrypted store exists on disk.
+    /// It does not decrypt anything, so it can be used on the UI thread to pick
+    /// an initial state before the real content is available.
+    /// </summary>
+    public bool HasStoredData
+    {
+        get
+        {
+            try
+            {
+                var info = new FileInfo(_filePath);
+                return info.Exists && info.Length > SaltSize + 16;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
+
+    /// <summary>Completes once the store has been read and decrypted.</summary>
+    public Task WhenLoadedAsync() => _loadTask;
 
     /// <summary>
     /// Obtient le chemin du fichier sécurisé selon la plateforme
@@ -128,6 +159,15 @@ public class SecureStorage
     }
 
     /// <summary>
+    /// PBKDF2-HMAC-SHA256 key derivation. The static one-shot API produces the
+    /// same bytes as the <see cref="Rfc2898DeriveBytes"/> instance API but runs
+    /// as a single native call instead of a managed loop with two HMAC calls
+    /// per iteration, which is dramatically faster on Android.
+    /// </summary>
+    private byte[] DeriveKey(byte[] salt) =>
+        Rfc2898DeriveBytes.Pbkdf2(_entropy, salt, Iterations, HashAlgorithmName.SHA256, KeySize / 8);
+
+    /// <summary>
     /// Chiffre les données avec AES-256
     /// </summary>
     private byte[] Encrypt(string plainText)
@@ -139,14 +179,7 @@ public class SecureStorage
         var salt = RandomNumberGenerator.GetBytes(SaltSize);
 
         // Dérive la clé à partir de l'entropy
-        using var keyDerivation = new Rfc2898DeriveBytes(
-            _entropy,
-            salt,
-            Iterations,
-            HashAlgorithmName.SHA256
-        );
-
-        aes.Key = keyDerivation.GetBytes(KeySize / 8);
+        aes.Key = DeriveKey(salt);
         aes.GenerateIV();
 
         using var encryptor = aes.CreateEncryptor();
@@ -183,14 +216,7 @@ public class SecureStorage
         Buffer.BlockCopy(encryptedData, SaltSize + 16, cipherBytes, 0, cipherBytes.Length);
 
         // Dérive la clé
-        using var keyDerivation = new Rfc2898DeriveBytes(
-            _entropy,
-            salt,
-            Iterations,
-            HashAlgorithmName.SHA256
-        );
-
-        aes.Key = keyDerivation.GetBytes(KeySize / 8);
+        aes.Key = DeriveKey(salt);
         aes.IV = iv;
 
         using var decryptor = aes.CreateDecryptor();
@@ -232,8 +258,9 @@ public class SecureStorage
         try
         {
             var json = JsonSerializer.Serialize(_cache);
-            var encryptedData = Encrypt(json);
-            await File.WriteAllBytesAsync(_filePath, encryptedData);
+            // Key derivation + encryption are CPU-bound: keep them off the caller's thread.
+            var encryptedData = await Task.Run(() => Encrypt(json)).ConfigureAwait(false);
+            await File.WriteAllBytesAsync(_filePath, encryptedData).ConfigureAwait(false);
 
             // Définit les permissions sur Unix
             if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
@@ -256,7 +283,8 @@ public class SecureStorage
         if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentException("La clé ne peut pas être vide", nameof(key));
 
-        await _lock.WaitAsync();
+        await _loadTask.ConfigureAwait(false);
+        await _lock.WaitAsync().ConfigureAwait(false);
         try
         {
             _cache[key] = value;
@@ -279,7 +307,8 @@ public class SecureStorage
     /// </summary>
     public async Task<string> GetAsync(string key, string defaultValue = null)
     {
-        await _lock.WaitAsync();
+        await _loadTask.ConfigureAwait(false);
+        await _lock.WaitAsync().ConfigureAwait(false);
         try
         {
             return _cache.TryGetValue(key, out var value) ? value : defaultValue;
@@ -295,7 +324,25 @@ public class SecureStorage
     /// </summary>
     public bool ContainsKey(string key)
     {
+        _loadTask.Wait();
         _lock.Wait();
+        try
+        {
+            return _cache.ContainsKey(key);
+        }
+        finally
+        {
+            _lock.Release();
+        }
+    }
+
+    /// <summary>
+    /// Vérifie si une clé existe, sans bloquer le thread appelant.
+    /// </summary>
+    public async Task<bool> ContainsKeyAsync(string key)
+    {
+        await _loadTask.ConfigureAwait(false);
+        await _lock.WaitAsync().ConfigureAwait(false);
         try
         {
             return _cache.ContainsKey(key);
@@ -311,7 +358,8 @@ public class SecureStorage
     /// </summary>
     public async Task<bool> RemoveAsync(string key)
     {
-        await _lock.WaitAsync();
+        await _loadTask.ConfigureAwait(false);
+        await _lock.WaitAsync().ConfigureAwait(false);
         try
         {
             if (!_cache.Remove(key))
@@ -336,7 +384,8 @@ public class SecureStorage
     /// </summary>
     public async Task<bool> ClearAsync()
     {
-        await _lock.WaitAsync();
+        await _loadTask.ConfigureAwait(false);
+        await _lock.WaitAsync().ConfigureAwait(false);
         try
         {
             _cache.Clear();
@@ -359,6 +408,7 @@ public class SecureStorage
     /// </summary>
     public IEnumerable<string> GetAllKeys()
     {
+        _loadTask.Wait();
         _lock.Wait();
         try
         {

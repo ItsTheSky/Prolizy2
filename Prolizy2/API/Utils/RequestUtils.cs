@@ -54,7 +54,7 @@ public static class RequestUtils
             _ => throw new ArgumentOutOfRangeException(nameof(method), method, null)
         }, GetServerUrl(targetServer) + endpoint);
 
-        return await SendAsync(request, targetServer, data, postFormat, customizer, token);
+        return await SendAsync(request, targetServer, data, postFormat, customizer, token).ConfigureAwait(false);
     }
 
     public static async Task<HttpResponseMessage> SendAsync(
@@ -126,7 +126,7 @@ public static class RequestUtils
         // Application des personnalisations de requête si spécifiées
         customizer?.Invoke(request);
         
-        return await _client.SendAsync(request, token);
+        return await _client.SendAsync(request, token).ConfigureAwait(false);
     }
 
     #region Utility Methods
@@ -138,7 +138,7 @@ public static class RequestUtils
         RequestCustomizer customizer = null,
         CancellationToken token = default)
     {
-        return await SendAsync(Method.Get, targetServer, endpoint, parameters, PostFormat.FormUrlEncoded, customizer, token);
+        return await SendAsync(Method.Get, targetServer, endpoint, parameters, PostFormat.FormUrlEncoded, customizer, token).ConfigureAwait(false);
     }
     
     public static async Task<HttpResponseMessage> PostAsync(
@@ -149,7 +149,7 @@ public static class RequestUtils
         RequestCustomizer customizer = null,
         CancellationToken token = default)
     {
-        return await SendAsync(Method.Post, targetServer, endpoint, content, postFormat, customizer, token);
+        return await SendAsync(Method.Post, targetServer, endpoint, content, postFormat, customizer, token).ConfigureAwait(false);
     }
 
     #endregion

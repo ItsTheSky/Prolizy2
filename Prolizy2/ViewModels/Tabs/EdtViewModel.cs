@@ -27,8 +27,8 @@ namespace Prolizy2.ViewModels.Tabs;
 public partial class EdtViewModel : ViewModelBase
 {
     public MainViewModel MainVm { get; init; }
-    private ScheduleCacheService _cacheService = new();
-    private ScheduleCacheService _secondaryCacheService = new();
+    private ScheduleCacheService _cacheService;
+    private ScheduleCacheService _secondaryCacheService;
     private DateOnly _lastLoadedDay = DateOnly.MinValue;
     private int _loadingCounter = 0;
 
@@ -58,15 +58,15 @@ public partial class EdtViewModel : ViewModelBase
 
     private static readonly IPageTransition SlideLeftTransition = new DirectionalSlideTransition(
         DirectionalSlideTransition.SlideDirection.RightToLeft,
-        TimeSpan.FromMilliseconds(400),
-        TimeSpan.FromMilliseconds(500),
+        TimeSpan.FromMilliseconds(200),
+        TimeSpan.FromMilliseconds(200),
         new CubicEaseOut()
     );
     
     private static readonly IPageTransition SlideRightTransition = new DirectionalSlideTransition(
         DirectionalSlideTransition.SlideDirection.LeftToRight,
-        TimeSpan.FromMilliseconds(400),
-        TimeSpan.FromMilliseconds(500),
+        TimeSpan.FromMilliseconds(200),
+        TimeSpan.FromMilliseconds(200),
         new CubicEaseOut()
     );
     
@@ -80,6 +80,8 @@ public partial class EdtViewModel : ViewModelBase
     public EdtViewModel(MainViewModel mainVm)
     {
         MainVm = mainVm;
+        _cacheService = CreateCacheService();
+        _secondaryCacheService = CreateCacheService();
         if (Design.IsDesignMode)
             return;
 
@@ -112,32 +114,80 @@ public partial class EdtViewModel : ViewModelBase
 
     #endregion
     
-    public void TryRefreshCurrentDay()
+    private ScheduleCacheService CreateCacheService()
     {
-        if (IsLoading)
-            return; // Prevent multiple refreshes at the same time
+        var service = new ScheduleCacheService();
+        service.WeekUpdated += weekStart => OnWeekUpdated(service, weekStart);
+        return service;
+    }
 
+    /// <summary>
+    /// A week first shown from the disk cache changed on the server: refresh
+    /// what is on screen in place (no page transition) if it is affected.
+    /// </summary>
+    private void OnWeekUpdated(ScheduleCacheService source, DateOnly weekStart)
+    {
+        if (!ReferenceEquals(source, _cacheService) && !ReferenceEquals(source, _secondaryCacheService))
+            return; // stale service, replaced by ClearCache
+
+        UpdateHomeNextCourse();
+
+        if (CurrentDay < weekStart || CurrentDay > weekStart.AddDays(6))
+            return;
+
+        if (HasSecondaryGroup)
+        {
+            if (ReferenceEquals(source, _cacheService))
+                CurrentDailyControl.Items = new ObservableCollection<ScheduleItem>(_cacheService.GetDaySchedule(CurrentDay));
+            else
+                SecondaryDailyControl.Items = new ObservableCollection<ScheduleItem>(_secondaryCacheService.GetDaySchedule(CurrentDay));
+        }
+        else if (ReferenceEquals(source, _cacheService))
+        {
+            SingleViewDailyControl.Items = new ObservableCollection<ScheduleItem>(_cacheService.GetDaySchedule(CurrentDay));
+        }
+
+        UpdateWidgetFromDisplayedDay();
+    }
+
+    /// <summary>Pushes the next course of the displayed day to the home-screen widget, off the UI thread.</summary>
+    private void UpdateWidgetFromDisplayedDay()
+    {
+        var items = HasSecondaryGroup ? CurrentDailyControl.Items.ToList() : SingleViewDailyControl.Items.ToList();
+        UpdateWidget(EdtUtilities.FindNextOrCurrentItem(items));
+    }
+
+    private static void UpdateWidget(ScheduleItem? item)
+    {
+        var bridge = AndroidBridgeProvider.Bridge;
+        if (bridge is null)
+            return;
+
+        // RemoteViews updates are binder calls: no reason to make a tap wait for them.
+        Task.Run(() => bridge.UpdateScheduleWidget(item));
+    }
+
+    public async void TryRefreshCurrentDay()
+    {
+        // Every request gets an id; only the latest one may update the loading
+        // state. A newer tap is never dropped because an older load is running.
         var currentLoadId = ++_loadingCounter;
         IsLoading = true;
 
-        RefreshCurrentDay().ContinueWith(t =>
+        try
         {
-            // Only update UI if this is still the latest request
-            if (currentLoadId != _loadingCounter)
-                return;
+            await RefreshCurrentDay();
+        }
+        catch (Exception ex)
+        {
+            Logs.Error(ex);
+        }
 
-            if (t.IsFaulted)
-            {
-                // Handle error
-                Logs.Error(t.Exception);
-            }
+        if (currentLoadId != _loadingCounter)
+            return;
 
-            IsLoading = false;
-            _lastLoadedDay = CurrentDay;
-
-            var items = HasSecondaryGroup ? CurrentDailyControl.Items.ToList() : SingleViewDailyControl.Items.ToList();
-            AndroidBridgeProvider.Bridge?.UpdateScheduleWidget(EdtUtilities.FindNextOrCurrentItem(items));
-        });
+        IsLoading = false;
+        UpdateWidgetFromDisplayedDay();
     }
 
     public async Task RefreshCurrentDay()
@@ -157,6 +207,8 @@ public partial class EdtViewModel : ViewModelBase
             if (!string.IsNullOrEmpty(secondaryGroup))
             {
                 var secondarySchedule = await _secondaryCacheService.LoadMonthIfNeededAsync(targetDay, secondaryGroup);
+                if (targetDay != CurrentDay)
+                    return;
 
                 // Use separate controls for dual-column view
                 CurrentDailyControl = new DailyScheduleControl
@@ -183,6 +235,10 @@ public partial class EdtViewModel : ViewModelBase
         OnPropertyChanged(nameof(SecondaryGroupName));
 
         _lastLoadedDay = targetDay;
+
+        // The home card only needs the current week: do not make it wait for
+        // the adjacent months to finish downloading.
+        UpdateHomeNextCourse();
         PreloadAdjacentMonthsInBackground();
     }
 
@@ -313,8 +369,12 @@ public partial class EdtViewModel : ViewModelBase
 
             _lastLoadedDay = CurrentDay;
 
+            // This request is now the latest one and it is already satisfied:
+            // an older network load must not leave the spinner on.
+            IsLoading = false;
+
             var items = daySchedule.ToList();
-            AndroidBridgeProvider.Bridge?.UpdateScheduleWidget(EdtUtilities.FindNextOrCurrentItem(items));
+            UpdateWidget(EdtUtilities.FindNextOrCurrentItem(items));
             Logs.Debug("EDT: from week cache, loaded " + items.Count + " items.");
 
             PreloadAdjacentMonthsInBackground();
@@ -339,10 +399,10 @@ public partial class EdtViewModel : ViewModelBase
     [RelayCommand]
     public void ClearCache()
     {
-        _cacheService = new ScheduleCacheService();
-        _secondaryCacheService = new ScheduleCacheService();
+        _cacheService = CreateCacheService();
+        _secondaryCacheService = CreateCacheService();
         _lastLoadedDay = DateOnly.MinValue;
-        _loadingCounter = 0;
+        _loadingCounter++; // invalidate in-flight loads without reusing their ids
     }
 
 

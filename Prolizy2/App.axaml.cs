@@ -20,26 +20,31 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+#if DEBUG
         this.AttachDeveloperTools();
+#endif
         Logs.Init();
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
+        // Apply the saved theme before any view exists: doing it afterwards
+        // re-evaluates every dynamic resource of the tree that was just built
+        // (and used to flash the default theme first).
+        PersonalizationViewModel.ApplyThemeFromPreferences();
+        var backgroundAnimations = PersonalizationViewModel.GetSavedBackgroundAnimations();
 
         var view = new MainView { DataContext = new MainViewModel() };
         var sukiMiddleman = new SukiMainHost
         {
-            BackgroundStyle = SukiBackgroundStyle.Bubble,
+            BackgroundStyle = PersonalizationViewModel.GetSavedBackgroundStyle(),
             BackgroundTransitionsEnabled = true,
             Content = view
         };
         MainView.SukiHost = sukiMiddleman;
-        Dispatcher.UIThread.InvokeAsync(async () =>
-        {
-            await Task.Delay(50);
-            PersonalizationViewModel.LoadFromPreferencesToApp();
-        }).SafeFireAndForget();
+
+        // The background only starts animating once it is on screen (desktop and mobile alike).
+        sukiMiddleman.Loaded += (_, _) => sukiMiddleman.BackgroundAnimationEnabled = backgroundAnimations;
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -49,10 +54,6 @@ public partial class App : Application
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
             singleViewPlatform.MainView = sukiMiddleman;
-            singleViewPlatform.MainView.Loaded += (sender, args) =>
-            {
-                (singleViewPlatform.MainView as SukiMainHost)!.BackgroundAnimationEnabled = true;
-            };
             MainView.TopLevel = TopLevel.GetTopLevel(singleViewPlatform.MainView)!;
         }
 

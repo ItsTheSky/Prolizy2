@@ -1,18 +1,40 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Prolizy2.API;
+using Prolizy2.API.Model.Course;
 using Prolizy2.API.Model.Request;
+using Prolizy2.API.Utils;
 using Prolizy2.Model;
 
 namespace Prolizy2.Services;
 
 public class ScheduleCacheService
 {
+    // All state below is only touched from the UI thread: every public method is
+    // called from it and resumes on it; only fetching and parsing run elsewhere.
     private readonly Dictionary<string, List<ScheduleItem>> _weeklyCache = new();
-    private readonly HashSet<string> _loadingWeeks = new();
+    private readonly Dictionary<string, Task> _loadingWeeks = new();
+    private readonly HashSet<string> _revalidatedWeeks = new();
+
+    private static bool _pruned;
+
+    /// <summary>
+    /// Raised (on the UI thread) when a week that was first served from the disk
+    /// cache turned out to have changed on the server. The argument is the
+    /// Monday of that week.
+    /// </summary>
+    public event Action<DateOnly>? WeekUpdated;
+
+    public ScheduleCacheService()
+    {
+        if (_pruned)
+            return;
+        _pruned = true;
+        Task.Run(ScheduleDiskCache.Prune);
+    }
 
     public bool IsWeekCached(DateOnly date)
     {
@@ -29,13 +51,13 @@ public class ScheduleCacheService
     public bool IsMonthLoading(DateOnly date)
     {
         var monthWeeks = GetMonthWeeks(date);
-        return monthWeeks.Any(week => _loadingWeeks.Contains(GetWeekKey(week.startDate)));
+        return monthWeeks.Any(week => _loadingWeeks.ContainsKey(GetWeekKey(week.startDate)));
     }
 
     public bool IsWeekLoading(DateOnly date)
     {
         var weekKey = GetWeekKey(date);
-        return _loadingWeeks.Contains(weekKey);
+        return _loadingWeeks.ContainsKey(weekKey);
     }
 
     public List<ScheduleItem> GetDaySchedule(DateOnly date)
@@ -50,28 +72,31 @@ public class ScheduleCacheService
             .ToList();
     }
 
+    /// <summary>
+    /// Returns the schedule of <paramref name="date"/> as soon as its week is
+    /// available. The rest of the month is fetched in the background so the
+    /// caller is never kept waiting for data it does not display.
+    /// </summary>
     public async Task<List<ScheduleItem>> LoadMonthIfNeededAsync(DateOnly date, string federationId)
     {
-        if (IsWeekCached(date))
-            return GetDaySchedule(date);
+        if (!IsWeekCached(date))
+            await LoadWeekAsync(date, federationId);
 
-        if (IsWeekLoading(date))
-        {
-            var weekKey = GetWeekKey(date);
-            while (_loadingWeeks.Contains(weekKey))
-            {
-                await Task.Delay(50);
-            }
-            return GetDaySchedule(date);
-        }
-
-        // Load the week containing this date
-        await LoadWeekAsync(date, federationId);
-
-        // Load all weeks for the month
-        await LoadMonthAsync(date, federationId);
+        _ = LoadMonthInBackgroundAsync(date, federationId);
 
         return GetDaySchedule(date);
+    }
+
+    private async Task LoadMonthInBackgroundAsync(DateOnly date, string federationId)
+    {
+        try
+        {
+            await LoadMonthAsync(date, federationId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error preloading month: {ex.Message}");
+        }
     }
 
     public async Task LoadMonthAsync(DateOnly date, string federationId)
@@ -82,7 +107,7 @@ public class ScheduleCacheService
         foreach (var (startDate, endDate) in monthWeeks)
         {
             var weekKey = GetWeekKey(startDate);
-            if (!_weeklyCache.ContainsKey(weekKey) && !_loadingWeeks.Contains(weekKey))
+            if (!_weeklyCache.ContainsKey(weekKey))
             {
                 loadTasks.Add(LoadWeekAsync(startDate, federationId));
             }
@@ -94,42 +119,163 @@ public class ScheduleCacheService
         }
     }
 
+    /// <summary>
+    /// Makes the week containing <paramref name="date"/> available. Concurrent
+    /// callers share the same in-flight load instead of polling for it.
+    /// </summary>
     public async Task LoadWeekAsync(DateOnly date, string federationId)
     {
         var weekKey = GetWeekKey(date);
 
-        if (_loadingWeeks.Contains(weekKey) || _weeklyCache.ContainsKey(weekKey))
+        if (_weeklyCache.ContainsKey(weekKey))
             return;
 
-        _loadingWeeks.Add(weekKey);
+        if (!_loadingWeeks.TryGetValue(weekKey, out var pending))
+        {
+            pending = LoadWeekCoreAsync(weekKey, date, federationId);
+            _loadingWeeks[weekKey] = pending;
+        }
 
         try
         {
-            var (startOfWeek, endOfWeek) = GetWeekBounds(date);
+            await pending;
+        }
+        finally
+        {
+            if (_loadingWeeks.TryGetValue(weekKey, out var current) && ReferenceEquals(current, pending))
+                _loadingWeeks.Remove(weekKey);
+        }
+    }
 
-            var courses = await EDTClient.GetCourses(new CalendarRequest
+    private async Task LoadWeekCoreAsync(string weekKey, DateOnly date, string federationId)
+    {
+        var (startOfWeek, endOfWeek) = GetWeekBounds(date);
+
+        // 1. Disk: show what we knew last time, then check the server quietly.
+        var cached = await Task.Run(() =>
+        {
+            var json = ScheduleDiskCache.TryRead(federationId, startOfWeek);
+            return json is null ? null : TryParse(json);
+        });
+
+        if (cached is not null)
+        {
+            _weeklyCache[weekKey] = BuildItems(cached.Courses);
+            _ = RevalidateWeekAsync(weekKey, startOfWeek, endOfWeek, federationId);
+            return;
+        }
+
+        // 2. Network.
+        var fresh = await FetchWeekAsync(startOfWeek, endOfWeek, federationId);
+        _weeklyCache[weekKey] = BuildItems(fresh.Courses);
+        _revalidatedWeeks.Add(weekKey);
+        _ = Task.Run(() => ScheduleDiskCache.Write(federationId, startOfWeek, fresh.Json));
+    }
+
+    /// <summary>
+    /// Re-fetches a week that was served from disk. Nothing is touched when the
+    /// server still returns the same courses, so the UI is not rebuilt for nothing.
+    /// </summary>
+    private async Task RevalidateWeekAsync(string weekKey, DateOnly startOfWeek, DateOnly endOfWeek,
+        string federationId)
+    {
+        if (!_revalidatedWeeks.Add(weekKey))
+            return;
+
+        try
+        {
+            var fresh = await FetchWeekAsync(startOfWeek, endOfWeek, federationId);
+            var freshItems = BuildItems(fresh.Courses);
+
+            var changed = !_weeklyCache.TryGetValue(weekKey, out var current)
+                          || !HaveSameContent(current, freshItems);
+
+            _ = Task.Run(() => ScheduleDiskCache.Write(federationId, startOfWeek, fresh.Json));
+
+            if (!changed)
+                return;
+
+            _weeklyCache[weekKey] = freshItems;
+            WeekUpdated?.Invoke(startOfWeek);
+        }
+        catch (Exception ex)
+        {
+            // Offline or server error: keep serving the cached week, retry next time.
+            _revalidatedWeeks.Remove(weekKey);
+            Console.WriteLine($"Could not refresh week {weekKey}: {ex.Message}");
+        }
+    }
+
+    private sealed record WeekPayload(string Json, List<(Course Course, CourseDescription Description)> Courses);
+
+    /// <summary>Downloads and parses a week entirely off the UI thread.</summary>
+    private static Task<WeekPayload> FetchWeekAsync(DateOnly startOfWeek, DateOnly endOfWeek, string federationId)
+    {
+        return Task.Run(async () =>
+        {
+            var json = await EDTClient.GetCoursesJson(new CalendarRequest
             {
                 FederationId = federationId,
                 StartDate = startOfWeek,
                 EndDate = endOfWeek,
                 ViewType = CalendarRequest.CalendarViewType.AgendaWeek
-            });
+            }).ConfigureAwait(false);
 
-            var scheduleItems = new List<ScheduleItem>();
+            return Parse(json);
+        });
+    }
 
-            foreach (var course in courses)
-            {
-                var description = await course.GetDescription(true);
-                var scheduleItem = await ScheduleItemFactory.CreateFromCourse(course, description);
-                scheduleItems.Add(scheduleItem);
-            }
+    private static WeekPayload Parse(string json)
+    {
+        var courses = EDTClient.ParseCourses(json);
+        var parsed = new List<(Course, CourseDescription)>(courses.Count);
+        foreach (var course in courses)
+            parsed.Add((course, CourseDescriptionParser.ParseDescription(course.RawDescription)));
 
-            _weeklyCache[weekKey] = scheduleItems;
-        }
-        finally
+        return new WeekPayload(json, parsed);
+    }
+
+    private static WeekPayload? TryParse(string json)
+    {
+        try
         {
-            _loadingWeeks.Remove(weekKey);
+            return Parse(json);
         }
+        catch
+        {
+            // Corrupted or outdated cache entry: fall back to the network.
+            return null;
+        }
+    }
+
+    /// <summary>Builds the UI models (they hold brushes, so this stays on the UI thread).</summary>
+    private static List<ScheduleItem> BuildItems(List<(Course Course, CourseDescription Description)> courses)
+    {
+        var items = new List<ScheduleItem>(courses.Count);
+        foreach (var (course, description) in courses)
+            items.Add(ScheduleItemFactory.Create(course, description));
+        return items;
+    }
+
+    private static bool HaveSameContent(List<ScheduleItem> left, List<ScheduleItem> right)
+    {
+        if (left.Count != right.Count)
+            return false;
+
+        for (var i = 0; i < left.Count; i++)
+        {
+            var a = left[i];
+            var b = right[i];
+            if (a.StartTime != b.StartTime || a.EndTime != b.EndTime
+                || a.Subject != b.Subject || a.Room != b.Room
+                || a.Professor != b.Professor || a.Group != b.Group
+                || a.Type != b.Type
+                || a.Course?.Id != b.Course?.Id
+                || a.Course?.BackgroundColor != b.Course?.BackgroundColor)
+                return false;
+        }
+
+        return true;
     }
 
     public async Task PreloadAdjacentMonthsAsync(DateOnly currentDate, string federationId)
@@ -139,12 +285,15 @@ public class ScheduleCacheService
 
         var tasks = new List<Task>();
 
-        if (!IsMonthCached(previousMonth) && !IsMonthLoading(previousMonth))
+        // Weeks already being loaded (e.g. the one shared with the current
+        // month) are simply awaited by LoadWeekAsync, so a month must not be
+        // skipped just because one of its weeks is in flight.
+        if (!IsMonthCached(previousMonth))
         {
             tasks.Add(LoadMonthAsync(previousMonth, federationId));
         }
 
-        if (!IsMonthCached(nextMonth) && !IsMonthLoading(nextMonth))
+        if (!IsMonthCached(nextMonth))
         {
             tasks.Add(LoadMonthAsync(nextMonth, federationId));
         }

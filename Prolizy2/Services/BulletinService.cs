@@ -24,8 +24,17 @@ public class BulletinService
     /// <summary>The most recent payload returned by <see cref="LoadInitialAsync"/>.</summary>
     public BulletinRoot? LatestRoot { get; private set; }
 
-    public bool IsConfigured => MainView.SecureStorage.ContainsKey(UsernameKey)
-                                && MainView.SecureStorage.ContainsKey(PasswordKey);
+    /// <summary>
+    /// Non-blocking guess used to pick the initial UI state: true when an
+    /// encrypted credential store exists. The store is decrypted on a background
+    /// thread, so the authoritative answer comes from <see cref="IsConfiguredAsync"/>.
+    /// </summary>
+    public bool IsProbablyConfigured => MainView.SecureStorage.HasStoredData;
+
+    /// <summary>True when both credentials are stored. Never blocks the caller.</summary>
+    public async Task<bool> IsConfiguredAsync() =>
+        await MainView.SecureStorage.ContainsKeyAsync(UsernameKey)
+        && await MainView.SecureStorage.ContainsKeyAsync(PasswordKey);
 
     public async Task<string?> GetUsernameAsync() =>
         await MainView.SecureStorage.GetAsync(UsernameKey);

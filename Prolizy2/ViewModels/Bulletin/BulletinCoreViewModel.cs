@@ -75,14 +75,14 @@ public partial class BulletinCoreViewModel : ViewModelBase
 
     private static readonly IPageTransition ForwardTransition = new DirectionalSlideTransition(
         DirectionalSlideTransition.SlideDirection.RightToLeft,
-        TimeSpan.FromMilliseconds(380),
-        TimeSpan.FromMilliseconds(480),
+        TimeSpan.FromMilliseconds(200),
+        TimeSpan.FromMilliseconds(200),
         new CubicEaseOut());
 
     private static readonly IPageTransition BackwardTransition = new DirectionalSlideTransition(
         DirectionalSlideTransition.SlideDirection.LeftToRight,
-        TimeSpan.FromMilliseconds(380),
-        TimeSpan.FromMilliseconds(480),
+        TimeSpan.FromMilliseconds(200),
+        TimeSpan.FromMilliseconds(200),
         new CubicEaseOut());
 
     [ObservableProperty] private IPageTransition _detailTransition = ForwardTransition;
@@ -105,7 +105,9 @@ public partial class BulletinCoreViewModel : ViewModelBase
         }
 
         _data = new BulletinData();
-        IsConfigured = MainVm.BulletinService.IsConfigured;
+        // The credential store is decrypted in the background; start from a
+        // cheap guess and let LoadAsync settle the real state.
+        IsConfigured = MainVm.BulletinService.IsProbablyConfigured;
 
         RefreshSortedUnits();
         Options.PropertyChanged += OnOptionsChanged;
@@ -120,7 +122,7 @@ public partial class BulletinCoreViewModel : ViewModelBase
     /// </summary>
     public async Task LoadAsync()
     {
-        IsConfigured = MainVm.BulletinService.IsConfigured;
+        IsConfigured = await MainVm.BulletinService.IsConfiguredAsync();
         if (!IsConfigured)
             return;
 
@@ -166,7 +168,7 @@ public partial class BulletinCoreViewModel : ViewModelBase
     /// </summary>
     public async Task RefreshConfigurationAsync()
     {
-        IsConfigured = MainVm.BulletinService.IsConfigured;
+        IsConfigured = await MainVm.BulletinService.IsConfiguredAsync();
         if (IsConfigured)
         {
             await LoadAsync();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 
@@ -8,7 +9,9 @@ namespace Prolizy2.Utilities;
 
 public class ViewLocator : IDataTemplate
 {
-    private readonly Dictionary<object, Control> _controlCache = new();
+    // Weak association: a view lives as long as its view model, instead of every
+    // dialog ever opened being kept alive by a strong dictionary.
+    private readonly ConditionalWeakTable<object, Control> _controlCache = new();
 
     public Control Build(object? data)
     {
@@ -34,8 +37,8 @@ public class ViewLocator : IDataTemplate
 
         if (!_controlCache.TryGetValue(data, out var res))
         {
-            res ??= (Control)Activator.CreateInstance(type)!;
-            _controlCache[data] = res;
+            res = (Control)Activator.CreateInstance(type)!;
+            _controlCache.Add(data, res);
         }
 
         res.DataContext = data;

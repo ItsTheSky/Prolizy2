@@ -15,20 +15,27 @@ public static class EDTClient
     
     public static async Task<List<Course>> GetCourses(CalendarRequest request, CancellationToken token = default)
     {
-        var response = await RequestUtils.PostAsync(RequestUtils.TargetServer.Edt, 
-            "GetCalendarData", request, token: token);
-        var content = await response.Content.ReadAsStringAsync(token);
-        return JsonUtils.Deserialize<List<Course>>(content);
+        return ParseCourses(await GetCoursesJson(request, token).ConfigureAwait(false));
     }
-    
+
+    /// <summary>Raw calendar payload, as returned by the server (kept so it can be cached on disk).</summary>
+    public static async Task<string> GetCoursesJson(CalendarRequest request, CancellationToken token = default)
+    {
+        var response = await RequestUtils.PostAsync(RequestUtils.TargetServer.Edt,
+            "GetCalendarData", request, token: token).ConfigureAwait(false);
+        return await response.Content.ReadAsStringAsync(token).ConfigureAwait(false);
+    }
+
+    public static List<Course> ParseCourses(string json) => JsonUtils.Deserialize<List<Course>>(json);
+
     public static async Task<CourseDescription> GetDescription(this Course course, bool offline = false, CancellationToken token = default)
     {
         if (offline)
             return CourseDescriptionParser.ParseDescription(course.RawDescription);
         
         var obj = new { eventId = course.Id };
-        var response = await RequestUtils.PostAsync(RequestUtils.TargetServer.Edt, "GetSideBarEvent", obj, token: token);
-        var content = await response.Content.ReadAsStringAsync(token);
+        var response = await RequestUtils.PostAsync(RequestUtils.TargetServer.Edt, "GetSideBarEvent", obj, token: token).ConfigureAwait(false);
+        var content = await response.Content.ReadAsStringAsync(token).ConfigureAwait(false);
         var elementsJson = JsonDocument.Parse(content).RootElement.GetProperty("elements");
         var description = new CourseDescription();
 
@@ -80,8 +87,8 @@ public static class EDTClient
     
     public static async Task<List<string>> GetGroups(FederationRequest request, CancellationToken token = default)
     {
-        var response = await RequestUtils.PostAsync(RequestUtils.TargetServer.Edt, "ReadResourceListItems", request, token: token);
-        var content = await response.Content.ReadAsStringAsync(token);
+        var response = await RequestUtils.PostAsync(RequestUtils.TargetServer.Edt, "ReadResourceListItems", request, token: token).ConfigureAwait(false);
+        var content = await response.Content.ReadAsStringAsync(token).ConfigureAwait(false);
         //Console.WriteLine(content);
         var json = JsonDocument.Parse(content);
         var results = json.RootElement.GetProperty("results");

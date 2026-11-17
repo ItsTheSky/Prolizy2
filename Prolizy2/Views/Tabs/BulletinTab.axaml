@@ -13,10 +13,9 @@
         <suki:BusyArea BusyText="{DynamicResource BulletinLoading}"
                        IsBusy="{Binding IsLoading}"
                        IsEnabled="{Binding IsConfigured}">
-            <Panel>
-                <bv:BulletinTabsView IsVisible="{Binding Options.IsTabsVariant}" />
-                <bv:BulletinDrillDownView IsVisible="{Binding Options.IsDrillDownVariant}" />
-            </Panel>
+            <!-- Only the selected layout variant is instantiated (see code-behind);
+                 both used to be built and data-bound, with one of them hidden. -->
+            <Panel Name="VariantHost" />
         </suki:BusyArea>
 
         <!-- Error overlay (configured, has error) -->

@@ -93,25 +93,40 @@ public partial class PersonalizationViewModel : ViewModelBase
         BackgroundAnimations = Views.MainView.Preferences.Get("per_background_animations", true);
     }
 
-    public static void LoadFromPreferencesToApp()
+    /// <summary>
+    /// Applies the saved base theme and colour theme. Meant to run before the
+    /// first view is created so nothing has to be re-themed afterwards.
+    /// </summary>
+    public static void ApplyThemeFromPreferences()
     {
         var theme = SukiTheme.GetInstance();
-        Logs.Debug("Given theme is " + theme);
         var baseTheme = Views.MainView.Preferences.Get("per_base_theme", "Light");
         theme.ChangeBaseTheme(baseTheme == "Light" ? ThemeVariant.Light : ThemeVariant.Dark);
+
         var colorThemeName = Views.MainView.Preferences.Get("per_color_theme", "Blue");
-        Logs.Debug($"PER: colorThemeName: {colorThemeName}");
         var colorTheme = theme.ColorThemes.ToList().Find(t => t.DisplayName == colorThemeName);
-        Logs.Debug($"PER: colorTheme: {colorTheme}");
         if (colorTheme != null)
             theme.ChangeColorTheme(colorTheme);
+
+        Logs.Debug($"PER: theme applied ({baseTheme}, {colorThemeName})");
+    }
+
+    public static SukiBackgroundStyle GetSavedBackgroundStyle()
+    {
         var backgroundStyleStr = Views.MainView.Preferences.Get("per_background_style", "Gradient");
-        Logs.Debug($"PER: backgroundStyleStr: {backgroundStyleStr}");
-        var backgroundStyle = Enum.TryParse<SukiBackgroundStyle>(backgroundStyleStr, out var bgStyle) ? bgStyle : SukiBackgroundStyle.Gradient;
-        Logs.Debug($"PER: backgroundStyle: {backgroundStyle}");
-        Views.MainView.SukiHost.BackgroundStyle = backgroundStyle;
-        var backgroundAnimations = Views.MainView.Preferences.Get("per_background_animations", true);
-        Views.MainView.SukiHost.BackgroundAnimationEnabled = backgroundAnimations;
+        return Enum.TryParse<SukiBackgroundStyle>(backgroundStyleStr, out var bgStyle)
+            ? bgStyle
+            : SukiBackgroundStyle.Gradient;
+    }
+
+    public static bool GetSavedBackgroundAnimations() =>
+        Views.MainView.Preferences.Get("per_background_animations", true);
+
+    public static void LoadFromPreferencesToApp()
+    {
+        ApplyThemeFromPreferences();
+        Views.MainView.SukiHost.BackgroundStyle = GetSavedBackgroundStyle();
+        Views.MainView.SukiHost.BackgroundAnimationEnabled = GetSavedBackgroundAnimations();
     }
 }
 

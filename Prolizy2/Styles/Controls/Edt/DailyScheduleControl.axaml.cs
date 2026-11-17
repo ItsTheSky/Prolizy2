@@ -96,6 +96,16 @@ public class DailyScheduleControl : TemplatedControl
         set => SetValue(StartHourProperty, value);
     }
 
+    private static readonly Cursor HandCursor = new(StandardCursorType.Hand);
+
+    // Snapshot of everything the generated visuals depend on. The control is
+    // asked to refresh from several places (template applied, size changed,
+    // property changed); comparing against this avoids rebuilding every card
+    // two or three times for the same state.
+    private (ObservableCollection<ScheduleItem>? Items, int ItemsVersion, Size CanvasSize,
+        bool ShowHourLines, bool ShowHours, int DisplayedHours, int StartHour)? _builtState;
+    private int _itemsVersion;
+
     private Grid? _mainGrid;
     private Canvas? _scheduleCanvas;
     private TextBlock? _noDataText;
@@ -129,18 +139,17 @@ public class DailyScheduleControl : TemplatedControl
 
     private void OnDisplayedHoursChanged(AvaloniaPropertyChangedEventArgs e)
     {
-        GenerateTimeLabels();
         UpdateVisual();
     }
 
     private void OnStartHourChanged(AvaloniaPropertyChangedEventArgs e)
     {
-        GenerateTimeLabels();
         UpdateVisual();
     }
 
     private void OnItemsCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
+        _itemsVersion++;
         UpdateVisual();
     }
 
@@ -153,12 +162,11 @@ public class DailyScheduleControl : TemplatedControl
         _noDataText = e.NameScope.Find<TextBlock>("PART_NoDataText");
         _timeLabelsContainer = e.NameScope.Find<Canvas>("PART_TimeLabelsContainer");
 
+        // A fresh template means fresh (empty) canvases.
+        _builtState = null;
+
         // Delay the initial update to ensure proper bounds
-        Dispatcher.UIThread.Post(() =>
-        {
-            GenerateTimeLabels();
-            UpdateVisual();
-        });
+        Dispatcher.UIThread.Post(UpdateVisual);
     }
 
     protected override void OnSizeChanged(SizeChangedEventArgs e)
@@ -172,7 +180,14 @@ public class DailyScheduleControl : TemplatedControl
         if (_scheduleCanvas == null || _mainGrid == null || _noDataText == null)
             return;
 
+        var state = (Items, _itemsVersion, _scheduleCanvas.Bounds.Size,
+            ShowHourLines, ShowHours, DisplayedHours, StartHour);
+        if (_builtState is { } built && built.Equals(state))
+            return; // already showing exactly this
+        _builtState = state;
+
         _scheduleCanvas.Children.Clear();
+        GenerateTimeLabels();
 
         if (Items == null || !Items.Any())
         {
@@ -186,8 +201,6 @@ public class DailyScheduleControl : TemplatedControl
         if (canvasHeight <= 0) return;
 
         var hourHeight = canvasHeight / DisplayedHours;
-
-        GenerateTimeLabels();
 
         // Draw hour lines if enabled
         if (ShowHourLines && !Items.Any(x => x.Type.IsHoliday()) && Items.Any())
@@ -270,7 +283,7 @@ public class DailyScheduleControl : TemplatedControl
                 Item = item,
                 Width = _scheduleCanvas.Bounds.Width,
                 Height = itemHeight,
-                Cursor = new Cursor(StandardCursorType.Hand)
+                Cursor = HandCursor
             };
             
             scheduleCard.Tapped += (_, _) => item.ItemClicked();
@@ -325,6 +338,7 @@ public class DailyScheduleControl : TemplatedControl
             Foreground = item.ForegroundColor,
             BorderThickness = new Thickness(2),
             BorderBrush = item.BorderColor ?? new SolidColorBrush(Color.Parse("#FFCCCCCC")),
+            IsAnimated = false, // fixed-size card: no implicit composition animations needed
         };
     }
 

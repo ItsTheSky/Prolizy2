@@ -32,6 +32,8 @@ public partial class MainViewModel : ViewModelBase
                 Icon = LucideIconKind.House,
                 Title = "TabHome",
                 ViewModelType = typeof(HomeViewModel),
+                // First screen: build it straight away rather than showing a placeholder first.
+                BuildImmediately = true,
                 ContentFactory = () => new HomeTab { DataContext = HomeViewModel }
             },
 
@@ -56,11 +58,40 @@ public partial class MainViewModel : ViewModelBase
                 Icon = LucideIconKind.Settings,
                 Title = "TabSettings",
                 ViewModelType = typeof(SettingsViewModel),
-                ContentFactory = () => new SettingsTab { DataContext = SettingsViewModel }
+                ContentFactory = () =>
+                {
+                    SettingsViewModel.EnsureInitialized();
+                    return new SettingsTab { DataContext = SettingsViewModel };
+                }
             }
         ];
 
         NavigateTo(TabEntries[0]);
+    }
+
+    /// <summary>
+    /// Builds the tabs that have not been opened yet while the application is
+    /// idle, one per dispatcher job so input always gets a turn in between.
+    /// The first tap on a tab then only has to show an existing view.
+    /// </summary>
+    public async void PreloadTabsWhenIdle()
+    {
+        try
+        {
+            // Let the first frames and the start-up requests go through first.
+            await Task.Delay(1200);
+
+            foreach (var entry in TabEntries)
+            {
+                await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(
+                    entry.Preload, Avalonia.Threading.DispatcherPriority.ApplicationIdle);
+                await Task.Delay(150);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logs.Error(ex);
+        }
     }
 
     public void NavigateTo(TabItemEntry entry)
@@ -155,6 +186,9 @@ public partial class TabItemEntry(MainViewModel mainVm) : ObservableObject
     /// <summary>Factory building the tab view on first display. Mutually exclusive with a direct <see cref="Content"/>.</summary>
     public Func<Control>? ContentFactory { get; init; }
 
+    /// <summary>When true the view is built as soon as the tab is created (used for the start screen).</summary>
+    public bool BuildImmediately { get; init; }
+
     private Control? _content;
 
     /// <summary>
@@ -163,9 +197,12 @@ public partial class TabItemEntry(MainViewModel mainVm) : ObservableObject
     /// </summary>
     public Control? Content
     {
-        get => _content ??= ContentFactory is { } factory ? new LazyLoader(factory) : null;
+        get => _content ??= ContentFactory is { } factory ? new LazyLoader(factory, BuildImmediately) : null;
         set => _content = value;
     }
+
+    /// <summary>Builds the tab view ahead of its first display (no-op when already built).</summary>
+    public void Preload() => (Content as LazyLoader)?.EnsureLoaded();
 
     [RelayCommand]
     public void Clicked()

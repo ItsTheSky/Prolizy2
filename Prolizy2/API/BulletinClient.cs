@@ -25,12 +25,12 @@ public class BulletinClient
         
         // 1. Gather the cookies
         url = "https://bulletins.iut-velizy.uvsq.fr/services/data.php?q=dataPremi%C3%A8reConnexion";
-        response = await _client.PostAsync(url, null);
+        response = await _client.PostAsync(url, null).ConfigureAwait(false);
         
         // 2. Gather JWT token
         url = "https://cas2.uvsq.fr/cas/login?service=https%3A%2F%2Fbulletins.iut-velizy.uvsq.fr%2Fservices%2FdoAuth.php%3Fhref%3Dhttps%253A%252F%252Fbulletins.iut-velizy.uvsq.fr%252F";
-        response = await _client.GetAsync(url);
-        var html = await response.Content.ReadAsStringAsync();
+        response = await _client.GetAsync(url).ConfigureAwait(false);
+        var html = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         var doc = new HtmlDocument();
         doc.LoadHtml(html);
         var token = doc.DocumentNode.SelectSingleNode("//input[@name='execution']")
@@ -47,7 +47,7 @@ public class BulletinClient
             { "geolocation", "" }
         };
         var content = new FormUrlEncodedContent(dict);
-        response = await _client.PostAsync(url, content);
+        response = await _client.PostAsync(url, content).ConfigureAwait(false);
         
         if (response.StatusCode == HttpStatusCode.OK)
             IsLoggedIn = true;
@@ -68,7 +68,7 @@ public class BulletinClient
     {
         if (!IsLoggedIn)
         {
-            var code = await Login();
+            var code = await Login().ConfigureAwait(false);
             if (code != HttpStatusCode.OK)
                 return null;
         }
@@ -77,8 +77,8 @@ public class BulletinClient
             ? "https://bulletins.iut-velizy.uvsq.fr/services/data.php?q=dataPremi%C3%A8reConnexion" 
             : $"https://bulletins.iut-velizy.uvsq.fr/services/data.php?q=relev%C3%A9Etudiant&semestre={semesterId}";
      
-        var response = await _client.PostAsync(url, null);
-        var json = (await response.Content.ReadAsStringAsync()).ReplaceLineEndings("")
+        var response = await _client.PostAsync(url, null).ConfigureAwait(false);
+        var json = (await response.Content.ReadAsStringAsync().ConfigureAwait(false)).ReplaceLineEndings("")
             .Replace("\"absences\":[]", "\"absences\":{}"); // Fixing the JSON format
         
         return JsonSerializer.Deserialize<BulletinRoot>(json);
@@ -87,7 +87,7 @@ public class BulletinClient
     /// <inheritdoc cref="FetchListNotes(int)"/>
     public async Task<List<double>?> FetchListNotes(Evaluation evaluation)
     {
-        return await FetchListNotes(evaluation.Id);
+        return await FetchListNotes(evaluation.Id).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -99,8 +99,8 @@ public class BulletinClient
     public async Task<List<double>?> FetchListNotes(int evaluationId)
     {
         var url = $"https://bulletins.iut-velizy.uvsq.fr/services/data.php?q=listeNotes&eval={evaluationId}";
-        var response = await _client.PostAsync(url, null);
-        var json = await response.Content.ReadAsStringAsync();
+        var response = await _client.PostAsync(url, null).ConfigureAwait(false);
+        var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         try
         {
             return JsonSerializer.Deserialize<List<double>>(json)!;

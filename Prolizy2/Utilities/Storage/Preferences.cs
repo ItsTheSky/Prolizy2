@@ -72,9 +72,20 @@ public class Preferences
         {
             if (File.Exists(_filePath))
             {
-                var json = File.ReadAllText(_filePath);
-                _cache = JsonSerializer.Deserialize<Dictionary<string, object>>(json, _jsonOptions)
-                         ?? new Dictionary<string, object>();
+                // Read the document directly instead of going through the
+                // reflection-based serializer: this runs during start-up.
+                var cache = new Dictionary<string, object>();
+                ReadOnlyMemory<byte> bytes = File.ReadAllBytes(_filePath);
+                if (bytes.Length >= 3 && bytes.Span[0] == 0xEF && bytes.Span[1] == 0xBB && bytes.Span[2] == 0xBF)
+                    bytes = bytes[3..]; // tolerate a UTF-8 byte-order mark
+                using var document = JsonDocument.Parse(bytes);
+                if (document.RootElement.ValueKind == JsonValueKind.Object)
+                {
+                    foreach (var property in document.RootElement.EnumerateObject())
+                        cache[property.Name] = property.Value.Clone();
+                }
+
+                _cache = cache;
             }
         }
         catch (Exception ex)
@@ -84,20 +95,59 @@ public class Preferences
         }
     }
 
+    // Writes are queued on a background task so changing a setting never makes
+    // the UI thread wait for the disk. Each write carries a full snapshot, and
+    // they are chained so the last one always wins.
+    private Task _pendingWrite = Task.CompletedTask;
+
     /// <summary>
-    /// Sauvegarde les préférences sur le disque
+    /// Sauvegarde les préférences sur le disque (en arrière-plan)
     /// </summary>
     private void SaveToDisk()
     {
-        try
+        // Called under _lock: take the snapshot now, write it later.
+        byte[] snapshot;
+        using (var buffer = new MemoryStream())
         {
-            var json = JsonSerializer.Serialize(_cache, _jsonOptions);
-            File.WriteAllText(_filePath, json);
+            using (var writer = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true }))
+            {
+                writer.WriteStartObject();
+                foreach (var (key, value) in _cache)
+                {
+                    writer.WritePropertyName(key);
+                    if (value is JsonElement element)
+                        element.WriteTo(writer);
+                    else
+                        JsonSerializer.Serialize(writer, value, _jsonOptions);
+                }
+                writer.WriteEndObject();
+            }
+
+            snapshot = buffer.ToArray();
         }
-        catch (Exception ex)
+
+        _pendingWrite = _pendingWrite.ContinueWith(_ =>
         {
-            Console.WriteLine($"[Preferences] Erreur de sauvegarde: {ex.Message}");
-            throw;
+            try
+            {
+                // Temp file + rename: a killed process never leaves a truncated file.
+                var tempPath = _filePath + ".tmp";
+                File.WriteAllBytes(tempPath, snapshot);
+                File.Move(tempPath, _filePath, overwrite: true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Preferences] Erreur de sauvegarde: {ex.Message}");
+            }
+        }, TaskScheduler.Default);
+    }
+
+    /// <summary>Waits until every queued write has reached the disk.</summary>
+    public Task FlushAsync()
+    {
+        lock (_lock)
+        {
+            return _pendingWrite;
         }
     }
 
@@ -142,7 +192,24 @@ public class Preferences
 
                 if (value is JsonElement jsonElement)
                 {
-                    return JsonSerializer.Deserialize<T>(jsonElement.GetRawText(), _jsonOptions);
+                    // Fast paths for the types read on hot paths (several times
+                    // per tap): no serializer round-trip for a string or a bool.
+                    if (typeof(T) == typeof(string))
+                    {
+                        if (jsonElement.ValueKind == JsonValueKind.String)
+                            return (T)(object)jsonElement.GetString()!;
+                        if (jsonElement.ValueKind == JsonValueKind.Null)
+                            return (T)(object)null!;
+                    }
+                    else if (typeof(T) == typeof(bool))
+                    {
+                        if (jsonElement.ValueKind == JsonValueKind.True)
+                            return (T)(object)true;
+                        if (jsonElement.ValueKind == JsonValueKind.False)
+                            return (T)(object)false;
+                    }
+
+                    return jsonElement.Deserialize<T>(_jsonOptions);
                 }
 
                 if (value is T typedValue)
