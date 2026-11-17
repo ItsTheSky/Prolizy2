@@ -49,37 +49,38 @@ public partial class HomeCardViewModel : ViewModelBase
 
     private void RefreshMetadata()
     {
+        Icon = HomeCardVisuals.Icon(Config.Type);
+        AccentHex = HomeCardVisuals.AccentHex(Config.Type);
+        Hint = string.Empty;
+
         switch (Config.Type)
         {
             case HomeCardType.NextCourse:
                 Title = LangViewModel.Translate("HomeCardTitleNextCourse");
-                Icon = LucideIconKind.CalendarClock;
-                AccentHex = "#FF8C42";
-                Hint = LangViewModel.Translate("HomeCardTypeNextCourse");
                 break;
 
             case HomeCardType.BulletinOverview:
                 Title = LangViewModel.Translate("HomeCardTitleOverview");
-                Icon = LucideIconKind.GraduationCap;
-                AccentHex = "#22C55E";
-                Hint = string.Empty;
                 break;
 
             case HomeCardType.EvaluationDetail:
                 var group = FindGroup();
-                Title = group is null
-                    ? LangViewModel.Translate("HomeCardTitleEvaluation")
-                    : string.IsNullOrEmpty(group.Label) ? group.Code : group.Label;
-                Icon = group?.Kind == BulletinEntryKind.Sae ? LucideIconKind.WandSparkles : LucideIconKind.NotebookPen;
-                AccentHex = "#10B981";
-                Hint = EvaluationDetailCardViewModel.TranslateKind(group?.Kind);
+                if (group is null)
+                {
+                    Title = LangViewModel.Translate("HomeCardTitleEvaluation");
+                    break;
+                }
+
+                Title = string.IsNullOrEmpty(group.Label) ? group.Code : group.Label;
+                Hint = EvaluationDetailCardViewModel.TranslateKind(group.Kind);
+                if (group.Kind == BulletinEntryKind.Sae)
+                    Icon = LucideIconKind.WandSparkles;
                 break;
 
             default:
-                Title = ResolveUnitTitle();
-                Icon = LucideIconKind.Layers;
-                AccentHex = "#2563EB";
-                Hint = LangViewModel.Translate("HomeCardTitleUnits");
+                var unit = FindUnit();
+                Title = unit?.Code ?? LangViewModel.Translate("HomeCardTitleUnits");
+                Hint = unit?.Name ?? string.Empty;
                 break;
         }
     }
@@ -121,14 +122,9 @@ public partial class HomeCardViewModel : ViewModelBase
     private EvaluationGroupInfo? FindGroup() =>
         Bulletin?.FindGroup(Config.GroupCode ?? string.Empty);
 
-    private string ResolveUnitTitle()
-    {
-        if (string.IsNullOrEmpty(Config.UnitCode))
-            return LangViewModel.Translate("HomeCardTitleUnits");
-
-        var unit = Bulletin?.Data.Units
-            .FirstOrDefault(u => string.Equals(u.Code, Config.UnitCode, StringComparison.OrdinalIgnoreCase));
-
-        return unit?.Code ?? Config.UnitCode;
-    }
+    private TeachingUnitInfo? FindUnit() =>
+        string.IsNullOrEmpty(Config.UnitCode)
+            ? null
+            : Bulletin?.Data.Units.FirstOrDefault(u =>
+                string.Equals(u.Code, Config.UnitCode, StringComparison.OrdinalIgnoreCase));
 }

@@ -126,6 +126,7 @@
     <system:String x:Key="HomeCardNoBulletin">Add your ScoDoc credentials to display your average.</system:String>
     <system:String x:Key="HomeCardNoEvaluation">Pick a resource or a SAÉ to display.</system:String>
     <system:String x:Key="HomeCardNoUnits">No teaching unit available.</system:String>
+    <system:String x:Key="HomeCardNoGrades">No grade yet.</system:String>
     <system:String x:Key="HomeCardStatusOngoing">Ongoing</system:String>
     <system:String x:Key="HomeCardStatusTomorrow">Tomorrow</system:String>
     <system:String x:Key="HomeCardStatusInMinutes">In {0} min</system:String>
@@ -153,9 +154,9 @@
     <system:String x:Key="HomeSettingsSave">Save</system:String>
     <system:String x:Key="HomeSettingsReset">Reset</system:String>
     <system:String x:Key="HomeSettingsNoCards">No card yet.</system:String>
-    <system:String x:Key="HomeSettingsHalf">1 slot</system:String>
-    <system:String x:Key="HomeSettingsFull">2 slots</system:String>
-    <system:String x:Key="HomeSettingsVariantClassic">Classic</system:String>
+    <system:String x:Key="HomeSettingsHalf">One column</system:String>
+    <system:String x:Key="HomeSettingsFull">Two columns</system:String>
+    <system:String x:Key="HomeSettingsVariantClassic">Large</system:String>
     <system:String x:Key="HomeSettingsVariantCompact">Compact</system:String>
     <system:String x:Key="HomeSettingsMaxItems">Rows</system:String>
     <system:String x:Key="HomeSettingsMoveUp">Move up</system:String>
@@ -164,7 +165,11 @@
     <system:String x:Key="HomeSettingsSemesterCurrent">Current semester</system:String>
     <system:String x:Key="HomeSettingsDiscardTitle">Unsaved changes</system:String>
     <system:String x:Key="HomeSettingsDiscardMessage">Your changes are not saved yet. Do you want to discard them?</system:String>
-    <system:String x:Key="HomeSettingsDiscardKeepEditing">Keep editing</system:String>
-    <system:String x:Key="HomeSettingsDiscardLeave">Discard</system:String>
+    <system:String x:Key="HomeSettingsDiscardKeepEditing">Stay</system:String>
+    <system:String x:Key="HomeSettingsDiscardLeave">Leave</system:String>
+    <system:String x:Key="HomeSettingsWidth">Width</system:String>
+    <system:String x:Key="HomeSettingsStyle">Display</system:String>
+    <system:String x:Key="HomeSettingsAllUnits">All units</system:String>
+    <system:String x:Key="HomeSettingsPickEvaluation">Pick a resource or a SAÉ</system:String>
 
 </ResourceDictionary>

@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Media;
 using Lucide.Avalonia;
 
 namespace Prolizy2.Styles.Controls.Home;
@@ -109,8 +110,40 @@ public class HomeCardShell : ContentControl
         set => SetValue(IsInteractiveProperty, value);
     }
 
+    public static readonly StyledProperty<IBrush?> AccentBrushProperty =
+        AvaloniaProperty.Register<HomeCardShell, IBrush?>(nameof(AccentBrush));
+
+    public static readonly StyledProperty<IBrush?> AccentTintBrushProperty =
+        AvaloniaProperty.Register<HomeCardShell, IBrush?>(nameof(AccentTintBrush));
+
+    public IBrush? AccentBrush
+    {
+        get => GetValue(AccentBrushProperty);
+        private set => SetValue(AccentBrushProperty, value);
+    }
+
+    public IBrush? AccentTintBrush
+    {
+        get => GetValue(AccentTintBrushProperty);
+        private set => SetValue(AccentTintBrushProperty, value);
+    }
+
+    public HomeCardShell() => UpdateAccentBrushes();
+
+    // A brush declared inside the template cannot bind to the templated parent
+    // (it is not part of the tree), so the accent brushes are built here.
+    private void UpdateAccentBrushes()
+    {
+        if (!Color.TryParse(AccentHex, out var color))
+            color = Colors.Gray;
+
+        AccentBrush = new SolidColorBrush(color);
+        AccentTintBrush = new SolidColorBrush(color, 0.18);
+    }
+
     static HomeCardShell()
     {
+        AccentHexProperty.Changed.AddClassHandler<HomeCardShell>((shell, _) => shell.UpdateAccentBrushes());
         IsCompactProperty.Changed.AddClassHandler<HomeCardShell>(
             (shell, _) => shell.PseudoClasses.Set(":compact", shell.IsCompact));
     }

@@ -1,0 +1,49 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Prolizy2.Styles.Controls.Home">
+    <Design.PreviewWith>
+        <controls:HomeSegmentToggle Width="160" Margin="20" FirstIcon="Square" SecondIcon="RectangleHorizontal" />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|HomeSegmentToggle">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="#1A808080" CornerRadius="10" Padding="3">
+                    <Grid ColumnDefinitions="*,*">
+                        <Border Name="PART_Indicator" Grid.Column="0"
+                                CornerRadius="8"
+                                Background="{DynamicResource SukiPrimaryColor}" />
+
+                        <Border Name="PART_First" Grid.Column="0"
+                                Background="Transparent" Cursor="Hand"
+                                ToolTip.Tip="{TemplateBinding FirstTip}">
+                            <LucideIcon Name="PART_FirstIcon" Kind="{TemplateBinding FirstIcon}" Size="17"
+                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+
+                        <Border Name="PART_Second" Grid.Column="1"
+                                Background="Transparent" Cursor="Hand"
+                                ToolTip.Tip="{TemplateBinding SecondTip}">
+                            <LucideIcon Name="PART_SecondIcon" Kind="{TemplateBinding SecondIcon}" Size="17"
+                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="controls|HomeSegmentToggle /template/ LucideIcon#PART_FirstIcon">
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="controls|HomeSegmentToggle /template/ LucideIcon#PART_SecondIcon">
+        <Setter Property="Foreground" Value="{DynamicResource SukiLowText}" />
+    </Style>
+    <Style Selector="controls|HomeSegmentToggle:second /template/ LucideIcon#PART_FirstIcon">
+        <Setter Property="Foreground" Value="{DynamicResource SukiLowText}" />
+    </Style>
+    <Style Selector="controls|HomeSegmentToggle:second /template/ LucideIcon#PART_SecondIcon">
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+</Styles>

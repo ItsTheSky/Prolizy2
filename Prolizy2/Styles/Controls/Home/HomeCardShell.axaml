@@ -14,6 +14,8 @@
     </Design.PreviewWith>
 
     <Style Selector="controls|HomeCardShell">
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="CornerRadius" Value="16" />
         <Setter Property="Template">
             <ControlTemplate>
                 <suki:GlassCard x:CompileBindings="False"
@@ -34,24 +36,21 @@
                                     Width="{Binding IconSize, RelativeSource={RelativeSource TemplatedParent}}"
                                     Height="{Binding IconSize, RelativeSource={RelativeSource TemplatedParent}}"
                                     CornerRadius="10"
+                                    Background="{TemplateBinding AccentTintBrush}"
                                     VerticalAlignment="Center">
-                                <Border.Background>
-                                    <SolidColorBrush Color="{Binding AccentHex, RelativeSource={RelativeSource TemplatedParent}}" Opacity="0.18" />
-                                </Border.Background>
                                 <LucideIcon Kind="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}"
                                             Size="{Binding IconGlyphSize, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Foreground="{TemplateBinding AccentBrush}"
                                             HorizontalAlignment="Center"
-                                            VerticalAlignment="Center">
-                                    <LucideIcon.Foreground>
-                                        <SolidColorBrush Color="{Binding AccentHex, RelativeSource={RelativeSource TemplatedParent}}" />
-                                    </LucideIcon.Foreground>
-                                </LucideIcon>
+                                            VerticalAlignment="Center" />
                             </Border>
 
                             <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">
                                 <TextBlock Text="{TemplateBinding Title}"
                                            FontSize="{TemplateBinding TitleFontSize}"
                                            FontWeight="SemiBold"
+                                           TextWrapping="Wrap"
+                                           MaxLines="2"
                                            TextTrimming="CharacterEllipsis"
                                            VerticalAlignment="Center" />
                                 <TextBlock Text="{TemplateBinding Hint}"
@@ -85,8 +84,8 @@
 
     <!-- Compact variant -->
     <Style Selector="controls|HomeCardShell:compact">
-        <Setter Property="Padding" Value="11" />
-        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="CornerRadius" Value="14" />
         <Setter Property="IconSize" Value="30" />
         <Setter Property="IconGlyphSize" Value="15" />
         <Setter Property="TitleFontSize" Value="13" />

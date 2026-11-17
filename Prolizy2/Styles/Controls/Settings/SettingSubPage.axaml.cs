@@ -14,6 +14,10 @@ public class SettingSubPage : ContentControl
     public static readonly StyledProperty<IRelayCommand?> BackCommandProperty =
         AvaloniaProperty.Register<SettingSubPage, IRelayCommand?>(nameof(BackCommand));
 
+    /// <summary>Extra buttons shown next to "Retour", outside the scrolled content.</summary>
+    public static readonly StyledProperty<object?> ActionsProperty =
+        AvaloniaProperty.Register<SettingSubPage, object?>(nameof(Actions));
+
 
     public string Title
     {
@@ -25,6 +29,12 @@ public class SettingSubPage : ContentControl
     {
         get => GetValue(BackCommandProperty);
         set => SetValue(BackCommandProperty, value);
+    }
+
+    public object? Actions
+    {
+        get => GetValue(ActionsProperty);
+        set => SetValue(ActionsProperty, value);
     }
     
 }

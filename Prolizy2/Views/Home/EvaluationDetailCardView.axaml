@@ -52,7 +52,13 @@
                               VerticalAlignment="Center" />
             </Grid>
 
-            <Border Height="1" Background="{DynamicResource SukiBorderBrush}" />
+            <Border Height="1" Background="{DynamicResource SukiBorderBrush}"
+                    IsVisible="{Binding HasEvaluations}" />
+
+            <TextBlock Text="{DynamicResource HomeCardNoGrades}"
+                       IsVisible="{Binding !HasEvaluations}"
+                       FontSize="12" FontStyle="Italic"
+                       Foreground="{DynamicResource SukiLowText}" />
 
             <ItemsControl ItemsSource="{Binding Evaluations}">
                 <ItemsControl.ItemTemplate>

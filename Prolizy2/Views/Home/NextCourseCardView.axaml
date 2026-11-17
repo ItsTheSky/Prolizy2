@@ -31,31 +31,28 @@
         <!-- Next course -->
         <StackPanel IsVisible="{Binding HasCourse}" Spacing="10">
 
-            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                <Border Grid.Column="0"
-                        MinWidth="52" Padding="7,3"
-                        CornerRadius="7"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Left">
-                    <Border.Background>
-                        <SolidColorBrush Color="#FF8C42" Opacity="0.16" />
-                    </Border.Background>
-                    <TextBlock Text="{Binding NextItem.FormattedTimeRange}"
-                               FontSize="11" FontWeight="SemiBold"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
-                </Border>
-
-                <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding NextItem.Subject}"
-                               FontSize="15" FontWeight="SemiBold"
-                               TextWrapping="Wrap"
-                               LineHeight="19" />
+            <StackPanel Spacing="6">
+                <TextBlock Text="{Binding NextItem.Subject}"
+                           FontSize="15" FontWeight="SemiBold"
+                           TextWrapping="Wrap"
+                           LineHeight="19" />
+                <WrapPanel Orientation="Horizontal">
+                    <Border Padding="7,3" Margin="0,0,8,0"
+                            CornerRadius="7"
+                            VerticalAlignment="Center">
+                        <Border.Background>
+                            <SolidColorBrush Color="#FF8C42" Opacity="0.16" />
+                        </Border.Background>
+                        <TextBlock Text="{Binding NextItem.FormattedTimeRange}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   VerticalAlignment="Center" />
+                    </Border>
                     <TextBlock Text="{Binding StatusText}"
                                FontSize="12"
+                               VerticalAlignment="Center"
                                Foreground="{DynamicResource SukiLowText}" />
-                </StackPanel>
-            </Grid>
+                </WrapPanel>
+            </StackPanel>
 
             <!-- Details -->
             <WrapPanel Orientation="Horizontal" IsVisible="{Binding ShowDetails}">

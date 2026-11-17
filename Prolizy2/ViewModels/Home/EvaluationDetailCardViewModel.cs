@@ -28,7 +28,9 @@ public partial class EvaluationDetailCardViewModel : ViewModelBase
 
     [ObservableProperty] private GradeValue? _average;
 
-    [ObservableProperty] private ObservableCollection<EvaluationInfo> _evaluations = new();
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasEvaluations))]
+    private ObservableCollection<EvaluationInfo> _evaluations = new();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(MoreCountLabel))]
@@ -44,6 +46,8 @@ public partial class EvaluationDetailCardViewModel : ViewModelBase
     public bool HasNoGroup => Group is null;
 
     public bool HasMore => HiddenCount > 0;
+
+    public bool HasEvaluations => Evaluations.Count > 0;
 
     public string MoreCountLabel => string.Format(
         CultureInfo.CurrentCulture,

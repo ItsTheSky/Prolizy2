@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
+using Avalonia.Media;
+using Lucide.Avalonia;
 using Prolizy2.Model.Home;
 using Prolizy2.ViewModels.Common;
+using Prolizy2.ViewModels.Home;
 
 namespace Prolizy2.ViewModels.Tabs.Settings;
 
@@ -46,15 +49,16 @@ public sealed class EvaluationChoice
 
 public sealed class UnitChoice
 {
-    public UnitChoice(string code, string name)
+    /// <param name="code">Unit code, or null for "all units".</param>
+    public UnitChoice(string? code, string name)
     {
         Code = code;
-        Label = string.IsNullOrEmpty(name) ? code : name;
+        Label = string.IsNullOrEmpty(name) ? code ?? string.Empty : name;
     }
 
-    public string Code { get; }
+    public string? Code { get; }
     public string Label { get; }
-    public string Display => $"{Code} · {Label}";
+    public string Display => Code is null ? Label : $"{Code} · {Label}";
 }
 
 #region Converters
@@ -78,36 +82,40 @@ public sealed class HomeCardTypeLabelConverter : IValueConverter
         throw new NotSupportedException();
 }
 
-/// <summary>Maps a radio button (parameter "half" / "full") to a <see cref="HomeCardSize"/>.</summary>
+/// <summary>True for <see cref="HomeCardSize.Full"/>, the second option of the width switch.</summary>
 public sealed class HomeCardSizeConverter : IValueConverter
 {
     public static readonly HomeCardSizeConverter Instance = new();
 
-    private static HomeCardSize FromParameter(object? parameter) =>
-        parameter is "full" ? HomeCardSize.Full : HomeCardSize.Half;
-
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
-        value is HomeCardSize size && size == FromParameter(parameter);
+        value is HomeCardSize.Full;
 
-    // Only the radio being checked writes back; the one being unchecked must not
-    // overwrite the value its sibling just set.
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
-        value is true ? FromParameter(parameter) : BindingOperations.DoNothing;
+        value is bool full ? (full ? HomeCardSize.Full : HomeCardSize.Half) : BindingOperations.DoNothing;
 }
 
-/// <summary>Maps a radio button (parameter "classic" / "compact") to a <see cref="HomeCardVariant"/>.</summary>
+/// <summary>True for <see cref="HomeCardVariant.Compact"/>, the second option of the style switch.</summary>
 public sealed class HomeCardVariantConverter : IValueConverter
 {
     public static readonly HomeCardVariantConverter Instance = new();
 
-    private static HomeCardVariant FromParameter(object? parameter) =>
-        parameter is "compact" ? HomeCardVariant.Compact : HomeCardVariant.Classic;
-
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
-        value is HomeCardVariant variant && variant == FromParameter(parameter);
+        value is HomeCardVariant.Compact;
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
-        value is true ? FromParameter(parameter) : BindingOperations.DoNothing;
+        value is bool compact ? (compact ? HomeCardVariant.Compact : HomeCardVariant.Classic) : BindingOperations.DoNothing;
+}
+
+public static class HomeCardTypeConverters
+{
+    public static readonly IValueConverter Icon =
+        new FuncValueConverter<HomeCardType, LucideIconKind>(HomeCardVisuals.Icon);
+
+    public static readonly IValueConverter Accent =
+        new FuncValueConverter<HomeCardType, IBrush>(HomeCardVisuals.AccentBrush);
+
+    public static readonly IValueConverter AccentTint =
+        new FuncValueConverter<HomeCardType, IBrush>(HomeCardVisuals.AccentTintBrush);
 }
 
 public sealed class CardTypeCheckConverter : IValueConverter

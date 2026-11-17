@@ -32,35 +32,31 @@
         <!-- Data -->
         <StackPanel IsVisible="{Binding HasData}" Spacing="8">
 
-            <Grid ColumnDefinitions="*,Auto">
-
-                <StackPanel Grid.Column="0" Spacing="4">
-                    <TextBlock Text="{DynamicResource HomeCardSemesterAverage}"
-                               FontSize="10" FontWeight="Bold"
+            <StackPanel Spacing="4">
+                <TextBlock Text="{DynamicResource HomeCardSemesterAverage}"
+                           FontSize="10" FontWeight="Bold"
+                           TextTrimming="CharacterEllipsis"
+                           Foreground="{DynamicResource SukiLowText}" />
+                <bc:GradeText Grade="{Binding Average}"
+                              GradeSize="30"
+                              HorizontalAlignment="Left" />
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                    <TextBlock Text="{Binding AcquiredUnits}"
+                               FontSize="15" FontWeight="Bold"
+                               VerticalAlignment="Bottom"
+                               Foreground="#22C55E" />
+                    <TextBlock Text="{Binding TotalUnits, StringFormat='/{0}'}"
+                               FontSize="12" FontWeight="SemiBold"
+                               VerticalAlignment="Bottom"
                                Foreground="{DynamicResource SukiLowText}" />
-                    <bc:GradeText Grade="{Binding Average}"
-                                  GradeSize="30"
-                                  HorizontalAlignment="Left" />
-                </StackPanel>
-
-                <StackPanel Grid.Column="1" Spacing="4"
-                            HorizontalAlignment="Right">
                     <TextBlock Text="{DynamicResource HomeCardUnitsAcquired}"
+                               Margin="6,0,0,1"
                                FontSize="10" FontWeight="Bold"
-                               HorizontalAlignment="Right"
+                               VerticalAlignment="Bottom"
+                               TextTrimming="CharacterEllipsis"
                                Foreground="{DynamicResource SukiLowText}" />
-                    <StackPanel Orientation="Horizontal" Spacing="2"
-                                HorizontalAlignment="Right">
-                        <TextBlock Text="{Binding AcquiredUnits}"
-                                   FontSize="20" FontWeight="Bold"
-                                   Foreground="#22C55E" />
-                        <TextBlock Text="{Binding TotalUnits, StringFormat='/{0}'}"
-                                   FontSize="13" FontWeight="SemiBold"
-                                   VerticalAlignment="Bottom"
-                                   Foreground="{DynamicResource SukiLowText}" />
-                    </StackPanel>
                 </StackPanel>
-            </Grid>
+            </StackPanel>
 
             <WrapPanel Orientation="Horizontal">
                 <badge:Badge Text="{Binding DecisionText}"

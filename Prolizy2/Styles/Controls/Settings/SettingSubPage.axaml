@@ -23,7 +23,17 @@
                             Margin="10,20"
                             HorizontalAlignment="Stretch"
                             Content="Retour"
+                            IsVisible="{TemplateBinding Actions, Converter={x:Static ObjectConverters.IsNull}}"
                             Command="{TemplateBinding BackCommand}"/>
+
+                    <Grid Grid.Row="2" Margin="10,20" ColumnDefinitions="*,Auto" ColumnSpacing="8"
+                          IsVisible="{TemplateBinding Actions, Converter={x:Static ObjectConverters.IsNotNull}}">
+                        <Button Grid.Column="0"
+                                HorizontalAlignment="Stretch"
+                                Content="Retour"
+                                Command="{TemplateBinding BackCommand}"/>
+                        <ContentPresenter Grid.Column="1" Content="{TemplateBinding Actions}"/>
+                    </Grid>
                     
                 </Grid>
             </ControlTemplate>

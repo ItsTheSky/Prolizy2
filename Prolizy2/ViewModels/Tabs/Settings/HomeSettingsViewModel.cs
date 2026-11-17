@@ -29,7 +29,9 @@ public partial class HomeSettingsViewModel : ViewModelBase
 
     public ObservableCollection<UnitChoice> Units { get; } = new();
 
-    [ObservableProperty] private bool _isDirty;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    private bool _isDirty;
 
     public bool HasNoCards => Cards.Count == 0;
 
@@ -69,6 +71,8 @@ public partial class HomeSettingsViewModel : ViewModelBase
 
         IsDirty = true;
         OnPropertyChanged(nameof(HasNoCards));
+        MoveUpCommand.NotifyCanExecuteChanged();
+        MoveDownCommand.NotifyCanExecuteChanged();
     }
 
     private void OnCardPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -131,11 +135,16 @@ public partial class HomeSettingsViewModel : ViewModelBase
             Cards.Remove(card);
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanMoveUp))]
     private void MoveUp(HomeCardConfig? card) => Move(card, -1);
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanMoveDown))]
     private void MoveDown(HomeCardConfig? card) => Move(card, 1);
+
+    private bool CanMoveUp(HomeCardConfig? card) => card is not null && Cards.IndexOf(card) > 0;
+
+    private bool CanMoveDown(HomeCardConfig? card) =>
+        card is not null && Cards.IndexOf(card) is var index && index >= 0 && index < Cards.Count - 1;
 
     private void Move(HomeCardConfig? card, int delta)
     {
@@ -162,7 +171,7 @@ public partial class HomeSettingsViewModel : ViewModelBase
 
     #region Save / back
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsDirty))]
     private void Save()
     {
         HomeLayout.ReplaceAll(Cards);
@@ -205,6 +214,7 @@ public partial class HomeSettingsViewModel : ViewModelBase
             Groups.Add(new EvaluationChoice(sae.Code, sae.Label));
 
         Units.Clear();
+        Units.Add(new UnitChoice(null, LangViewModel.Translate("HomeSettingsAllUnits")));
         foreach (var unit in data.Units)
             Units.Add(new UnitChoice(unit.Code, unit.Name));
     }

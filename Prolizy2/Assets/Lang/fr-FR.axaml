@@ -126,6 +126,7 @@
     <system:String x:Key="HomeCardNoBulletin">Renseignez vos identifiants ScoDoc pour afficher votre moyenne.</system:String>
     <system:String x:Key="HomeCardNoEvaluation">Choisissez une ressource ou une SAÉ à afficher.</system:String>
     <system:String x:Key="HomeCardNoUnits">Aucune unité d'enseignement disponible.</system:String>
+    <system:String x:Key="HomeCardNoGrades">Aucune note pour l'instant.</system:String>
     <system:String x:Key="HomeCardStatusOngoing">En cours</system:String>
     <system:String x:Key="HomeCardStatusTomorrow">Demain</system:String>
     <system:String x:Key="HomeCardStatusInMinutes">Dans {0} min</system:String>
@@ -153,9 +154,9 @@
     <system:String x:Key="HomeSettingsSave">Enregistrer</system:String>
     <system:String x:Key="HomeSettingsReset">Réinitialiser</system:String>
     <system:String x:Key="HomeSettingsNoCards">Aucune carte pour le moment.</system:String>
-    <system:String x:Key="HomeSettingsHalf">1 case</system:String>
-    <system:String x:Key="HomeSettingsFull">2 cases</system:String>
-    <system:String x:Key="HomeSettingsVariantClassic">Classique</system:String>
+    <system:String x:Key="HomeSettingsHalf">Une colonne</system:String>
+    <system:String x:Key="HomeSettingsFull">Deux colonnes</system:String>
+    <system:String x:Key="HomeSettingsVariantClassic">Large</system:String>
     <system:String x:Key="HomeSettingsVariantCompact">Compacte</system:String>
     <system:String x:Key="HomeSettingsMaxItems">Nombre de lignes</system:String>
     <system:String x:Key="HomeSettingsMoveUp">Monter</system:String>
@@ -164,7 +165,11 @@
     <system:String x:Key="HomeSettingsSemesterCurrent">Semestre courant</system:String>
     <system:String x:Key="HomeSettingsDiscardTitle">Modifications non enregistrées</system:String>
     <system:String x:Key="HomeSettingsDiscardMessage">Vos changements ne sont pas encore enregistrés. Voulez-vous les abandonner ?</system:String>
-    <system:String x:Key="HomeSettingsDiscardKeepEditing">Continuer l'édition</system:String>
-    <system:String x:Key="HomeSettingsDiscardLeave">Abandonner</system:String>
+    <system:String x:Key="HomeSettingsDiscardKeepEditing">Rester</system:String>
+    <system:String x:Key="HomeSettingsDiscardLeave">Quitter</system:String>
+    <system:String x:Key="HomeSettingsWidth">Largeur</system:String>
+    <system:String x:Key="HomeSettingsStyle">Affichage</system:String>
+    <system:String x:Key="HomeSettingsAllUnits">Toutes les UE</system:String>
+    <system:String x:Key="HomeSettingsPickEvaluation">Choisir une ressource ou une SAÉ</system:String>
 
 </ResourceDictionary>
