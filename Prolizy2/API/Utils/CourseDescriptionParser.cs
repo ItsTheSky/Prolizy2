@@ -6,28 +6,42 @@ using Prolizy2.API.Model.Course;
 
 namespace Prolizy2.API.Utils;
 
-public static class CourseDescriptionParser
+public static partial class CourseDescriptionParser
 {
-    private static readonly Regex SubjectStart =
-        new(@"^(?:R\d+\.|SA[EÉ]\s*\d+\.\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    // Source-generated regexes: no pattern parsing or IL emission at startup
+    // (RegexOptions.Compiled is costly on mobile runtimes).
+    [GeneratedRegex(@"^(?:R\d+\.|SA[EÉ]\s*\d+\.\d+)", RegexOptions.IgnoreCase)]
+    private static partial Regex SubjectStartRegex();
 
-    private static readonly Regex ModuleCode =
-        new(@"\[[A-Z]{2,}\d+[A-Z]\d*[A-Z]?\]", RegexOptions.Compiled);
+    [GeneratedRegex(@"\[[A-Z]{2,}\d+[A-Z]\d*[A-Z]?\]")]
+    private static partial Regex ModuleCodeRegex();
 
-    private static readonly Regex Group =
-        new(@"^INF\d+(?:-[A-Z]+)*$", RegexOptions.Compiled);
+    [GeneratedRegex(@"^INF\d+(?:-[A-Z]+)*$")]
+    private static partial Regex GroupRegex();
 
-    private static readonly Regex RoomDash =
-        new(@"^[A-Z]?\d+\s*-\s*[A-Z]{2,}$", RegexOptions.Compiled);
+    [GeneratedRegex(@"^[A-Z]?\d+\s*-\s*[A-Z]{2,}$")]
+    private static partial Regex RoomDashRegex();
 
-    private static readonly Regex AmphiPrefix =
-        new(@"^Amphi\s+[A-Z0-9]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    [GeneratedRegex(@"^Amphi\s+[A-Z0-9]", RegexOptions.IgnoreCase)]
+    private static partial Regex AmphiPrefixRegex();
 
-    private static readonly Regex Professor =
-        new(@"^[A-Z]{2,}(?:[-' ][A-Z]{2,})*\s+[A-Z][a-zà-öø-ÿ]", RegexOptions.Compiled);
+    [GeneratedRegex(@"^[A-Z]{2,}(?:[-' ][A-Z]{2,})*\s+[A-Z][a-zà-öø-ÿ]")]
+    private static partial Regex ProfessorRegex();
 
-    private static readonly Regex HtmlNumericEntity =
-        new(@"&#(\d+);", RegexOptions.Compiled);
+    [GeneratedRegex(@"&#(\d+);")]
+    private static partial Regex HtmlNumericEntityRegex();
+
+    [GeneratedRegex(@"^[A-Z]{2,}")]
+    private static partial Regex UpperCasePrefixRegex();
+
+    private static readonly Regex SubjectStart = SubjectStartRegex();
+    private static readonly Regex ModuleCode = ModuleCodeRegex();
+    private static readonly Regex Group = GroupRegex();
+    private static readonly Regex RoomDash = RoomDashRegex();
+    private static readonly Regex AmphiPrefix = AmphiPrefixRegex();
+    private static readonly Regex Professor = ProfessorRegex();
+    private static readonly Regex HtmlNumericEntity = HtmlNumericEntityRegex();
+    private static readonly Regex UpperCasePrefix = UpperCasePrefixRegex();
 
     private static string DecodeHtmlEntities(string input)
     {
@@ -105,7 +119,7 @@ public static class CourseDescriptionParser
             courseDescription.Rooms.Add(part);
         else if (part.StartsWith("INF"))
             courseDescription.Groups.Add(part);
-        else if (Regex.IsMatch(part, @"^[A-Z]{2,}"))
+        else if (UpperCasePrefix.IsMatch(part))
             courseDescription.Professors.Add(part);
         else
             courseDescription.Subjects.Add(part);

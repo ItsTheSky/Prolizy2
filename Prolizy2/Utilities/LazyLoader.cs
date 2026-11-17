@@ -16,14 +16,38 @@ public class LazyLoader : ContentControl
     private readonly Func<Control> _viewFactory;
     private bool _isLoaded;
 
-    public LazyLoader(Func<Control> viewFactory)
+    /// <param name="viewFactory">Builds the real view.</param>
+    /// <param name="buildImmediately">
+    /// Build the view right now instead of on first display. Used for the start
+    /// screen, where a placeholder would only delay the first useful frame.
+    /// </param>
+    public LazyLoader(Func<Control> viewFactory, bool buildImmediately = false)
     {
         _viewFactory = viewFactory;
         HorizontalContentAlignment = HorizontalAlignment.Stretch;
         VerticalContentAlignment = VerticalAlignment.Stretch;
-        Content = BuildPlaceholder();
 
+        if (buildImmediately)
+        {
+            EnsureLoaded();
+            return;
+        }
+
+        Content = BuildPlaceholder();
         AttachedToVisualTree += (_, _) => Load();
+    }
+
+    /// <summary>
+    /// Builds the real view synchronously if it has not been built yet. Called
+    /// while the application is idle so the first display is instantaneous.
+    /// </summary>
+    public void EnsureLoaded()
+    {
+        if (_isLoaded)
+            return;
+        _isLoaded = true;
+
+        Content = _viewFactory();
     }
 
     /// <summary>Builds the real view once; subsequent calls are no-ops.</summary>
@@ -31,11 +55,10 @@ public class LazyLoader : ContentControl
     {
         if (_isLoaded)
             return;
-        _isLoaded = true;
 
         // Build on the next background tick so the placeholder paints first and
         // the tab transition is not stalled by the view + layout construction.
-        Dispatcher.UIThread.Post(() => Content = _viewFactory(), DispatcherPriority.Background);
+        Dispatcher.UIThread.Post(EnsureLoaded, DispatcherPriority.Background);
     }
 
     private static Control BuildPlaceholder() => new ProgressBar

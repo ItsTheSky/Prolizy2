@@ -22,7 +22,8 @@
                                 Background="{Binding BackgroundColor}"
 
                                 Padding="10"
-                                CornerRadius="10">
+                                CornerRadius="10"
+                                IsAnimated="False">
 
                     <suki:GlassCard.Resources>
                         <system:Double x:Key="GlassOpacity">0.5</system:Double>
@@ -33,65 +34,49 @@
                         </Style>
                     </suki:GlassCard.Styles>
 
-                    <Panel>
+                    <!-- A single grid serves both modes: the detail rows are simply
+                         hidden when course data is turned off, instead of building
+                         two complete copies of the card and showing one. -->
+                    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto" RowSpacing="10"
+                          ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5">
 
-                        <Grid RowDefinitions="Auto,Auto" RowSpacing="10"
-                              ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5"
-                              IsVisible="{DynamicResource !ProlizyHasItemCardData}">
-                            
-                            <TextBlock Grid.Row="0" Grid.RowSpan="2"
-                                       Grid.Column="0" Grid.ColumnSpan="2"
-                                       Text="{Binding Subject}"
-                                       TextAlignment="Center"
-                                       TextWrapping="Wrap" FontWeight="SemiBold" FontSize="18"
-                                       HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+                        <TextBlock Grid.Row="0" Grid.RowSpan="2"
+                                   Grid.Column="0" Grid.ColumnSpan="2"
+                                   Text="{Binding Subject}"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap" FontWeight="SemiBold" FontSize="18"
+                                   HorizontalAlignment="Stretch" VerticalAlignment="Top" />
 
-                            <controls1:Badge Grid.Row="0" Grid.Column="2" BadgeType="Info"
-                                             HorizontalAlignment="Right"
-                                             Text="{Binding FormattedDuration}" />
+                        <controls1:Badge Grid.Row="0" Grid.Column="2" BadgeType="Info"
+                                         HorizontalAlignment="Right"
+                                         Text="{Binding FormattedDuration}" />
 
-                            <controls1:Badge Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
-                                             HorizontalAlignment="Right" BadgeType="Neutral"
-                                             Text="{Binding FormattedType}" />
-                        </Grid>
+                        <controls1:Badge Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                         HorizontalAlignment="Right" BadgeType="Neutral"
+                                         Text="{Binding FormattedType}" />
 
-                        <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto" RowSpacing="10"
-                              ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5"
-                              IsVisible="{DynamicResource ProlizyHasItemCardData}">
+                        <!-- Elements/Rows -->
+                        <LucideIcon Grid.Row="3" Grid.Column="0" Kind="Navigation"
+                                    IsVisible="{DynamicResource ProlizyHasItemCardData}" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                                   VerticalAlignment="Center"
+                                   IsVisible="{DynamicResource ProlizyHasItemCardData}"
+                                   Text="{Binding Room}" FontWeight="Medium" />
 
-                            <TextBlock Grid.Row="0" Grid.RowSpan="2"
-                                       Grid.Column="0" Grid.ColumnSpan="2"
-                                       Text="{Binding Subject}"
-                                       TextAlignment="Center"
-                                       TextWrapping="Wrap" FontWeight="SemiBold" FontSize="18"
-                                       HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+                        <LucideIcon Grid.Row="4" Grid.Column="0" Kind="Clock"
+                                    IsVisible="{DynamicResource ProlizyHasItemCardData}" />
+                        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                                   VerticalAlignment="Center"
+                                   IsVisible="{DynamicResource ProlizyHasItemCardData}"
+                                   Text="{Binding FormattedTimeRange}" FontWeight="Medium" />
 
-                            <controls1:Badge Grid.Row="0" Grid.Column="2" BadgeType="Info"
-                                             HorizontalAlignment="Right"
-                                             Text="{Binding FormattedDuration}" />
-
-                            <controls1:Badge Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
-                                             HorizontalAlignment="Right" BadgeType="Neutral"
-                                             Text="{Binding FormattedType}" />
-
-                            <!-- Elements/Rows -->
-                            <LucideIcon Grid.Row="3" Grid.Column="0" Kind="Navigation" />
-                            <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
-                                       VerticalAlignment="Center"
-                                       Text="{Binding Room}" FontWeight="Medium" />
-
-                            <LucideIcon Grid.Row="4" Grid.Column="0" Kind="Clock" />
-                            <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
-                                       VerticalAlignment="Center"
-                                       Text="{Binding FormattedTimeRange}" FontWeight="Medium" />
-
-                            <LucideIcon Grid.Row="5" Grid.Column="0" Kind="User" />
-                            <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
-                                       VerticalAlignment="Center"
-                                       Text="{Binding Professor}" FontWeight="Medium" />
-                        </Grid>
-
-                    </Panel>
+                        <LucideIcon Grid.Row="5" Grid.Column="0" Kind="User"
+                                    IsVisible="{DynamicResource ProlizyHasItemCardData}" />
+                        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
+                                   VerticalAlignment="Center"
+                                   IsVisible="{DynamicResource ProlizyHasItemCardData}"
+                                   Text="{Binding Professor}" FontWeight="Medium" />
+                    </Grid>
                 </suki:GlassCard>
             </ControlTemplate>
         </Setter>

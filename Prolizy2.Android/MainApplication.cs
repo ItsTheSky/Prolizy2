@@ -18,7 +18,9 @@ public class MainApplication : AvaloniaAndroidApplication<App>
             .UseSkia()
             .With(new SkiaOptions
             {
-                MaxGpuResourceSizeBytes = 1024 * 1024 * 1024 // 1 GB
+                // 1 GB was far more than a phone can give a single app's GPU
+                // cache; an oversized budget only invites memory pressure.
+                MaxGpuResourceSizeBytes = 128 * 1024 * 1024 // 128 MB
             })
             .WithInterFont();
     }

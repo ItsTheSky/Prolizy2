@@ -34,10 +34,54 @@ public partial class MainView : UserControl
         DialogManager = DialogHost.Manager = new SukiDialogManager();
         ToastManager = ToastHost.Manager = new SukiToastManager();
         
-        Loaded += (sender, args) =>
+        DataContextChanged += (_, _) => AttachWelcomeScreen();
+
+        // Once the first screen is up, build the other tabs in idle time.
+        Loaded += (_, _) => (DataContext as MainViewModel)?.PreloadTabsWhenIdle();
+    }
+
+    private MainViewModel? _welcomeSource;
+
+    /// <summary>
+    /// Creates the welcome screen only when it has to be shown (first launch)
+    /// and releases it once dismissed, instead of always building it hidden.
+    /// </summary>
+    private void AttachWelcomeScreen()
+    {
+        if (_welcomeSource is not null)
+            _welcomeSource.PropertyChanged -= OnMainViewModelPropertyChanged;
+
+        _welcomeSource = DataContext as MainViewModel;
+        if (_welcomeSource is null)
+            return;
+
+        _welcomeSource.PropertyChanged += OnMainViewModelPropertyChanged;
+        UpdateWelcomeScreen();
+    }
+
+    private void OnMainViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(MainViewModel.IsWelcomeScreenVisible))
+            UpdateWelcomeScreen();
+    }
+
+    private void UpdateWelcomeScreen()
+    {
+        var visible = _welcomeSource?.IsWelcomeScreenVisible == true;
+        if (visible && WelcomeHost.Children.Count == 0)
         {
-            SukiTheme.GetInstance().ChangeBaseTheme(ThemeVariant.Dark);
-        };
+            WelcomeHost.Children.Add(new Welcome.WelcomeView
+            {
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
+                HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
+                VerticalContentAlignment = Avalonia.Layout.VerticalAlignment.Stretch
+            });
+        }
+        else if (!visible)
+        {
+            WelcomeHost.Children.Clear();
+        }
     }
 
     private void NextTab()

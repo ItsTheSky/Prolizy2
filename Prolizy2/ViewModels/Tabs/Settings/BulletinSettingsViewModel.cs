@@ -46,7 +46,7 @@ public partial class BulletinSettingsViewModel : ViewModelBase
 
     private async Task LoadCredentialsAsync()
     {
-        IsConfigured = MainVm.BulletinService.IsConfigured;
+        IsConfigured = await MainVm.BulletinService.IsConfiguredAsync();
         Username = await MainVm.BulletinService.GetUsernameAsync() ?? string.Empty;
         Password = await MainVm.BulletinService.GetPasswordAsync() ?? string.Empty;
 

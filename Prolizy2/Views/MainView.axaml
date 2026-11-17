@@ -5,7 +5,6 @@
              xmlns:vm="clr-namespace:Prolizy2.ViewModels"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
 
-             xmlns:welcome="clr-namespace:Prolizy2.Views.Welcome"
              mc:Ignorable="d"
              d:DesignWidth="450" d:DesignHeight="800"
              x:Class="Prolizy2.Views.MainView"
@@ -157,11 +156,14 @@
                                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                              Content="{Binding DisplayedControl}">
                     <TransitioningContentControl.PageTransition>
-                        <CrossFade Duration="0:00:00.2" />
+                        <CrossFade Duration="0:00:00.12" />
                     </TransitioningContentControl.PageTransition>
                 </TransitioningContentControl>
 
-                <suki:GlassCard Grid.Row="1" CornerRadius="0">
+                <!-- No padding on the card: it is carried by the buttons instead, so
+                     the whole height of the bar reacts to a tap (the card padding
+                     used to be a dead zone around the icons). -->
+                <suki:GlassCard Grid.Row="1" CornerRadius="0" Padding="0" IsAnimated="False">
 
                     <ItemsControl ItemsSource="{Binding TabEntries}">
                         <ItemsControl.ItemsPanel>
@@ -172,7 +174,9 @@
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="vm:TabItemEntry">
-                                <Button Padding="0" HorizontalAlignment="Stretch" BorderThickness="0"
+                                <Button Padding="0,20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                        BorderThickness="0" CornerRadius="0"
                                         Command="{Binding ClickedCommand}">
 
                                     <StackPanel Classes.IsTabItemSelected="{Binding IsSelected}"
@@ -197,9 +201,10 @@
 
         </Border>
 
-        <welcome:WelcomeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                             HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                             IsVisible="{Binding IsWelcomeScreenVisible}" />
+        <!-- The welcome screen is only built when it is actually needed (first
+             launch), see MainView.axaml.cs. -->
+        <Panel Name="WelcomeHost" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+               IsVisible="{Binding IsWelcomeScreenVisible}" />
 
         <suki:SukiDialogHost Name="DialogHost" />
         <suki:SukiToastHost Position="TopLeft" Name="ToastHost" />

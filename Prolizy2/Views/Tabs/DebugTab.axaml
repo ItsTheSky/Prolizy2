@@ -6,6 +6,11 @@
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Prolizy2.Views.Tabs.DebugTab">
+    <!-- The editor theme is only needed by this debug screen: loading it here
+         keeps AvaloniaEdit out of the application start-up path. -->
+    <UserControl.Styles>
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Simple/AvaloniaEdit.xaml" />
+    </UserControl.Styles>
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" RowSpacing="10"
                          ColumnDefinitions="*,*,*,*" ColumnSpacing="4"
                          Margin="10">

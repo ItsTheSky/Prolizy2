@@ -17,6 +17,7 @@ namespace Prolizy2.Views.Tabs;
 public partial class DebugTab : UserControl
 {
     public static readonly List<string> WaitingLines = new();
+    private const int MaxWaitingLines = 500;
     
     public static DebugTab Instance { get; set; }
 
@@ -27,9 +28,15 @@ public partial class DebugTab : UserControl
         Instance = this;
         TextBlock.TextArea.TextView.LineTransformers.Add(new ColorizeAvalonEdit());
         
-        foreach (var line in WaitingLines)
+        List<string> backlog;
+        lock (WaitingLines)
+        {
+            backlog = new List<string>(WaitingLines);
+            WaitingLines.Clear();
+        }
+
+        foreach (var line in backlog)
             AddDebugText(line);
-        WaitingLines.Clear();
 
         // var waitingDebugLines = AndroidBridgeProvider.Bridge?.GetWaitingDebugLines() ?? new List<string>();
         // if (waitingDebugLines.Count > 0)
@@ -45,15 +52,22 @@ public partial class DebugTab : UserControl
     {
         if (Instance == null!)
         {
-            WaitingLines.Add(line);
+            // The debug tab is rarely opened: keep a bounded backlog rather than
+            // every line logged since start-up.
+            lock (WaitingLines)
+            {
+                if (WaitingLines.Count >= MaxWaitingLines)
+                    WaitingLines.RemoveRange(0, WaitingLines.Count - MaxWaitingLines + 1);
+                WaitingLines.Add(line);
+            }
             return false;
         }
         
         // Ensure we're on the UI thread
         Dispatcher.UIThread.Post(() =>
         {
-            Instance.TextBlock.Text += line + "\n";
-            Instance.TextBlock.TextArea.TextView.Redraw();
+            // Append instead of re-assigning the whole text for every line.
+            Instance.TextBlock.AppendText(line + "\n");
             Instance.TextBlock.ScrollToEnd();
         });
         return true;

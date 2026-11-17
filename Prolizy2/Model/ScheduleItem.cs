@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Threading.Tasks;
 using Avalonia.Media;
@@ -14,8 +15,13 @@ using SukiUI.Dialogs;
 
 namespace Prolizy2.Model;
 
-public class ScheduleItem
+public class ScheduleItem : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private string? _additionalText;
+    private bool _detailsRequested;
+
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     
@@ -30,7 +36,18 @@ public class ScheduleItem
 
     public string Type { get; set; }
     
-    public string? AdditionalText { get; set; }
+    /// <summary>Free-text notes of the course, fetched lazily when the detail dialog opens.</summary>
+    public string? AdditionalText
+    {
+        get => _additionalText;
+        set
+        {
+            if (_additionalText == value)
+                return;
+            _additionalText = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AdditionalText)));
+        }
+    }
 
     public ScheduleItemOverlay? Overlay { get; set; }
 
@@ -69,27 +86,35 @@ public class ScheduleItem
 
     public void ItemClicked()
     {
-        Course.GetDescription().ContinueWith(t =>
-        {
-            if (t.IsFaulted || t.Result == null!)
-            {
-                Console.WriteLine("Failed to fetch course description:");
-                Console.WriteLine(t.Exception);
-                return;
-            }
+        // Open the dialog right away with what is already known; the notes are
+        // the only part that needs a request and are filled in when it answers.
+        MainView.DialogManager.CreateDialog()
+            .WithTitle(Subject)
+            .WithContent(new ItemDialogOverlay { Item = this })
+            .WithActionButton(LangViewModel.Translate("Ok"), _ => { }, true)
+            .TryShow();
 
-            var description = t.Result;
-            AdditionalText = string.Join("\n", description.Notes);
-            
-            Dispatcher.UIThread.Invoke(() =>
-            {
-                MainView.DialogManager.CreateDialog()
-                    .WithTitle(Subject)
-                    .WithContent(new ItemDialogOverlay { Item = this })
-                    .WithActionButton(LangViewModel.Translate("Ok"), _ => { }, true)
-                    .TryShow();
-            });
-        });
+        _ = LoadDetailsAsync();
+    }
+
+    private async Task LoadDetailsAsync()
+    {
+        if (_detailsRequested)
+            return;
+        _detailsRequested = true;
+
+        try
+        {
+            var description = await Course.GetDescription();
+            var notes = string.Join("\n", description.Notes);
+            Dispatcher.UIThread.Post(() => AdditionalText = notes);
+        }
+        catch (Exception ex)
+        {
+            _detailsRequested = false; // allow a retry on the next tap
+            Console.WriteLine("Failed to fetch course description:");
+            Console.WriteLine(ex);
+        }
     }
 }
 
