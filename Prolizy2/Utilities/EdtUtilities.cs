@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Prolizy2.Model;
@@ -15,14 +15,7 @@ public static class EdtUtilities
     /// </summary>
     /// <param name="items">The list of schedule items to check.</param>
     /// <returns>The next or current schedule item, or null if none found.</returns>
-    public static ScheduleItem? FindNextOrCurrentItem(List<ScheduleItem> items) =>
-        FindNextOrCurrentItem(items, DateTime.Now);
-
-    /// <summary>
-    /// Same as <see cref="FindNextOrCurrentItem(List{ScheduleItem})"/> but with an
-    /// injectable "now", so the home cards can compute several upcoming courses.
-    /// </summary>
-    public static ScheduleItem? FindNextOrCurrentItem(List<ScheduleItem> items, DateTime now)
+    public static ScheduleItem? FindNextOrCurrentItem(List<ScheduleItem> items)
     {
         if (items == null || items.Count == 0)
             return null;
@@ -34,6 +27,7 @@ public static class EdtUtilities
             return dateComparison != 0 ? dateComparison : a.StartTimeOnly.CompareTo(b.StartTimeOnly);
         });
 
+        var now = DateTime.Now;
         var currentDate = DateOnly.FromDateTime(now);
         var currentTime = TimeOnly.FromDateTime(now);
         
@@ -62,10 +56,6 @@ public static class EdtUtilities
         return null;
     }
 
-    /// <summary>
-    /// The courses that follow <paramref name="item"/> in <paramref name="items"/>,
-    /// sorted by start time. Used to show the rest of the day on the home card.
-    /// </summary>
     public static List<ScheduleItem> FindFollowingItems(List<ScheduleItem> items, ScheduleItem? item, int count)
     {
         if (items is null || count <= 0)

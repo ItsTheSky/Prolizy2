@@ -61,14 +61,12 @@
                                           ColumnDefinitions="*,*" ColumnSpacing="8">
                                         <RadioButton Grid.Column="0"
                                                      Classes="GigaChips" HorizontalContentAlignment="Center"
-                                                     GroupName="HomeCardWidth"
                                                      IsChecked="{Binding Size, Converter={x:Static vm:HomeCardSizeConverter.Instance}, ConverterParameter=half}">
                                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
                                                        Text="{DynamicResource HomeSettingsHalf}" />
                                         </RadioButton>
                                         <RadioButton Grid.Column="1"
                                                      Classes="GigaChips" HorizontalContentAlignment="Center"
-                                                     GroupName="HomeCardWidth"
                                                      IsChecked="{Binding Size, Converter={x:Static vm:HomeCardSizeConverter.Instance}, ConverterParameter=full}">
                                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
                                                        Text="{DynamicResource HomeSettingsFull}" />
@@ -80,14 +78,12 @@
                                           ColumnDefinitions="*,*" ColumnSpacing="8">
                                         <RadioButton Grid.Column="0"
                                                      Classes="GigaChips" HorizontalContentAlignment="Center"
-                                                     GroupName="HomeCardStyle"
                                                      IsChecked="{Binding Variant, Converter={x:Static vm:HomeCardVariantConverter.Instance}, ConverterParameter=classic}">
                                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
                                                        Text="{DynamicResource HomeSettingsVariantClassic}" />
                                         </RadioButton>
                                         <RadioButton Grid.Column="1"
                                                      Classes="GigaChips" HorizontalContentAlignment="Center"
-                                                     GroupName="HomeCardStyle"
                                                      IsChecked="{Binding Variant, Converter={x:Static vm:HomeCardVariantConverter.Instance}, ConverterParameter=compact}">
                                             <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center"
                                                        Text="{DynamicResource HomeSettingsVariantCompact}" />
@@ -101,7 +97,7 @@
                                         <!-- Semester picker -->
                                         <settingsControls:HomePickerComboBox HorizontalAlignment="Stretch"
                                                   IsVisible="{Binding Type, Converter={x:Static vm:CardTypeCheckConverter.Semester}}"
-                                                  ItemsSource="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).Semesters}"
+                                                  Choices="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).Semesters}"
                                                   KeyPath="Id"
                                                   DisplayPath="Label"
                                                   SelectedKey="{Binding SemesterId}" />
@@ -109,7 +105,7 @@
                                         <!-- Resource / SAÉ picker -->
                                         <settingsControls:HomePickerComboBox HorizontalAlignment="Stretch"
                                                   IsVisible="{Binding Type, Converter={x:Static vm:CardTypeCheckConverter.Evaluation}}"
-                                                  ItemsSource="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).Groups}"
+                                                  Choices="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).Groups}"
                                                   KeyPath="Code"
                                                   DisplayPath="Display"
                                                   SelectedKey="{Binding GroupCode}" />
@@ -117,7 +113,7 @@
                                         <!-- Unit picker -->
                                         <settingsControls:HomePickerComboBox HorizontalAlignment="Stretch"
                                                   IsVisible="{Binding Type, Converter={x:Static vm:CardTypeCheckConverter.Unit}}"
-                                                  ItemsSource="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).Units}"
+                                                  Choices="{Binding $parent[ItemsControl].((vm:HomeSettingsViewModel)DataContext).Units}"
                                                   KeyPath="Code"
                                                   DisplayPath="Display"
                                                   SelectedKey="{Binding UnitCode}" />

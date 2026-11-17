@@ -1,7 +1,8 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Prolizy2.Styles.Controls.Home"
-        xmlns:suki="https://github.com/kikipoulet/SukiUI">
+        xmlns:suki="https://github.com/kikipoulet/SukiUI"
+        xmlns:util="using:Prolizy2.Utilities">
     <Design.PreviewWith>
         <Border Width="360" Padding="15">
             <controls:HomeCardShell Title="Prochain cours"
@@ -17,8 +18,8 @@
             <ControlTemplate>
                 <suki:GlassCard x:CompileBindings="False"
                                 IsInteractive="{TemplateBinding IsInteractive}"
-                                Command="{TemplateBinding Command}"
-                                CommandParameter="{TemplateBinding CommandParameter}"
+                                util:TappedCommand.Command="{TemplateBinding Command}"
+                                util:TappedCommand.CommandParameter="{TemplateBinding CommandParameter}"
                                 Padding="{TemplateBinding Padding}"
                                 CornerRadius="{TemplateBinding CornerRadius}"
                                 HorizontalAlignment="Stretch"
@@ -72,6 +73,7 @@
                         <!-- Content -->
                         <ContentPresenter Grid.Row="2"
                                           Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
                                           HorizontalAlignment="Stretch"
                                           VerticalAlignment="Stretch" />
 

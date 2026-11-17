@@ -8,31 +8,15 @@ using Prolizy2.ViewModels.Common;
 
 namespace Prolizy2.ViewModels.Tabs.Settings;
 
-/// <summary>A home-card kind offered by the "add a card" list.</summary>
 public sealed class HomeCardTypeOption
 {
     public HomeCardTypeOption(HomeCardType type) => Type = type;
 
     public HomeCardType Type { get; }
 
-    public string Title => Type switch
-    {
-        HomeCardType.NextCourse => LangViewModel.Translate("HomeCardTypeNextCourse"),
-        HomeCardType.BulletinOverview => LangViewModel.Translate("HomeCardTypeOverview"),
-        HomeCardType.EvaluationDetail => LangViewModel.Translate("HomeCardTypeEvaluation"),
-        _ => LangViewModel.Translate("HomeCardTypeUnits")
-    };
-
-    public string Icon => Type switch
-    {
-        HomeCardType.NextCourse => "CalendarClock",
-        HomeCardType.BulletinOverview => "GraduationCap",
-        HomeCardType.EvaluationDetail => "NotebookPen",
-        _ => "Layers"
-    };
+    public string Title => HomeCardTypeLabelConverter.Translate(Type);
 }
 
-/// <summary>A semester choice for the overview card.</summary>
 public sealed class SemesterChoice
 {
     public SemesterChoice(string? id, string label)
@@ -47,23 +31,19 @@ public sealed class SemesterChoice
     public string Label { get; }
 }
 
-/// <summary>A resource / SAÉ choice for the evaluation card.</summary>
 public sealed class EvaluationChoice
 {
-    public EvaluationChoice(string code, string label, string kind)
+    public EvaluationChoice(string code, string label)
     {
         Code = code;
         Label = string.IsNullOrEmpty(label) ? code : label;
-        Kind = kind;
     }
 
     public string Code { get; }
     public string Label { get; }
-    public string Kind { get; }
     public string Display => $"{Code} · {Label}";
 }
 
-/// <summary>A teaching-unit choice for the unit-list card.</summary>
 public sealed class UnitChoice
 {
     public UnitChoice(string code, string name)
@@ -79,92 +59,69 @@ public sealed class UnitChoice
 
 #region Converters
 
-/// <summary>Translates a <see cref="HomeCardType"/> into its localised label.</summary>
 public sealed class HomeCardTypeLabelConverter : IValueConverter
 {
     public static readonly HomeCardTypeLabelConverter Instance = new();
 
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public static string Translate(HomeCardType type) => type switch
     {
-        return value is HomeCardType type
-            ? type switch
-            {
-                HomeCardType.NextCourse => LangViewModel.Translate("HomeCardTypeNextCourse"),
-                HomeCardType.BulletinOverview => LangViewModel.Translate("HomeCardTypeOverview"),
-                HomeCardType.EvaluationDetail => LangViewModel.Translate("HomeCardTypeEvaluation"),
-                _ => LangViewModel.Translate("HomeCardTypeUnits")
-            }
-            : value?.ToString() ?? string.Empty;
-    }
+        HomeCardType.NextCourse => LangViewModel.Translate("HomeCardTypeNextCourse"),
+        HomeCardType.BulletinOverview => LangViewModel.Translate("HomeCardTypeOverview"),
+        HomeCardType.EvaluationDetail => LangViewModel.Translate("HomeCardTypeEvaluation"),
+        _ => LangViewModel.Translate("HomeCardTypeUnits")
+    };
+
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is HomeCardType type ? Translate(type) : value?.ToString() ?? string.Empty;
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         throw new NotSupportedException();
 }
 
-/// <summary>Bidirectional converter between a <see cref="HomeCardSize"/> and "half"/"full".</summary>
+/// <summary>Maps a radio button (parameter "half" / "full") to a <see cref="HomeCardSize"/>.</summary>
 public sealed class HomeCardSizeConverter : IValueConverter
 {
     public static readonly HomeCardSizeConverter Instance = new();
 
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        if (value is not HomeCardSize size)
-            return false;
+    private static HomeCardSize FromParameter(object? parameter) =>
+        parameter is "full" ? HomeCardSize.Full : HomeCardSize.Half;
 
-        return size == (parameter is string s && s == "full" ? HomeCardSize.Full : HomeCardSize.Half);
-    }
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is HomeCardSize size && size == FromParameter(parameter);
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        if (value is not bool checkedValue)
-            return BindingOperations.DoNothing;
-
-        var isFull = parameter is string s && s == "full";
-        return checkedValue ? (isFull ? HomeCardSize.Full : HomeCardSize.Half)
-                            : (isFull ? HomeCardSize.Half : HomeCardSize.Full);
-    }
+    // Only the radio being checked writes back; the one being unchecked must not
+    // overwrite the value its sibling just set.
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is true ? FromParameter(parameter) : BindingOperations.DoNothing;
 }
 
-/// <summary>Bidirectional converter between a <see cref="HomeCardVariant"/> and "classic"/"compact".</summary>
+/// <summary>Maps a radio button (parameter "classic" / "compact") to a <see cref="HomeCardVariant"/>.</summary>
 public sealed class HomeCardVariantConverter : IValueConverter
 {
     public static readonly HomeCardVariantConverter Instance = new();
 
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        if (value is not HomeCardVariant variant)
-            return false;
+    private static HomeCardVariant FromParameter(object? parameter) =>
+        parameter is "compact" ? HomeCardVariant.Compact : HomeCardVariant.Classic;
 
-        return variant == (parameter is string s && s == "compact" ? HomeCardVariant.Compact : HomeCardVariant.Classic);
-    }
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is HomeCardVariant variant && variant == FromParameter(parameter);
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        if (value is not bool checkedValue)
-            return BindingOperations.DoNothing;
-
-        var isCompact = parameter is string s && s == "compact";
-        return checkedValue ? (isCompact ? HomeCardVariant.Compact : HomeCardVariant.Classic)
-                            : (isCompact ? HomeCardVariant.Classic : HomeCardVariant.Compact);
-    }
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is true ? FromParameter(parameter) : BindingOperations.DoNothing;
 }
 
-/// <summary>True when a <see cref="HomeCardType"/> is one of a given set of kinds.</summary>
 public sealed class CardTypeCheckConverter : IValueConverter
 {
     private readonly HashSet<HomeCardType> _types;
 
     public CardTypeCheckConverter(params HomeCardType[] types) => _types = new HashSet<HomeCardType>(types);
 
-    /// <summary>True for any card that shows a picker (semester, resource, unit).</summary>
     public static readonly CardTypeCheckConverter Pickers = new(
         HomeCardType.BulletinOverview, HomeCardType.EvaluationDetail, HomeCardType.UnitList);
 
     public static readonly CardTypeCheckConverter Semester = new(HomeCardType.BulletinOverview);
     public static readonly CardTypeCheckConverter Evaluation = new(HomeCardType.EvaluationDetail);
     public static readonly CardTypeCheckConverter Unit = new(HomeCardType.UnitList);
-
-    /// <summary>True for cards whose row count can be configured.</summary>
     public static readonly CardTypeCheckConverter List = new(HomeCardType.EvaluationDetail, HomeCardType.UnitList);
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>

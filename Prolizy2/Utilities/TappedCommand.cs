@@ -57,7 +57,11 @@ public static class TappedCommand
         var command = GetCommand(element);
         var parameter = GetCommandParameter(element);
 
-        if (command?.CanExecute(parameter) == true)
-            command.Execute(parameter);
+        if (command?.CanExecute(parameter) != true)
+            return;
+
+        // Consumed: a TappedCommand nested in another one must not trigger both.
+        e.Handled = true;
+        command.Execute(parameter);
     }
 }

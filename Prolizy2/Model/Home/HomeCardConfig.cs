@@ -4,13 +4,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Prolizy2.Model.Home;
 
-/// <summary>
-/// A single user-placed card on the home screen: what it shows, how wide it is,
-/// and the per-kind options (chosen resource, bulletin semester, …).
-/// </summary>
 public partial class HomeCardConfig : ObservableObject
 {
-    /// <summary>Stable identifier used to match the saved configuration.</summary>
     public string Id { get; init; } = Guid.NewGuid().ToString("N");
 
     [ObservableProperty] private HomeCardType _type;
@@ -23,23 +18,18 @@ public partial class HomeCardConfig : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsCompact))]
     private HomeCardVariant _variant = HomeCardVariant.Classic;
 
-    /// <summary>Code of the chosen resource / SAÉ — <see cref="HomeCardType.EvaluationDetail"/>.</summary>
     [ObservableProperty] private string? _groupCode;
 
-    /// <summary><c>formsemestre_id</c> of the bulletin semester to display (null = current).</summary>
     [ObservableProperty] private string? _semesterId;
 
-    /// <summary>Code of the chosen teaching unit (null = show the full list) — <see cref="HomeCardType.UnitList"/>.</summary>
     [ObservableProperty] private string? _unitCode;
 
-    /// <summary>Number of rows shown by the list-like cards.</summary>
     [ObservableProperty] private int _maxItems = 4;
 
     public bool IsFullWidth => Size == HomeCardSize.Full;
 
     public bool IsCompact => Variant == HomeCardVariant.Compact;
 
-    /// <summary>Clones this card, used when the settings page adds a new one.</summary>
     public HomeCardConfig Clone() => new()
     {
         Id = Id,
@@ -52,9 +42,6 @@ public partial class HomeCardConfig : ObservableObject
         MaxItems = MaxItems
     };
 
-    // ---- Persistence DTO -------------------------------------------------
-
-    /// <summary>Flat, serialisable form of the configuration list.</summary>
     public sealed class Dto
     {
         public string Id { get; set; } = string.Empty;
@@ -91,7 +78,6 @@ public partial class HomeCardConfig : ObservableObject
         MaxItems = MaxItems
     };
 
-    /// <summary>The cards shown on first launch, before the user customises them.</summary>
     public static IReadOnlyList<HomeCardConfig> Defaults() => new List<HomeCardConfig>
     {
         new() { Type = HomeCardType.NextCourse, Size = HomeCardSize.Full },

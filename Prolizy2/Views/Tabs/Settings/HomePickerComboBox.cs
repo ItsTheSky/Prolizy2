@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using Avalonia;
@@ -8,43 +10,40 @@ using Avalonia.Controls;
 namespace Prolizy2.Views.Tabs.Settings;
 
 /// <summary>
-/// ComboBox bound to one of the picker lists of the home settings page
-/// (semesters, resources/SAÉs, units). It maps the selected item back to the
-/// plain string stored on the card (a semester id, a group code, a unit code),
-/// so the card configuration stays free of any UI type.
-///
-/// The choices come from <see cref="ItemsControl.ItemsSource"/> and are turned
-/// into display rows (<see cref="HomePickerRow"/>) so the ComboBox can show a
-/// readable label without a data template.
+/// ComboBox that maps the picked choice back to a plain string key (semester id,
+/// group code, unit code) so the card configuration stays free of UI types.
 /// </summary>
 public class HomePickerComboBox : ComboBox
 {
-    /// <summary>Property of the choices holding the key stored on the card.</summary>
+    public static readonly StyledProperty<IEnumerable?> ChoicesProperty =
+        AvaloniaProperty.Register<HomePickerComboBox, IEnumerable?>(nameof(Choices));
+
     public static readonly StyledProperty<string?> KeyPathProperty =
         AvaloniaProperty.Register<HomePickerComboBox, string?>(nameof(KeyPath));
 
-    /// <summary>Property of the choices holding the text to display.</summary>
     public static readonly StyledProperty<string?> DisplayPathProperty =
         AvaloniaProperty.Register<HomePickerComboBox, string?>(nameof(DisplayPath));
 
-    /// <summary>The key currently selected — two-way bound to a card option.</summary>
     public static readonly StyledProperty<string?> SelectedKeyProperty =
         AvaloniaProperty.Register<HomePickerComboBox, string?>(
             nameof(SelectedKey),
             defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
 
+    private List<HomePickerRow> _rows = new();
+    private INotifyCollectionChanged? _observedChoices;
     private bool _isSyncing;
 
     static HomePickerComboBox()
     {
-        KeyPathProperty.Changed.AddClassHandler<HomePickerComboBox>(OnChanged);
-        DisplayPathProperty.Changed.AddClassHandler<HomePickerComboBox>(OnChanged);
-        SelectedKeyProperty.Changed.AddClassHandler<HomePickerComboBox>(OnSelectedKeyChanged);
-        SelectionChangedEvent.AddClassHandler<HomePickerComboBox>(OnSelectionChanged);
+        SelectionChangedEvent.AddClassHandler<HomePickerComboBox>((combo, _) => combo.OnRowSelected());
+    }
 
-        // Re-read the choices when the source collection is swapped.
-        ItemsControl.ItemsSourceProperty.Changed.AddClassHandler<HomePickerComboBox>(
-            (combo, _) => combo.RebuildRows());
+    protected override Type StyleKeyOverride => typeof(ComboBox);
+
+    public IEnumerable? Choices
+    {
+        get => GetValue(ChoicesProperty);
+        set => SetValue(ChoicesProperty, value);
     }
 
     public string? KeyPath
@@ -65,30 +64,47 @@ public class HomePickerComboBox : ComboBox
         set => SetValue(SelectedKeyProperty, value);
     }
 
-    /// <summary>The rows actually shown, one per choice.</summary>
-    private List<HomePickerRow>? _rows;
-
-    private static void OnChanged(HomePickerComboBox combo, AvaloniaPropertyChangedEventArgs _) =>
-        combo.RebuildRows();
-
-    private static void OnSelectedKeyChanged(HomePickerComboBox combo, AvaloniaPropertyChangedEventArgs _) =>
-        combo.SyncFromKey();
-
-    private static void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
-        if (sender is not HomePickerComboBox combo || combo._isSyncing)
+        base.OnPropertyChanged(change);
+
+        if (change.Property == ChoicesProperty)
+        {
+            if (_observedChoices is not null)
+                _observedChoices.CollectionChanged -= OnChoicesCollectionChanged;
+
+            _observedChoices = Choices as INotifyCollectionChanged;
+
+            if (_observedChoices is not null)
+                _observedChoices.CollectionChanged += OnChoicesCollectionChanged;
+
+            RebuildRows();
+        }
+        else if (change.Property == KeyPathProperty || change.Property == DisplayPathProperty)
+        {
+            RebuildRows();
+        }
+        else if (change.Property == SelectedKeyProperty && !_isSyncing)
+        {
+            SyncFromKey();
+        }
+    }
+
+    private void OnChoicesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildRows();
+
+    private void OnRowSelected()
+    {
+        if (_isSyncing)
             return;
 
-        var key = (combo.SelectedItem as HomePickerRow)?.Key;
-
-        combo._isSyncing = true;
+        _isSyncing = true;
         try
         {
-            combo.SetCurrentValue(SelectedKeyProperty, key);
+            SetCurrentValue(SelectedKeyProperty, (SelectedItem as HomePickerRow)?.Key);
         }
         finally
         {
-            combo._isSyncing = false;
+            _isSyncing = false;
         }
     }
 
@@ -97,18 +113,20 @@ public class HomePickerComboBox : ComboBox
         var keyPath = KeyPath;
         var displayPath = DisplayPath;
 
-        _rows = ItemsSource?
-            .Cast<object>()
-            .Where(item => item is not null)
+        _rows = Choices?
+            .Cast<object?>()
+            .OfType<object>()
             .Select(item => new HomePickerRow(
                 keyPath is null ? item.ToString() : GetMember(item, keyPath),
-                displayPath is null ? item.ToString() ?? string.Empty : GetMember(item, displayPath) ?? string.Empty))
+                (displayPath is null ? item.ToString() : GetMember(item, displayPath)) ?? string.Empty))
             .ToList() ?? new List<HomePickerRow>();
 
+        // Swapping the rows clears the selection: the key must survive it, it is
+        // re-applied right after.
         _isSyncing = true;
         try
         {
-            base.ItemsSource = _rows;
+            ItemsSource = _rows;
         }
         finally
         {
@@ -120,20 +138,12 @@ public class HomePickerComboBox : ComboBox
 
     private void SyncFromKey()
     {
-        if (_rows is null)
-            return;
-
         var key = SelectedKey;
 
         _isSyncing = true;
         try
         {
-            var index = key is null
-                ? -1
-                : _rows.FindIndex(row => string.Equals(row.Key, key, StringComparison.Ordinal));
-
-            if (index >= 0 || SelectedIndex != -1)
-                SelectedIndex = index;
+            SelectedIndex = _rows.FindIndex(row => string.Equals(row.Key, key, StringComparison.Ordinal));
         }
         finally
         {
@@ -148,7 +158,6 @@ public class HomePickerComboBox : ComboBox
             ?.ToString();
 }
 
-/// <summary>A row of a <see cref="HomePickerComboBox"/>: the stored key and its label.</summary>
 public sealed class HomePickerRow
 {
     public HomePickerRow(string? key, string label)

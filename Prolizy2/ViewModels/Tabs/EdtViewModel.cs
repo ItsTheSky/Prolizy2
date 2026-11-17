@@ -277,10 +277,6 @@ public partial class EdtViewModel : ViewModelBase
 
     #region Cache access
 
-    /// <summary>
-    /// The cached weeks, flattened and sorted by start time. Used by the home
-    /// cards, which must not own a second copy of the week cache.
-    /// </summary>
     public List<ScheduleItem> GetCachedItems() => _cacheService.GetCachedItems();
 
     #endregion
@@ -434,7 +430,6 @@ public partial class EdtViewModel : ViewModelBase
 
         var cache = _cacheService.GetCachedItems();
         home.NextScheduleItem = EdtUtilities.FindNextOrCurrentItem(cache);
-        // The "next course" cards read the same cache: keep them in sync.
         home.RefreshNextCourseCards();
 
         Logs.Debug("EDT: Updated home next course: " + (home.NextScheduleItem?.Subject ?? "null") + $"Got {cache.Count} items in cache.");

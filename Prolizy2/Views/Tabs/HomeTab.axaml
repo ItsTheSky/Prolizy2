@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:home="clr-namespace:Prolizy2.Views.Home"
              xmlns:vmd="clr-namespace:Prolizy2.ViewModels.Tabs"
+             xmlns:homeVm="clr-namespace:Prolizy2.ViewModels.Home"
+             xmlns:shell="clr-namespace:Prolizy2.Styles.Controls.Home"
              mc:Ignorable="d"
              d:DesignWidth="450" d:DesignHeight="800"
              x:DataType="vmd:HomeViewModel"
@@ -12,7 +14,7 @@
     <Grid RowDefinitions="Auto,*" RowSpacing="10">
 
         <!-- Title bar -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8"
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="8"
               Margin="0,4,0,0">
 
             <StackPanel Grid.Column="0" VerticalAlignment="Center">
@@ -35,23 +37,31 @@
                 <LucideIcon Kind="Settings2" Size="20" />
             </Button>
 
-            <Button Grid.Column="2"
-                    Classes="Flat"
-                    Padding="10"
-                    VerticalAlignment="Center"
-                    Command="{Binding EditLayoutCommand}"
-                    ToolTip.Tip="{DynamicResource HomeSettingsAddCard}">
-                <LucideIcon Kind="Plus" Size="20" />
-            </Button>
-
         </Grid>
 
         <!-- Cards -->
         <ScrollViewer Grid.Row="1"
                       HorizontalScrollBarVisibility="Disabled"
                       Padding="0,0,0,20">
-            <home:HomeCardPanel ItemsSource="{Binding Cards}"
-                                ItemTemplate="{home:HomeCardTemplate}" />
+            <ItemsControl ItemsSource="{Binding Cards}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <home:HomeCardPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="homeVm:HomeCardViewModel">
+                        <shell:HomeCardShell Title="{Binding Title}"
+                                             Hint="{Binding Hint}"
+                                             Icon="{Binding Icon}"
+                                             AccentHex="{Binding AccentHex}"
+                                             IsCompact="{Binding IsCompact}"
+                                             Command="{Binding OpenCommand}"
+                                             Content="{Binding Content}"
+                                             ContentTemplate="{home:HomeCardTemplate}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
 
     </Grid>

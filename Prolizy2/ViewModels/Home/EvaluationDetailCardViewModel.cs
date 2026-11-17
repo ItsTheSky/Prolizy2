@@ -1,16 +1,13 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Prolizy2.Model.Bulletin;
-using Prolizy2.Utilities;
 using Prolizy2.ViewModels.Common;
 
-namespace Prolizy2.ViewModels.Tabs;
+namespace Prolizy2.ViewModels.Home;
 
-/// <summary>
-/// Card showing the grades of one resource or one SAÉ: its average plus the
-/// list of its evaluations.
-/// </summary>
 public partial class EvaluationDetailCardViewModel : ViewModelBase
 {
     public EvaluationDetailCardViewModel(EvaluationGroupInfo? group, int maxItems)
@@ -19,12 +16,14 @@ public partial class EvaluationDetailCardViewModel : ViewModelBase
         Apply(group);
     }
 
-    /// <summary>Maximum number of evaluations listed before the card truncates.</summary>
     public int MaxItems { get; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasGroup))]
     [NotifyPropertyChangedFor(nameof(HasNoGroup))]
+    [NotifyPropertyChangedFor(nameof(Code))]
+    [NotifyPropertyChangedFor(nameof(Label))]
+    [NotifyPropertyChangedFor(nameof(KindLabel))]
     private EvaluationGroupInfo? _group;
 
     [ObservableProperty] private GradeValue? _average;
@@ -36,7 +35,6 @@ public partial class EvaluationDetailCardViewModel : ViewModelBase
     [NotifyPropertyChangedFor(nameof(HasMore))]
     private int _hiddenCount;
 
-    /// <summary>Code of the group (e.g. <c>R2.01</c>, <c>SAE2.01</c>).</summary>
     public string Code => Group?.Code ?? string.Empty;
 
     public string Label => Group?.Label ?? string.Empty;
@@ -48,42 +46,29 @@ public partial class EvaluationDetailCardViewModel : ViewModelBase
     public bool HasMore => HiddenCount > 0;
 
     public string MoreCountLabel => string.Format(
-        System.Globalization.CultureInfo.CurrentCulture,
+        CultureInfo.CurrentCulture,
         LangViewModel.Translate("HomeCardMoreEvaluations"), HiddenCount);
 
-    /// <summary>Kind label — "Ressource" / "SAÉ".</summary>
-    public string KindLabel => Group?.Kind switch
+    public string KindLabel => TranslateKind(Group?.Kind);
+
+    public static string TranslateKind(BulletinEntryKind? kind) => kind switch
     {
         BulletinEntryKind.Sae => LangViewModel.Translate("HomeCardKindSae"),
         BulletinEntryKind.Portfolio => LangViewModel.Translate("HomeCardKindPortfolio"),
         _ => LangViewModel.Translate("HomeCardKindResource")
     };
 
-    public void Apply(EvaluationGroupInfo? group)
+    private void Apply(EvaluationGroupInfo? group)
     {
-        if (group is null)
-        {
-            Group = null;
-            Average = null;
-            Evaluations = new ObservableCollection<EvaluationInfo>();
-            HiddenCount = 0;
-            return;
-        }
-
         Group = group;
+
+        if (group is null)
+            return;
+
         Average = group.Average;
 
-        var all = group.Evaluations;
-        var shown = Math.Min(all.Count, MaxItems);
-        var visible = new EvaluationInfo[shown];
-        for (var i = 0; i < shown; i++)
-            visible[i] = all[i];
-
-        Evaluations = new ObservableCollection<EvaluationInfo>(visible);
-        HiddenCount = all.Count - shown;
-
-        OnPropertyChanged(nameof(Code));
-        OnPropertyChanged(nameof(Label));
-        OnPropertyChanged(nameof(KindLabel));
+        var shown = Math.Min(group.Evaluations.Count, MaxItems);
+        Evaluations = new ObservableCollection<EvaluationInfo>(group.Evaluations.Take(shown));
+        HiddenCount = group.Evaluations.Count - shown;
     }
 }

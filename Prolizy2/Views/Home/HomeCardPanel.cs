@@ -2,252 +2,113 @@ using System;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
-using Avalonia.Layout;
+using Prolizy2.ViewModels.Home;
 
 namespace Prolizy2.Views.Home;
 
 /// <summary>
-/// Lays its items out like a two-column grid: an item is wide (spans both
-/// columns) when its <see cref="ViewModels.Tabs.HomeCardViewModel.IsFullWidth"/>
-/// is true. Rows are implicit — a row is as tall as its tallest card.
-///
-/// Every item is wrapped in its own <see cref="ContentPresenter"/> kept in a
-/// plain <see cref="Panel"/> owned by this control, so no <c>ItemsPresenter</c>
-/// template is involved and the two-column flow stays under our control.
+/// Two-column flow used as the items panel of the home cards: a full-width card
+/// takes a whole row, half-width cards are paired, and both cards of a row get
+/// the height of the tallest one.
 /// </summary>
-public class HomeCardPanel : ItemsControl
+public class HomeCardPanel : Panel
 {
     private const double ColumnGap = 10d;
     private const double RowGap = 10d;
 
-    private readonly Panel _host = new();
-    private ContentPresenter[] _presenters = Array.Empty<ContentPresenter>();
+    private static bool IsWide(Control child) => child.DataContext is HomeCardViewModel { IsFullWidth: true };
 
-    protected override void OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs e)
+    private List<Control[]> BuildRows()
     {
-        base.OnApplyTemplate(e);
+        var rows = new List<Control[]>();
+        Control? pending = null;
 
-        if (!LogicalChildren.Contains(_host))
-            LogicalChildren.Add(_host);
-    }
-
-    protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey)
-    {
-        return new ContentPresenter
+        foreach (var child in Children)
         {
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Top,
-            HorizontalContentAlignment = HorizontalAlignment.Stretch,
-            VerticalContentAlignment = VerticalAlignment.Top
-        };
-    }
+            if (!child.IsVisible)
+                continue;
 
-    /// <summary>
-    /// True when the presented card spans both columns. The shell (not the
-    /// presenter) carries the card, so it is read on the shell's DataContext.
-    /// </summary>
-    private static bool IsWide(Control child) =>
-        child is ContentPresenter { Content: Control shell }
-        && shell.DataContext is ViewModels.Tabs.HomeCardViewModel card
-        && card.IsFullWidth;
-
-    /// <summary>
-    /// Creates the presenters for the current items (or reuses the existing
-    /// ones) and refreshes their data context / content.
-    /// </summary>
-    private void SyncPresenters()
-    {
-        var count = Items.Count;
-
-        if (_presenters.Length != count)
-        {
-            _host.Children.Clear();
-            _presenters = new ContentPresenter[count];
-
-            for (var i = 0; i < count; i++)
+            if (IsWide(child))
             {
-                var presenter = new ContentPresenter
+                if (pending is not null)
                 {
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                    VerticalContentAlignment = VerticalAlignment.Top
-                };
+                    rows.Add(new[] { pending });
+                    pending = null;
+                }
 
-                _presenters[i] = presenter;
-                _host.Children.Add(presenter);
+                rows.Add(new[] { child });
+            }
+            else if (pending is null)
+            {
+                pending = child;
+            }
+            else
+            {
+                rows.Add(new[] { pending, child });
+                pending = null;
             }
         }
 
-        for (var i = 0; i < count; i++)
-        {
-            var item = Items[i];
-            var presenter = _presenters[i];
+        if (pending is not null)
+            rows.Add(new[] { pending });
 
-            // The presenter shows the card itself (a shell, built by the item
-            // template). Re-assigning it rebuilds the card when its view-model
-            // is replaced, so the header and the body stay in sync.
-            if (!ReferenceEquals(presenter.Content, item))
-                presenter.Content = item;
+        return rows;
+    }
 
-            if (!ReferenceEquals(presenter.DataContext, item))
-                presenter.DataContext = item;
-        }
+    private static double HalfWidth(double width) =>
+        double.IsInfinity(width) ? double.PositiveInfinity : Math.Max(0d, (width - ColumnGap) / 2d);
+
+    private static double RowHeight(Control[] row)
+    {
+        var height = 0d;
+        foreach (var child in row)
+            height = Math.Max(height, child.DesiredSize.Height);
+        return height;
     }
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        SyncPresenters();
+        var halfWidth = HalfWidth(availableSize.Width);
+        var desiredWidth = 0d;
 
-        var hasBoundedWidth = !double.IsInfinity(availableSize.Width);
-        var halfWidth = hasBoundedWidth
-            ? Math.Max(0d, (availableSize.Width - ColumnGap) / 2d)
-            : double.PositiveInfinity;
-
-        var y = 0d;
-        var rowHeight = 0d;
-        var column = 0;
-
-        foreach (var presenter in _presenters)
+        foreach (var child in Children)
         {
-            var wide = IsWide(presenter);
-
-            // A wide card always starts a new row; two half cards share one.
-            if (wide && column == 1)
-            {
-                y += rowHeight + RowGap;
-                rowHeight = 0d;
-                column = 0;
-            }
-
-            var childWidth = wide || !hasBoundedWidth ? availableSize.Width : halfWidth;
-            // Measure with an infinite height so a card never gets clipped by
-            // the viewport: the scroll viewer clips the panel, not the cards.
-            presenter.Measure(new Size(childWidth, double.PositiveInfinity));
-
-            if (wide)
-            {
-                y += presenter.DesiredSize.Height + RowGap;
-                rowHeight = 0d;
-                column = 0;
-                continue;
-            }
-
-            rowHeight = Math.Max(rowHeight, presenter.DesiredSize.Height);
-            column++;
-
-            if (column == 2)
-            {
-                y += rowHeight + RowGap;
-                rowHeight = 0d;
-                column = 0;
-            }
+            var width = IsWide(child) ? availableSize.Width : halfWidth;
+            child.Measure(new Size(width, double.PositiveInfinity));
+            desiredWidth = Math.Max(desiredWidth, child.DesiredSize.Width);
         }
 
-        if (column == 1)
-            y += rowHeight;
+        var rows = BuildRows();
+        var height = 0d;
+        foreach (var row in rows)
+            height += RowHeight(row);
+        height += RowGap * Math.Max(0, rows.Count - 1);
 
-        return new Size(availableSize.Width, y);
+        return new Size(double.IsInfinity(availableSize.Width) ? desiredWidth : availableSize.Width, height);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var halfWidth = Math.Max(0d, (finalSize.Width - ColumnGap) / 2d);
-
-        var heights = ComputeRowHeights();
-
+        var halfWidth = HalfWidth(finalSize.Width);
         var y = 0d;
-        var rowHeight = 0d;
-        var column = 0;
-        var rowIndex = 0;
 
-        foreach (var presenter in _presenters)
+        foreach (var row in BuildRows())
         {
-            var wide = IsWide(presenter);
+            var height = RowHeight(row);
 
-            if (wide && column == 1)
+            if (IsWide(row[0]))
             {
-                y += rowHeight + RowGap;
-                rowHeight = 0d;
-                column = 0;
+                row[0].Arrange(new Rect(0d, y, finalSize.Width, height));
+            }
+            else
+            {
+                for (var column = 0; column < row.Length; column++)
+                    row[column].Arrange(new Rect(column * (halfWidth + ColumnGap), y, halfWidth, height));
             }
 
-            var width = wide ? finalSize.Width : halfWidth;
-            var x = wide ? 0d : column * (halfWidth + ColumnGap);
-
-            // Both cards of a row are stretched to the tallest one so the two
-            // columns stay visually aligned.
-            var height = wide || rowIndex >= heights.Count
-                ? presenter.DesiredSize.Height
-                : heights[rowIndex];
-            presenter.Arrange(new Rect(x, y, width, height));
-            rowHeight = Math.Max(rowHeight, presenter.DesiredSize.Height);
-
-            if (wide)
-            {
-                y += rowHeight + RowGap;
-                rowHeight = 0d;
-                column = 0;
-                continue;
-            }
-
-            column++;
-            if (column == 2)
-            {
-                y += rowHeight + RowGap;
-                rowHeight = 0d;
-                column = 0;
-                rowIndex++;
-            }
+            y += height + RowGap;
         }
 
         return finalSize;
-    }
-
-    /// <summary>
-    /// The height of each implicit row: the tallest of its cards. Computed from
-    /// the last measure pass so a row's two cards can be stretched equally.
-    /// </summary>
-    private IReadOnlyList<double> ComputeRowHeights()
-    {
-        var heights = new List<double>();
-        double current = 0d;
-        var column = 0;
-
-        foreach (var presenter in _presenters)
-        {
-            var wide = IsWide(presenter);
-
-            if (wide && column == 1)
-            {
-                heights.Add(current);
-                current = 0d;
-                column = 0;
-            }
-
-            if (wide)
-            {
-                heights.Add(presenter.DesiredSize.Height);
-                current = 0d;
-                column = 0;
-                continue;
-            }
-
-            current = Math.Max(current, presenter.DesiredSize.Height);
-            column++;
-
-            if (column == 2)
-            {
-                heights.Add(current);
-                current = 0d;
-                column = 0;
-            }
-        }
-
-        if (column == 1)
-            heights.Add(current);
-
-        return heights;
     }
 }

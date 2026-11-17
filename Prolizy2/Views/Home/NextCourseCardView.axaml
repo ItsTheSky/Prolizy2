@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:model="clr-namespace:Prolizy2.Model"
-             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Tabs"
+             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Home"
              xmlns:util="clr-namespace:Prolizy2.Utilities"
              mc:Ignorable="d"
              d:DesignWidth="360" d:DesignHeight="240"

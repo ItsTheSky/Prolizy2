@@ -1,39 +1,32 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Prolizy2.Model.Home;
+using Prolizy2.ViewModels.Bulletin;
 using SukiUI.Dialogs;
 using Prolizy2.Utilities;
 using Prolizy2.ViewModels.Common;
 
 namespace Prolizy2.ViewModels.Tabs.Settings;
 
-/// <summary>
-/// Settings sub-page that edits the home layout: add / remove / reorder cards and
-/// tune the options of each of them (width, style, resource, semester, rows).
-/// </summary>
 public partial class HomeSettingsViewModel : ViewModelBase
 {
     public MainViewModel MainVm { get; }
     public SettingsViewModel SettingsView { get; }
 
-    /// <summary>The cards being edited — a working copy until the user saves.</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasNoCards))]
-    private ObservableCollection<HomeCardConfig> _cards = new();
+    /// <summary>Working copy of the layout, written back on save only.</summary>
+    public ObservableCollection<HomeCardConfig> Cards { get; } = new();
 
-    /// <summary>Cards offered by the "add a card" list.</summary>
     public ObservableCollection<HomeCardTypeOption> AvailableTypes { get; } = new();
 
-    /// <summary>Semesters offered by the bulletin overview card.</summary>
     public ObservableCollection<SemesterChoice> Semesters { get; } = new();
 
-    /// <summary>Resources and SAÉs offered by the evaluation card.</summary>
     public ObservableCollection<EvaluationChoice> Groups { get; } = new();
 
-    /// <summary>Teaching units offered by the unit-list card.</summary>
     public ObservableCollection<UnitChoice> Units { get; } = new();
 
     [ObservableProperty] private bool _isDirty;
@@ -46,29 +39,54 @@ public partial class HomeSettingsViewModel : ViewModelBase
         SettingsView = settingsViewModel;
 
         foreach (var config in HomeLayout.Cards)
-            Cards.Add(config.Clone());
+            Track(config.Clone());
+
+        foreach (var value in Enum.GetValues<HomeCardType>())
+            AvailableTypes.Add(new HomeCardTypeOption(value));
 
         RefreshChoices();
-        Cards.CollectionChanged += (_, _) =>
-        {
-            IsDirty = true;
-            OnPropertyChanged(nameof(HasNoCards));
-        };
+        Cards.CollectionChanged += OnCardsChanged;
 
-        // The bulletin may still be loading when the page opens (first launch,
-        // or credentials just saved): pull it and rebuild the pickers.
         _ = LoadBulletinAsync();
+    }
+
+    private void Track(HomeCardConfig card)
+    {
+        card.PropertyChanged += OnCardPropertyChanged;
+        Cards.Add(card);
+    }
+
+    private void OnCardsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems is not null)
+        {
+            foreach (HomeCardConfig card in e.NewItems)
+            {
+                card.PropertyChanged -= OnCardPropertyChanged;
+                card.PropertyChanged += OnCardPropertyChanged;
+            }
+        }
+
+        IsDirty = true;
+        OnPropertyChanged(nameof(HasNoCards));
+    }
+
+    private void OnCardPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is HomeCardConfig card && Cards.Contains(card))
+            IsDirty = true;
     }
 
     private async Task LoadBulletinAsync()
     {
         try
         {
-            if (!MainVm.BulletinViewModel.IsConfigured)
-                await MainVm.BulletinViewModel.LoadAsync();
+            var bulletin = MainVm.BulletinViewModel;
 
-            if (MainVm.BulletinViewModel.Data.Units.Count == 0)
-                return;
+            await WaitUntilLoadedAsync(bulletin);
+
+            if (bulletin.Data.Units.Count == 0)
+                await bulletin.LoadAsync();
 
             RefreshChoices();
         }
@@ -76,6 +94,26 @@ public partial class HomeSettingsViewModel : ViewModelBase
         {
             Logs.Error(ex);
         }
+    }
+
+    private static Task WaitUntilLoadedAsync(BulletinCoreViewModel bulletin)
+    {
+        if (!bulletin.IsLoading)
+            return Task.CompletedTask;
+
+        var done = new TaskCompletionSource();
+
+        void Handler(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(BulletinCoreViewModel.IsLoading) || bulletin.IsLoading)
+                return;
+
+            bulletin.PropertyChanged -= Handler;
+            done.TrySetResult();
+        }
+
+        bulletin.PropertyChanged += Handler;
+        return done.Task;
     }
 
     #region Card list commands
@@ -109,11 +147,9 @@ public partial class HomeSettingsViewModel : ViewModelBase
         if (index < 0 || target < 0 || target >= Cards.Count)
             return;
 
-        Cards.RemoveAt(index);
-        Cards.Insert(target, card);
+        Cards.Move(index, target);
     }
 
-    /// <summary>Restores the default layout in the editor.</summary>
     [RelayCommand]
     private void Reset()
     {
@@ -126,7 +162,6 @@ public partial class HomeSettingsViewModel : ViewModelBase
 
     #region Save / back
 
-    /// <summary>Writes the edited layout back to the shared home layout.</summary>
     [RelayCommand]
     private void Save()
     {
@@ -154,28 +189,23 @@ public partial class HomeSettingsViewModel : ViewModelBase
 
     #endregion
 
-    /// <summary>Re-reads the pickers from the (possibly refreshed) bulletin data.</summary>
-    public void ReloadChoices() => RefreshChoices();
-
     private void RefreshChoices()
     {
-        AvailableTypes.Clear();
-        foreach (var value in Enum.GetValues<HomeCardType>())
-            AvailableTypes.Add(new HomeCardTypeOption(value));
+        var data = MainVm.BulletinViewModel.Data;
 
         Semesters.Clear();
         Semesters.Add(new SemesterChoice(null, LangViewModel.Translate("HomeSettingsSemesterCurrent")));
-        foreach (var semester in MainVm.BulletinViewModel.Data.Semesters)
+        foreach (var semester in data.Semesters)
             Semesters.Add(new SemesterChoice(semester.Id, $"{semester.Code} · {semester.Year}"));
 
         Groups.Clear();
-        foreach (var resource in MainVm.BulletinViewModel.Data.Resources)
-            Groups.Add(new EvaluationChoice(resource.Code, resource.Label, resource.Kind.ToString()));
-        foreach (var sae in MainVm.BulletinViewModel.Data.Saes)
-            Groups.Add(new EvaluationChoice(sae.Code, sae.Label, sae.Kind.ToString()));
+        foreach (var resource in data.Resources)
+            Groups.Add(new EvaluationChoice(resource.Code, resource.Label));
+        foreach (var sae in data.Saes)
+            Groups.Add(new EvaluationChoice(sae.Code, sae.Label));
 
         Units.Clear();
-        foreach (var unit in MainVm.BulletinViewModel.Data.Units)
+        foreach (var unit in data.Units)
             Units.Add(new UnitChoice(unit.Code, unit.Name));
     }
 }

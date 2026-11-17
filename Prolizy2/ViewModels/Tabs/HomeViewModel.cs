@@ -1,27 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
+using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Prolizy2.Model;
+using Prolizy2.Model.Bulletin;
 using Prolizy2.Model.Home;
+using Prolizy2.Services;
+using Prolizy2.Utilities;
 using Prolizy2.ViewModels.Bulletin;
+using Prolizy2.ViewModels.Home;
 
 namespace Prolizy2.ViewModels.Tabs;
 
-/// <summary>
-/// View-model of the home tab. It hosts the user's cards (see
-/// <see cref="HomeCardViewModel"/>) and keeps the legacy
-/// <see cref="NextScheduleItem"/> property alive for the EDT integration.
-///
-/// The cards read the EDT and bulletin view-models, which are created *after*
-/// this one. They are therefore built once those are available (see
-/// <see cref="OnMainViewModelPropertyChanged"/>), never from the constructor.
-/// </summary>
+/// <remarks>
+/// The cards read the EDT and bulletin view-models, which are created after this
+/// one: they are built once those exist (see <see cref="OnMainViewModelPropertyChanged"/>).
+/// </remarks>
 public partial class HomeViewModel : ViewModelBase
 {
     private readonly MainViewModel _mainVm;
     private readonly ObservableCollection<HomeCardViewModel> _cards = new();
+    private readonly Dictionary<string, BulletinData> _semesterSnapshots = new();
+    private readonly HashSet<string> _pendingSnapshots = new();
+    private BulletinCoreViewModel? _bulletin;
     private bool _built;
 
     public HomeViewModel(MainViewModel mainVm)
@@ -30,9 +37,17 @@ public partial class HomeViewModel : ViewModelBase
 
         HomeLayout.LayoutChanged += OnLayoutChanged;
         _mainVm.PropertyChanged += OnMainViewModelPropertyChanged;
+
+        if (Design.IsDesignMode)
+            return;
+
+        // "Dans 20 min" and the ongoing course would otherwise only move when
+        // the EDT cache changes.
+        var clock = new DispatcherTimer { Interval = TimeSpan.FromMinutes(1) };
+        clock.Tick += (_, _) => RefreshNextCourseCards();
+        clock.Start();
     }
 
-    /// <summary>The cards shown on the home screen, in display order.</summary>
     public ObservableCollection<HomeCardViewModel> Cards
     {
         get
@@ -42,20 +57,10 @@ public partial class HomeViewModel : ViewModelBase
         }
     }
 
-    /// <summary>True when no card is configured.</summary>
     public bool HasNoCards => Cards.Count == 0;
 
-    /// <summary>
-    /// Next or ongoing course. The EDT view-model pushes it whenever its week
-    /// cache changes (the Android widget and the home cards read it).
-    /// </summary>
     [ObservableProperty] private ScheduleItem? _nextScheduleItem;
 
-    /// <summary>
-    /// Builds the cards if it has not been done yet. Called by the
-    /// <see cref="Cards"/> getter so an early binding never sees an empty list,
-    /// and at the end of the view-model setup.
-    /// </summary>
     private void EnsureBuilt()
     {
         if (_built)
@@ -65,45 +70,50 @@ public partial class HomeViewModel : ViewModelBase
         Rebuild();
     }
 
-    private HomeCardViewModel CreateCard(HomeCardConfig config)
-    {
-        var card = new HomeCardViewModel(_mainVm, config);
-        card.RebuildContent();
-        return card;
-    }
-
     #region View-model wiring
 
-    /// <summary>
-    /// Hooks the view-models the cards depend on as soon as they exist, and
-    /// refreshes the cards when their data changes.
-    /// </summary>
     private void OnMainViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
-            case nameof(MainViewModel.EdtViewModel) when _mainVm.EdtViewModel is { } edt:
-                // The next-course cards read the EDT cache: pull them up now
-                // that it exists (the first load is still running, they refresh
-                // again when it completes).
+            case nameof(MainViewModel.EdtViewModel) when _mainVm.EdtViewModel is not null:
                 RefreshNextCourseCards();
                 break;
 
-            case nameof(MainViewModel.BulletinViewModel) when _mainVm.BulletinViewModel is { } bulletin:
-                bulletin.PropertyChanged += OnBulletinPropertyChanged;
-                // The bulletin cards need the view-model to exist: build them.
-                Rebuild();
+            case nameof(MainViewModel.BulletinViewModel):
+                if (_bulletin is not null)
+                    _bulletin.PropertyChanged -= OnBulletinPropertyChanged;
+
+                _bulletin = _mainVm.BulletinViewModel;
+                _semesterSnapshots.Clear();
+
+                if (_bulletin is not null)
+                {
+                    _bulletin.PropertyChanged += OnBulletinPropertyChanged;
+                    Rebuild();
+                }
                 break;
         }
     }
 
     private void OnBulletinPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(BulletinCoreViewModel.Data)
-            or nameof(BulletinCoreViewModel.SelectedSemester))
+        if (_bulletin is null)
+            return;
+
+        switch (e.PropertyName)
         {
-            // A refresh keeps the user's layout: only the data is recomputed.
-            RefreshCards();
+            case nameof(BulletinCoreViewModel.Data):
+                _semesterSnapshots.Clear();
+                if (!_bulletin.IsLoading)
+                    RefreshCards();
+                break;
+
+            // A semester switch mutates Data in place once its fetch completes,
+            // without raising Data: the end of the load is the reliable signal.
+            case nameof(BulletinCoreViewModel.IsLoading) when !_bulletin.IsLoading:
+                RefreshCards();
+                break;
         }
     }
 
@@ -111,55 +121,105 @@ public partial class HomeViewModel : ViewModelBase
 
     #endregion
 
-    /// <summary>Rebuilds every card from <see cref="HomeLayout.Cards"/>.</summary>
     public void Rebuild()
     {
         _cards.Clear();
         foreach (var config in HomeLayout.Cards)
-            _cards.Add(CreateCard(config));
+            _cards.Add(new HomeCardViewModel(_mainVm, config));
 
         OnPropertyChanged(nameof(HasNoCards));
     }
 
-    /// <summary>Refreshes the data of every card without recreating them.</summary>
     public void RefreshCards()
     {
         foreach (var card in _cards)
             card.RebuildContent();
     }
 
-    /// <summary>
-    /// Recomputes the "next course" cards only. Called by the EDT view-model
-    /// whenever its week cache changes.
-    /// </summary>
     public void RefreshNextCourseCards()
     {
-        // Nothing to refresh before the first build (it picks the cache up).
+        // The first build picks the cache up by itself.
         if (!_built)
             return;
 
         foreach (var card in _cards)
         {
-            if (card.Config.Type == HomeCardType.NextCourse
-                && card.Content is NextCourseCardViewModel next)
-            {
+            if (card.Content is NextCourseCardViewModel next)
                 next.Refresh();
-            }
         }
     }
 
+    #region Semester snapshots
+
+    /// <summary>
+    /// The transcript of <paramref name="semester"/>: the bulletin tab data when it
+    /// currently holds that semester, otherwise a separately fetched copy. Returns
+    /// null while the copy is loading; the cards are refreshed once it arrives.
+    /// </summary>
+    public BulletinData? GetSemesterData(SemesterInfo semester)
+    {
+        var bulletin = _mainVm.BulletinViewModel;
+        if (bulletin is null || semester.IsFuture)
+            return null;
+
+        if (!bulletin.IsLoading
+            && !bulletin.HasError
+            && string.Equals(bulletin.SelectedSemester?.Id, semester.Id, StringComparison.Ordinal))
+        {
+            return bulletin.Data;
+        }
+
+        if (_semesterSnapshots.TryGetValue(semester.Id, out var snapshot))
+            return snapshot;
+
+        if (!bulletin.IsLoading && bulletin.IsConfigured)
+            _ = LoadSemesterSnapshotAsync(semester.Id);
+
+        return null;
+    }
+
+    private async Task LoadSemesterSnapshotAsync(string semesterId)
+    {
+        if (!int.TryParse(semesterId, NumberStyles.Integer, CultureInfo.InvariantCulture, out var formsemestreId))
+            return;
+
+        if (!_pendingSnapshots.Add(semesterId))
+            return;
+
+        try
+        {
+            var root = await _mainVm.BulletinService.LoadSemesterAsync(formsemestreId);
+            if (root is null)
+                return;
+
+            var data = new BulletinData();
+            BulletinMapper.MapSemesterInto(root, data);
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                _semesterSnapshots[semesterId] = data;
+                RefreshCards();
+            });
+        }
+        catch (Exception ex)
+        {
+            Logs.Error(ex);
+        }
+        finally
+        {
+            _pendingSnapshots.Remove(semesterId);
+        }
+    }
+
+    #endregion
+
     #region Commands
 
-    /// <summary>Opens the page that edits the home layout.</summary>
     [RelayCommand]
     public void EditLayout()
     {
         _mainVm.NavigateTo(typeof(SettingsViewModel));
-        _mainVm.SettingsViewModel.SwitchToPage(
-            new Views.Tabs.Settings.HomeSettingsView
-            {
-                DataContext = new Settings.HomeSettingsViewModel(_mainVm, _mainVm.SettingsViewModel)
-            });
+        _mainVm.SettingsViewModel.MainSettingsViewModel.GoToHome();
     }
 
     [RelayCommand]
@@ -169,10 +229,6 @@ public partial class HomeViewModel : ViewModelBase
             OpenScheduleItem(NextScheduleItem);
     }
 
-    /// <summary>
-    /// Same navigation as <see cref="NavigateToAndOpenNextItem"/> but for any
-    /// course shown by a home card (the "rest of the day" rows).
-    /// </summary>
     [RelayCommand]
     public void OpenScheduleItem(ScheduleItem? item)
     {
@@ -185,7 +241,6 @@ public partial class HomeViewModel : ViewModelBase
         item.ItemClicked();
     }
 
-    /// <summary>Navigates to the bulletin tab, optionally selecting a given semester.</summary>
     [RelayCommand]
     public void OpenBulletin(string? semesterId)
     {

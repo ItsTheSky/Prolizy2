@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:bc="clr-namespace:Prolizy2.Styles.Controls.Bulletin"
              xmlns:bm="clr-namespace:Prolizy2.Model.Bulletin"
-             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Tabs"
+             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Home"
              mc:Ignorable="d"
              d:DesignWidth="360" d:DesignHeight="300"
              x:DataType="tabs:EvaluationDetailCardViewModel"

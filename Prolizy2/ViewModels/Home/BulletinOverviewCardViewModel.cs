@@ -1,41 +1,40 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Prolizy2.Model.Bulletin;
 using Prolizy2.ViewModels.Common;
 
-namespace Prolizy2.ViewModels.Tabs;
+namespace Prolizy2.ViewModels.Home;
 
-/// <summary>
-/// Card summarising a semester bulletin: the semester average, the decision and
-/// the units acquired / total.
-/// </summary>
 public partial class BulletinOverviewCardViewModel : ViewModelBase
 {
-    public BulletinOverviewCardViewModel(BulletinData? data, string? semesterId)
+    // The bulletin tab data only holds the transcript of the semester selected
+    // there, so the card's own semester is resolved separately.
+    public BulletinOverviewCardViewModel(
+        BulletinData? bulletinData,
+        string? semesterId,
+        Func<SemesterInfo, BulletinData?> resolveSemesterData)
     {
         SemesterId = semesterId;
-        Apply(data);
+
+        var semester = bulletinData is null ? null : FindSemester(bulletinData, semesterId);
+        ResolvedSemesterId = semester?.Id;
+
+        Apply(semester is null ? null : resolveSemesterData(semester), semester);
     }
 
-    /// <summary>Requested <c>formsemestre_id</c>, or null for the current semester.</summary>
     public string? SemesterId { get; }
 
-    /// <summary>Label of the semester shown (e.g. <c>S2 · 2024/2025</c>).</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasData))]
-    [NotifyPropertyChangedFor(nameof(HasNoData))]
-    private string _semesterLabel = string.Empty;
+    public string? ResolvedSemesterId { get; }
+
+    [ObservableProperty] private string _semesterLabel = string.Empty;
 
     [ObservableProperty] private GradeValue? _average;
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AcquiredSummary))]
-    private int _acquiredUnits;
+    [ObservableProperty] private int _acquiredUnits;
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AcquiredSummary))]
-    private int _totalUnits;
+    [ObservableProperty] private int _totalUnits;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DecisionText))]
@@ -45,11 +44,10 @@ public partial class BulletinOverviewCardViewModel : ViewModelBase
     [ObservableProperty] private ObservableCollection<TeachingUnitInfo> _acquiredList = new();
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasNoData))]
     private bool _hasData;
 
     public bool HasNoData => !HasData;
-
-    public string AcquiredSummary => $"{AcquiredUnits}/{TotalUnits}";
 
     public string DecisionText => Decision switch
     {
@@ -62,35 +60,20 @@ public partial class BulletinOverviewCardViewModel : ViewModelBase
     public global::Prolizy2.Styles.Controls.BadgeType DecisionBadgeType =>
         BulletinStatus.ToBadgeType(Decision);
 
-    /// <summary>Fills the card from the bulletin; safe to call every time the data changes.</summary>
-    public void Apply(BulletinData? data)
+    private void Apply(BulletinData? data, SemesterInfo? semester)
     {
-        if (data is null)
+        if (data is null || semester is null || data.Units.Count == 0)
         {
             HasData = false;
-            SemesterLabel = string.Empty;
-            Average = null;
-            AcquiredUnits = 0;
-            TotalUnits = 0;
-            Decision = "—";
-            AcquiredList = new ObservableCollection<TeachingUnitInfo>();
             return;
         }
 
-        var semester = FindSemester(data, SemesterId);
-
-        SemesterLabel = semester is null
-            ? data.Student?.Program ?? string.Empty
-            : $"{semester.Code} · {semester.Year}";
-
+        SemesterLabel = $"{semester.Code} · {semester.Year}";
         Average = data.SemesterAverage;
         AcquiredUnits = data.AcquiredUnitCount;
         TotalUnits = data.TotalUnitCount;
         Decision = data.Decision;
-
-        var acquired = data.Units.Where(u => u.IsAcquired).ToList();
-        AcquiredList = new ObservableCollection<TeachingUnitInfo>(acquired);
-
+        AcquiredList = new ObservableCollection<TeachingUnitInfo>(data.Units.Where(u => u.IsAcquired));
         HasData = true;
     }
 
@@ -100,12 +83,6 @@ public partial class BulletinOverviewCardViewModel : ViewModelBase
             return data.Semesters.FirstOrDefault(s => s.IsCurrent)
                    ?? data.Semesters.FirstOrDefault(s => !s.IsFuture);
 
-        foreach (var semester in data.Semesters)
-        {
-            if (string.Equals(semester.Id, semesterId, System.StringComparison.Ordinal))
-                return semester;
-        }
-
-        return null;
+        return data.Semesters.FirstOrDefault(s => string.Equals(s.Id, semesterId, StringComparison.Ordinal));
     }
 }
