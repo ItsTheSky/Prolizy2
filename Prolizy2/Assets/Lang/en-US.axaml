@@ -114,4 +114,57 @@
     <system:String x:Key="BulletinSettingsCredentialsDeleted">Credentials deleted</system:String>
     <system:String x:Key="BulletinSettingsError">Error</system:String>
 
+
+    <!-- Home -->
+    <system:String x:Key="HomeGreeting">Hello 👋</system:String>
+    <system:String x:Key="HomeEmptyHint">Add cards from the settings to compose your home page.</system:String>
+    <system:String x:Key="HomeCardTitleNextCourse">Next class</system:String>
+    <system:String x:Key="HomeCardTitleOverview">Semester average</system:String>
+    <system:String x:Key="HomeCardTitleEvaluation">Detailed grades</system:String>
+    <system:String x:Key="HomeCardTitleUnits">Teaching units</system:String>
+    <system:String x:Key="HomeCardNoCourse">No class coming up 🎉</system:String>
+    <system:String x:Key="HomeCardNoBulletin">Add your ScoDoc credentials to display your average.</system:String>
+    <system:String x:Key="HomeCardNoEvaluation">Pick a resource or a SAÉ to display.</system:String>
+    <system:String x:Key="HomeCardNoUnits">No teaching unit available.</system:String>
+    <system:String x:Key="HomeCardStatusOngoing">Ongoing</system:String>
+    <system:String x:Key="HomeCardStatusTomorrow">Tomorrow</system:String>
+    <system:String x:Key="HomeCardStatusInMinutes">In {0} min</system:String>
+    <system:String x:Key="HomeCardStatusInHours">In {0} h {1:00}</system:String>
+    <system:String x:Key="HomeCardMoreEvaluations">+ {0} more evaluation(s)</system:String>
+    <system:String x:Key="HomeCardUnitCount">{0} unit(s)</system:String>
+    <system:String x:Key="HomeCardSemesterAverage">SEMESTER AVERAGE</system:String>
+    <system:String x:Key="HomeCardUnitsAcquired">UNITS ACQUIRED</system:String>
+    <system:String x:Key="HomeCardKindResource">Resource</system:String>
+    <system:String x:Key="HomeCardKindSae">SAÉ</system:String>
+    <system:String x:Key="HomeCardKindPortfolio">Portfolio</system:String>
+    <system:String x:Key="HomeCardDecisionAdmitted">Admitted</system:String>
+    <system:String x:Key="HomeCardDecisionDeferred">Deferred</system:String>
+    <system:String x:Key="HomeCardDecisionFailed">Not admitted</system:String>
+
+    <system:String x:Key="HomeCardTypeNextCourse">Next class</system:String>
+    <system:String x:Key="HomeCardTypeOverview">Bulletin average</system:String>
+    <system:String x:Key="HomeCardTypeEvaluation">Grades of a resource / SAÉ</system:String>
+    <system:String x:Key="HomeCardTypeUnits">Teaching units</system:String>
+
+    <system:String x:Key="HomeSettingsEdit">Customise home</system:String>
+    <system:String x:Key="HomeSettingsAddCard">Add a card</system:String>
+    <system:String x:Key="HomeSettingsCardsTitle">Home cards</system:String>
+    <system:String x:Key="HomeSettingsCardsDesc">Add, reorder and configure the cards displayed on your home page.</system:String>
+    <system:String x:Key="HomeSettingsSave">Save</system:String>
+    <system:String x:Key="HomeSettingsReset">Reset</system:String>
+    <system:String x:Key="HomeSettingsNoCards">No card yet.</system:String>
+    <system:String x:Key="HomeSettingsHalf">1 slot</system:String>
+    <system:String x:Key="HomeSettingsFull">2 slots</system:String>
+    <system:String x:Key="HomeSettingsVariantClassic">Classic</system:String>
+    <system:String x:Key="HomeSettingsVariantCompact">Compact</system:String>
+    <system:String x:Key="HomeSettingsMaxItems">Rows</system:String>
+    <system:String x:Key="HomeSettingsMoveUp">Move up</system:String>
+    <system:String x:Key="HomeSettingsMoveDown">Move down</system:String>
+    <system:String x:Key="HomeSettingsRemoveCard">Remove</system:String>
+    <system:String x:Key="HomeSettingsSemesterCurrent">Current semester</system:String>
+    <system:String x:Key="HomeSettingsDiscardTitle">Unsaved changes</system:String>
+    <system:String x:Key="HomeSettingsDiscardMessage">Your changes are not saved yet. Do you want to discard them?</system:String>
+    <system:String x:Key="HomeSettingsDiscardKeepEditing">Keep editing</system:String>
+    <system:String x:Key="HomeSettingsDiscardLeave">Discard</system:String>
+
 </ResourceDictionary>

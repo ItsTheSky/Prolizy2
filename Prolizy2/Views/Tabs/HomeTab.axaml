@@ -2,54 +2,57 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:suki="https://github.com/kikipoulet/SukiUI"
-             xmlns:model="clr-namespace:Prolizy2.Model"
-             xmlns:viewModels="clr-namespace:Prolizy2"
-             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Tabs"
-             xmlns:controls="clr-namespace:Prolizy2.Styles.Controls"
-
-             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="800"
-             x:DataType="tabs:HomeViewModel"
+             xmlns:home="clr-namespace:Prolizy2.Views.Home"
+             xmlns:vmd="clr-namespace:Prolizy2.ViewModels.Tabs"
+             mc:Ignorable="d"
+             d:DesignWidth="450" d:DesignHeight="800"
+             x:DataType="vmd:HomeViewModel"
              x:Class="Prolizy2.Views.Tabs.HomeTab">
-    <Grid RowDefinitions="Auto,Auto" RowSpacing="10">
 
-        <TextBlock Grid.Row="0" Text="Bonjour 👋"
-                   Classes="Header" />
+    <Grid RowDefinitions="Auto,*" RowSpacing="10">
 
-        <suki:GlassCard Grid.Row="1" IsInteractive="True" Command="{Binding NavigateToAndOpenNextItemCommand}"
-                        Background="{Binding NextScheduleItem.BackgroundColor, FallbackValue={DynamicResource SukiGlassCardBackground}}">
-            
-            <Panel>
-                <Grid RowDefinitions="Auto,20,Auto" RowSpacing="5"
-                      ColumnDefinitions="Auto,*,Auto" ColumnSpacing="5"
-                      IsVisible="{Binding NextScheduleItem, Converter={x:Static ObjectConverters.IsNotNull}}">
-                    
-                    <LucideIcon Grid.Row="0" Grid.Column="0"
-                                Kind="CalendarClock"
-                                Size="20"/>
-                    
-                    <TextBlock Grid.Row="0" Grid.Column="1" 
-                               VerticalAlignment="Center"
-                               Classes="TextBig" Text="Prochain Cours"/>
-                    
-                    <controls:Badge Grid.Row="0" Grid.Column="2" Text="{Binding NextScheduleItem.Room}"/>
-                    
-                    <LucideIcon Grid.Row="1" Grid.Column="2" Grid.RowSpan="2"
-                                HorizontalAlignment="Right" VerticalAlignment="Center"
-                                Size="24"
-                                Kind="ArrowRight"/>
-                    
-                    <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                               TextWrapping="Wrap"
-                               Classes="TextNormal" Text="{Binding NextScheduleItem.Subject}" />
-                </Grid>
-            
-                <TextBlock Classes="SubHeader" Text="Chargement ..."
-                           HorizontalAlignment="Center" VerticalAlignment="Center"
-                           IsVisible="{Binding NextScheduleItem, Converter={x:Static ObjectConverters.IsNull}}"/>
-            </Panel>
+        <!-- Title bar -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8"
+              Margin="0,4,0,0">
 
-        </suki:GlassCard>
+            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                <TextBlock Classes="Header"
+                           HorizontalAlignment="Left"
+                           Margin="0,0,0,0"
+                           Text="{DynamicResource HomeGreeting}" />
+                <TextBlock Classes="Quote"
+                           IsVisible="{Binding HasNoCards}"
+                           Text="{DynamicResource HomeEmptyHint}"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+
+            <Button Grid.Column="1"
+                    Classes="Flat"
+                    Padding="10"
+                    VerticalAlignment="Center"
+                    Command="{Binding EditLayoutCommand}"
+                    ToolTip.Tip="{DynamicResource HomeSettingsEdit}">
+                <LucideIcon Kind="Settings2" Size="20" />
+            </Button>
+
+            <Button Grid.Column="2"
+                    Classes="Flat"
+                    Padding="10"
+                    VerticalAlignment="Center"
+                    Command="{Binding EditLayoutCommand}"
+                    ToolTip.Tip="{DynamicResource HomeSettingsAddCard}">
+                <LucideIcon Kind="Plus" Size="20" />
+            </Button>
+
+        </Grid>
+
+        <!-- Cards -->
+        <ScrollViewer Grid.Row="1"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Padding="0,0,0,20">
+            <home:HomeCardPanel ItemsSource="{Binding Cards}"
+                                ItemTemplate="{home:HomeCardTemplate}" />
+        </ScrollViewer>
 
     </Grid>
 </UserControl>

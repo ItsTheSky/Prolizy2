@@ -275,6 +275,16 @@ public partial class EdtViewModel : ViewModelBase
         }
     }
 
+    #region Cache access
+
+    /// <summary>
+    /// The cached weeks, flattened and sorted by start time. Used by the home
+    /// cards, which must not own a second copy of the week cache.
+    /// </summary>
+    public List<ScheduleItem> GetCachedItems() => _cacheService.GetCachedItems();
+
+    #endregion
+
     #region Commands
 
     [RelayCommand]

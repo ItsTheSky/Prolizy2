@@ -14,7 +14,10 @@ public partial class MainSettingsViewModel(SettingsViewModel settingsViewModel) 
     [RelayCommand]
     public void GoToHome()
     {
-        
+        settingsViewModel.SwitchToPage(new Views.Tabs.Settings.HomeSettingsView()
+        {
+            DataContext = new HomeSettingsViewModel(settingsViewModel.MainViewModel, settingsViewModel)
+        });
     }
 
     [RelayCommand]

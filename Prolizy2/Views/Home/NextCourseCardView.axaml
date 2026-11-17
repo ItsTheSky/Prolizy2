@@ -1,0 +1,143 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:model="clr-namespace:Prolizy2.Model"
+             xmlns:tabs="clr-namespace:Prolizy2.ViewModels.Tabs"
+             xmlns:util="clr-namespace:Prolizy2.Utilities"
+             mc:Ignorable="d"
+             d:DesignWidth="360" d:DesignHeight="240"
+             x:DataType="tabs:NextCourseCardViewModel"
+             x:Class="Prolizy2.Views.Home.NextCourseCardView">
+
+    <Panel>
+
+        <!-- Empty state -->
+        <StackPanel IsVisible="{Binding HasNothingPlanned}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="6">
+            <LucideIcon Kind="CalendarOff" Size="28"
+                        HorizontalAlignment="Center"
+                        Foreground="{DynamicResource SukiLowText}" />
+            <TextBlock Text="{DynamicResource HomeCardNoCourse}"
+                       FontSize="12"
+                       FontStyle="Italic"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource SukiLowText}"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center" />
+        </StackPanel>
+
+        <!-- Next course -->
+        <StackPanel IsVisible="{Binding HasCourse}" Spacing="10">
+
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <Border Grid.Column="0"
+                        MinWidth="52" Padding="7,3"
+                        CornerRadius="7"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left">
+                    <Border.Background>
+                        <SolidColorBrush Color="#FF8C42" Opacity="0.16" />
+                    </Border.Background>
+                    <TextBlock Text="{Binding NextItem.FormattedTimeRange}"
+                               FontSize="11" FontWeight="SemiBold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Border>
+
+                <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding NextItem.Subject}"
+                               FontSize="15" FontWeight="SemiBold"
+                               TextWrapping="Wrap"
+                               LineHeight="19" />
+                    <TextBlock Text="{Binding StatusText}"
+                               FontSize="12"
+                               Foreground="{DynamicResource SukiLowText}" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Details -->
+            <WrapPanel Orientation="Horizontal" IsVisible="{Binding ShowDetails}">
+                <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,0,12,6">
+                    <LucideIcon Kind="Navigation" Size="13"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource SukiLowText}" />
+                    <TextBlock Text="{Binding NextItem.Room}"
+                               FontSize="12"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource SukiLowText}"
+                               TextTrimming="CharacterEllipsis"
+                               MaxWidth="140" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,0,12,6"
+                            IsVisible="{Binding NextItem.Professor, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <LucideIcon Kind="User" Size="13"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource SukiLowText}" />
+                    <TextBlock Text="{Binding NextItem.Professor}"
+                               FontSize="12"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource SukiLowText}"
+                               TextTrimming="CharacterEllipsis"
+                               MaxWidth="150" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,0,12,6"
+                            IsVisible="{Binding NextItem.FormattedType, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <LucideIcon Kind="Tags" Size="13"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource SukiLowText}" />
+                    <TextBlock Text="{Binding NextItem.FormattedType}"
+                               FontSize="12"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource SukiLowText}" />
+                </StackPanel>
+            </WrapPanel>
+
+            <!-- Rest of the day -->
+            <StackPanel Spacing="4"
+                        IsVisible="{Binding ShowFollowing}">
+
+
+                <ItemsControl ItemsSource="{Binding FollowingItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="model:ScheduleItem">
+                            <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8"
+                                  Margin="0,2"
+                                  Background="Transparent"
+                                  Cursor="Hand"
+                                  util:TappedCommand.Command="{Binding $parent[UserControl].((tabs:NextCourseCardViewModel)DataContext).OpenScheduleItemCommand}"
+                                  util:TappedCommand.CommandParameter="{Binding}">
+                                <Border Grid.Column="0"
+                                        Width="3" CornerRadius="2"
+                                        Background="{Binding BackgroundColor}" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding StartTime, StringFormat='{}{0:HH\\:mm}'}"
+                                           FontSize="11" FontWeight="Medium"
+                                           MinWidth="40"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource SukiLowText}" />
+                                <TextBlock Grid.Column="2"
+                                           Text="{Binding Subject}"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Grid.Column="3"
+                                           Text="{Binding Room}"
+                                           FontSize="11"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource SukiLowText}"
+                                           MaxWidth="80"
+                                           TextTrimming="CharacterEllipsis" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+        </StackPanel>
+
+    </Panel>
+</UserControl>
